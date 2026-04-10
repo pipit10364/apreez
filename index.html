@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valreez — Part of Inarte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #F7F3ED;
+      --ivory: #EFE8DC;
+      --sage: #4A5C4E;
+      --sage-light: #7A9B7F;
+      --sage-muted: #C8D8C9;
+      --dusty-rose: #C4977A;
+      --rose-muted: #E8D5C4;
+      --charcoal: #2C2C2C;
+      --charcoal-light: #5A5A5A;
+      --gold: #B8956A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--charcoal);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── LANDING PAGE ── */
+    #landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-mark {
+      position: absolute;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .brand-mark .app-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--charcoal-light);
+    }
+
+    .brand-mark .parent-brand {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dusty-rose);
+      margin-top: 3px;
+    }
+
+    .landing-content {
+      text-align: center;
+      max-width: 480px;
+      animation: fadeUp 1.2s ease both;
+    }
+
+    .decorative-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--sage-light), transparent);
+      margin: 0 auto 32px;
+    }
+
+    .landing-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 10vw, 68px);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--charcoal);
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .landing-title em {
+      font-style: italic;
+      color: var(--sage);
+    }
+
+    .landing-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--charcoal-light);
+      margin-bottom: 40px;
+      letter-spacing: 0.5px;
+      line-height: 1.7;
+    }
+
+    .landing-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--charcoal-light);
+      line-height: 1.9;
+      margin-bottom: 48px;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--sage);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--dusty-rose);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .btn-primary:hover::before {
+      transform: translateX(0);
+    }
+
+    .btn-primary span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .landing-note {
+      margin-top: 24px;
+      font-size: 11px;
+      color: var(--charcoal-light);
+      letter-spacing: 0.3px;
+      opacity: 0.7;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      margin: 40px 0 32px;
+    }
+
+    .ornament-line {
+      width: 40px;
+      height: 1px;
+      background: var(--sage-muted);
+    }
+
+    .ornament-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--dusty-rose);
+    }
+
+    /* ── APP SHELL ── */
+    #app {
+      display: none;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      position: sticky;
+      top: 0;
+      background: var(--cream);
+      border-bottom: 1px solid var(--ivory);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: var(--charcoal);
+    }
+
+    .header-brand span {
+      color: var(--sage);
+      font-style: italic;
+    }
+
+    .header-progress {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--charcoal-light);
+      opacity: 0.6;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar {
+      height: 2px;
+      background: var(--ivory);
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--sage-light), var(--dusty-rose));
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ── TAB NAV ── */
+    .tab-nav {
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--ivory);
+      background: var(--cream);
+      padding: 0 16px;
+    }
+
+    .tab-nav::-webkit-scrollbar { display: none; }
+
+    .tab-nav-inner {
+      display: flex;
+      gap: 0;
+      min-width: max-content;
+    }
+
+    .tab-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--charcoal-light);
+      padding: 14px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      opacity: 0.5;
+    }
+
+    .tab-btn.active {
+      color: var(--sage);
+      border-bottom-color: var(--sage);
+      opacity: 1;
+    }
+
+    .tab-btn.completed {
+      opacity: 0.7;
+      color: var(--dusty-rose);
+    }
+
+    .tab-btn.completed::after {
+      content: ' ✓';
+      font-size: 9px;
+    }
+
+    /* ── TAB CONTENT ── */
+    .tab-content {
+      display: none;
+      padding: 40px 24px 80px;
+      max-width: 640px;
+      margin: 0 auto;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .tab-header {
+      margin-bottom: 40px;
+    }
+
+    .tab-number {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dusty-rose);
+      margin-bottom: 8px;
+    }
+
+    .tab-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--charcoal);
+      margin-bottom: 12px;
+    }
+
+    .tab-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--charcoal-light);
+      line-height: 1.8;
+      border-left: 2px solid var(--sage-muted);
+      padding-left: 16px;
+    }
+
+    /* ── SAFE SPACE NOTE ── */
+    .safe-space-note {
+      background: var(--rose-muted);
+      border-left: 3px solid var(--dusty-rose);
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      font-size: 12px;
+      font-style: italic;
+      color: var(--charcoal-light);
+      line-height: 1.7;
+    }
+
+    /* ── SECTION ── */
+    .question-section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--sage);
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--sage-muted);
+    }
+
+    /* ── QUESTION ── */
+    .question-item {
+      margin-bottom: 28px;
+    }
+
+    .question-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--charcoal);
+      line-height: 1.7;
+      margin-bottom: 10px;
+      letter-spacing: 0.1px;
+    }
+
+    .question-input {
+      width: 100%;
+      background: var(--ivory);
+      border: 1px solid transparent;
+      border-bottom: 1px solid var(--sage-muted);
+      padding: 12px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--charcoal);
+      outline: none;
+      transition: all 0.25s ease;
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.7;
+    }
+
+    .question-input:focus {
+      border-color: var(--sage-light);
+      background: #fff;
+    }
+
+    .question-input.single-line {
+      min-height: unset;
+      height: 44px;
+      resize: none;
+    }
+
+    /* ── PROFILE GRID ── */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .profile-grid .question-item {
+      margin-bottom: 0;
+    }
+
+    .profile-grid .full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ── PHOTO UPLOAD ── */
+    .photo-upload {
+      border: 1px dashed var(--sage-muted);
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: var(--ivory);
+    }
+
+    .photo-upload:hover {
+      border-color: var(--sage-light);
+      background: #fff;
+    }
+
+    .photo-upload-text {
+      font-size: 12px;
+      color: var(--charcoal-light);
+      letter-spacing: 0.3px;
+    }
+
+    .photo-upload-sub {
+      font-size: 10px;
+      color: var(--charcoal-light);
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+
+    /* ── NAVIGATION BUTTONS ── */
+    .tab-nav-btns {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--ivory);
+    }
+
+    .btn-nav {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border: 1px solid;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: none;
+    }
+
+    .btn-prev {
+      border-color: var(--sage-muted);
+      color: var(--charcoal-light);
+    }
+
+    .btn-prev:hover {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .btn-next {
+      border-color: var(--sage);
+      color: var(--sage);
+    }
+
+    .btn-next:hover {
+      background: var(--sage);
+      color: var(--cream);
+    }
+
+    .btn-finish {
+      border-color: var(--dusty-rose);
+      color: var(--dusty-rose);
+    }
+
+    .btn-finish:hover {
+      background: var(--dusty-rose);
+      color: var(--cream);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+      .profile-grid .full-width {
+        grid-column: 1;
+      }
+      .tab-title {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════ LANDING ══════════════════════════════ -->
+<section id="landing">
+  <div class="brand-mark">
+    <div class="app-name">Valreez</div>
+    <div class="parent-brand">Part of Inarte</div>
+  </div>
+
+  <div class="landing-content">
+    <div class="decorative-line"></div>
+
+    <h1 class="landing-title">
+      Mengenal<br><em>lebih dalam,</em><br>sebelum melangkah.
+    </h1>
+
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-dot"></div>
+      <div class="ornament-line"></div>
+    </div>
+
+    <p class="landing-subtitle">
+      Bukan tentang siapa yang sempurna.<br>
+      Tapi tentang siapa yang sungguh-sungguh ingin dikenal.
+    </p>
+
+    <p class="landing-desc">
+      Valreez adalah ruang refleksi pribadi untuk mereka yang ingin<br>
+      memahami diri sendiri — dan pasangannya — sebelum membangun<br>
+      kehidupan bersama. Tidak ada penilaian di sini. Hanya kejujuran.
+    </p>
+
+    <button class="btn-primary" onclick="startApp()">
+      <span>Mulai Refleksi</span>
+    </button>
+
+    <p class="landing-note">Semua jawaban tersimpan di perangkatmu. Hanya kamu yang bisa mengaksesnya.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ APP ══════════════════════════════ -->
+<div id="app">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-brand">Val<span>reez</span></div>
+    <div class="header-progress" id="progressText">Tab 1 dari 16</div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <nav class="tab-nav">
+    <div class="tab-nav-inner" id="tabNavInner"></div>
+  </nav>
+
+  <!-- Tab Contents -->
+  <div id="tabContents"></div>
+
+</div>
+
+<script>
+  // ── DATA ──
+  const tabs = [
+    {
+      id: 'profil',
+      title: 'Profil',
+      desc: 'Perkenalan dirimu. Ceritakan siapa kamu secara singkat dan jelas.',
+      safeSpace: false,
+      sections: [
+        {
+          title: null,
+          questions: [
+            { id: 'nama', label: 'Nama lengkap', type: 'single' },
+            { id: 'usia', label: 'Usia & tanggal lahir', type: 'single' },
+            { id: 'kota_asal', label: 'Kota asal', type: 'single' },
+            { id: 'domisili', label: 'Domisili sekarang', type: 'single' },
+            { id: 'pendidikan', label: 'Pendidikan terakhir', type: 'single' },
+            { id: 'pekerjaan', label: 'Pekerjaan / bidang yang ditekuni', type: 'single' },
+            { id: 'foto', label: 'Foto (opsional)', type: 'photo' },
+            { id: 'tentang', label: 'Ceritakan sedikit tentang dirimu', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'hobi',
+      title: 'Hobi',
+      desc: 'Hal-hal yang membuatmu bahagia, dan bagaimana kamu mengelolanya dalam hubungan.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Aktivitas & Hobi',
+          questions: [
+            { id: 'hobi_waktu_luang', label: 'Apa yang biasanya kamu lakukan di waktu luang?', type: 'textarea' },
+            { id: 'hobi_lanjut', label: 'Ada hobi yang ingin kamu teruskan setelah menikah?', type: 'textarea' },
+            { id: 'hobi_biaya', label: 'Apakah hobimu membutuhkan waktu atau biaya yang signifikan?', type: 'textarea' },
+            { id: 'hobi_komunikasi', label: 'Jika hobimu memakan banyak waktu, bagaimana kamu mengkomunikasikannya dengan pasangan?', type: 'textarea' },
+            { id: 'hobi_relakan', label: 'Apakah kamu mau merelakan waktu untuk hobimu demi anak dan pasanganmu?', type: 'textarea' },
+            { id: 'hobi_konflik', label: 'Apabila pasanganmu tidak menyukai hobimu, apa yang akan kamu lakukan?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Energi & Sosialisasi',
+          questions: [
+            { id: 'energi', label: 'Setelah hari yang melelahkan, kamu lebih butuh waktu sendiri atau justru butuh cerita sama orang terdekat?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Makanan & Minuman',
+          questions: [
+            { id: 'makanan', label: 'Makanan favorit & makanan yang tidak bisa kamu makan (alergi, pantangan, dll)', type: 'textarea' },
+            { id: 'masak', label: 'Apakah kamu tipe yang suka masak atau lebih suka makan di luar?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Hiburan & Gaya Santai',
+          questions: [
+            { id: 'hiburan', label: 'Tontonan, musik, atau buku yang kamu suka', type: 'textarea' },
+            { id: 'liburan', label: 'Kamu lebih suka liburan yang aktif atau yang santai?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Hewan Peliharaan',
+          questions: [
+            { id: 'hewan', label: 'Apakah kamu suka/punya hewan peliharaan? Atau justru tidak nyaman dengan hewan tertentu?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'mimpi',
+      title: 'Mimpi',
+      desc: 'Ke mana arah hidupmu — dan bagaimana kamu ingin bertumbuh bersama pasangan.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Mimpi Pribadi',
+          questions: [
+            { id: 'mimpi_terbesar', label: 'Apa hal yang paling ingin kamu wujudkan dalam hidupmu?', type: 'textarea' },
+            { id: 'mimpi_karir', label: 'Apakah ada pencapaian yang ingin kamu raih dalam karir atau bidang yang kamu tekuni?', type: 'textarea' },
+            { id: 'mimpi_tempat', label: 'Adakah tempat yang ingin kamu kunjungi atau tinggali suatu hari nanti?', type: 'textarea' },
+            { id: 'mimpi_korban', label: 'Apakah kamu pernah mengorbankan mimpimu untuk orang lain? Bagaimana perasaanmu tentang itu sekarang?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Mimpi Setelah Menikah',
+          questions: [
+            { id: 'mimpi_bersama', label: 'Apa yang paling ingin kamu bangun bersama pasanganmu setelah menikah?', type: 'textarea' },
+            { id: 'mimpi_5tahun', label: 'Dalam 5 tahun pertama pernikahan, kamu ingin hidupmu seperti apa?', type: 'textarea' },
+            { id: 'mimpi_target', label: 'Apakah kamu punya target yang ingin dicapai bersama — rumah, bisnis, ibadah, dll?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Mendukung Satu Sama Lain',
+          questions: [
+            { id: 'mimpi_dukung', label: 'Apakah menurutmu pernikahan harus mendukung pertumbuhan masing-masing individu? Dan secara konkret, bagaimana kamu akan mewujudkan itu untuk pasanganmu?', type: 'textarea' },
+            { id: 'mimpi_rela', label: 'Apakah kamu rela berhenti sejenak untuk mendukung pasanganmu meraih mimpinya, lalu kemudian kamu meraih mimpimu di kemudian hari?', type: 'textarea' },
+            { id: 'mimpi_evolusi', label: 'Apa pendapatmu jika mimpimu harus berevolusi dengan keadaanmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Pertumbuhan',
+          questions: [
+            { id: 'mimpi_belajar', label: 'Hal apa yang ingin kamu pelajari atau berkembang di dalamnya setelah menikah?', type: 'textarea' },
+            { id: 'mimpi_update', label: 'Apakah kamu siap mempelajari hal-hal baru seiring perkembangan zaman?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ruang Bebas',
+          questions: [
+            { id: 'mimpi_rahasia', label: 'Ceritakan mimpimu yang belum pernah kamu ceritakan ke siapapun.', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'visi',
+      title: 'Visi & Misi',
+      desc: 'Nilai dan arah hidup yang menjadi kompas — bagaimana kamu memandang pernikahan dan kehidupan.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Visi Pernikahan',
+          questions: [
+            { id: 'visi_sehat', label: 'Menurutmu, pernikahan yang sehat itu seperti apa?', type: 'textarea' },
+            { id: 'visi_penting', label: 'Apa yang paling penting bagimu dalam sebuah pernikahan?', type: 'textarea' },
+            { id: 'visi_bahagia', label: 'Bagaimana kamu mendefinisikan kebahagiaan dalam rumah tangga?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Peran dalam Keluarga',
+          questions: [
+            { id: 'visi_peran', label: 'Bagaimana kamu membayangkan peranmu sebagai suami/istri?', type: 'textarea' },
+            { id: 'visi_keluarga', label: 'Seperti apa keluarga ideal menurutmu?', type: 'textarea' },
+            { id: 'visi_anak', label: 'Apakah kamu ingin punya anak? Berapa, dan kapan?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Nilai Hidup',
+          questions: [
+            { id: 'visi_nilai', label: 'Apa nilai atau prinsip hidup yang paling kamu pegang teguh?', type: 'textarea' },
+            { id: 'visi_nilai_asal', label: 'Dari mana nilai-nilai itu kamu dapat?', type: 'textarea' },
+            { id: 'visi_tidak_kompromi', label: 'Adakah hal yang menurutmu tidak bisa dikompromikan dalam sebuah hubungan?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Jangka Panjang',
+          questions: [
+            { id: 'visi_tua', label: 'Di usia tua nanti, kamu ingin hidupmu seperti apa?', type: 'textarea' },
+            { id: 'visi_warisan', label: 'Warisan apa yang ingin kamu tinggalkan — untuk anak, keluarga, atau lingkunganmu?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'agama',
+      title: 'Agama',
+      desc: 'Bagaimana agama berperan dalam keseharian dan keputusan hidupmu.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Praktik Ibadah',
+          questions: [
+            { id: 'agama_wajib', label: 'Bagaimana kamu menjalankan kewajiban ibadahmu dalam keseharian?', type: 'textarea' },
+            { id: 'agama_sunnah', label: 'Apakah kamu punya rutinitas ibadah di luar kewajiban yang kamu jaga?', type: 'textarea' },
+            { id: 'agama_beda', label: 'Bagaimana sikapmu jika pasanganmu memiliki tingkat kedalaman ibadah yang berbeda darimu? Apakah kamu siap untuk belajar lebih lagi?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Agama sebagai Fondasi',
+          questions: [
+            { id: 'agama_keputusan', label: 'Seberapa besar agama memengaruhi keputusan-keputusan besar dalam hidupmu?', type: 'textarea' },
+            { id: 'agama_rumah', label: 'Bagaimana kamu ingin agama berperan dalam rumah tanggamu nanti?', type: 'textarea' },
+            { id: 'agama_bersama', label: 'Apakah kamu ingin membangun rutinitas ibadah bersama dalam keluarga?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Pendidikan Agama untuk Anak',
+          questions: [
+            { id: 'agama_anak', label: 'Bagaimana kamu ingin mengenalkan agama kepada anakmu?', type: 'textarea' },
+            { id: 'agama_formal', label: 'Apakah kamu ingin anak-anakmu mendapat pendidikan agama formal?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'keluarga',
+      title: 'Latar Belakang',
+      desc: 'Dari mana kamu dibentuk — karena di mana seseorang tumbuh, akan memengaruhi siapa dia.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Gambaran Keluarga',
+          questions: [
+            { id: 'kel_tumbuh', label: 'Ceritakan tentang keluargamu — kamu tumbuh bersama siapa?', type: 'textarea' },
+            { id: 'kel_suasana', label: 'Bagaimana suasana rumah tempat kamu dibesarkan?', type: 'textarea' },
+            { id: 'kel_dekat', label: 'Apakah kamu dekat dengan orang tuamu? Bagaimana hubungan itu membentukmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Pola yang Terbawa',
+          questions: [
+            { id: 'kel_positif', label: 'Hal positif apa dari keluargamu yang ingin kamu bawa ke rumah tanggamu sendiri?', type: 'textarea' },
+            { id: 'kel_tidak_ulang', label: 'Adakah pola dalam keluargamu yang tidak ingin kamu ulangi?', type: 'textarea' },
+            { id: 'kel_konflik', label: 'Bagaimana keluargamu menyelesaikan konflik? Apakah itu memengaruhi caramu menghadapi masalah?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Tradisi & Kebersamaan',
+          questions: [
+            { id: 'kel_tradisi', label: 'Adakah tradisi atau rutinitas keluarga yang ingin kamu lanjutkan setelah menikah?', type: 'textarea' },
+            { id: 'kel_rutinitas', label: 'Adakah rutinitas keluarga yang wajib dilakukan bersama pasangan maupun keluarga besarmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Hubungan dengan Keluarga Sekarang',
+          questions: [
+            { id: 'kel_interaksi', label: 'Seberapa sering kamu berinteraksi dengan keluarga besarmu? Apakah itu terasa seperti keharusan atau kesenangan?', type: 'textarea' },
+            { id: 'kel_bayangan', label: 'Bagaimana kamu membayangkan hubungan antara pasanganmu dan keluargamu?', type: 'textarea' },
+            { id: 'kel_ekspektasi', label: 'Apakah ada ekspektasi dari keluargamu terhadap pernikahanmu?', type: 'textarea' },
+            { id: 'kel_penengah', label: 'Apabila terjadi konflik antara keluarga dan pasanganmu, bagaimana kamu menjadi penengah?', type: 'textarea' },
+            { id: 'kel_tinggal', label: 'Apakah kamu dan pasangan akan tinggal bersama keluarga atau mandiri? Bagaimana keputusan itu diambil?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'keuangan',
+      title: 'Keuangan',
+      desc: 'Bagaimana kamu berhubungan dengan uang — karena itu cerminan nilai dan tanggung jawabmu.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Kebiasaan & Karakter Finansial',
+          questions: [
+            { id: 'uang_tipe', label: 'Apakah kamu tipe orang yang lebih suka menabung atau menghabiskan uang?', type: 'textarea' },
+            { id: 'uang_kelola', label: 'Bagaimana kamu mengelola pengeluaranmu sehari-hari? Apakah kamu punya sistem tersendiri?', type: 'textarea' },
+            { id: 'uang_catat', label: 'Apakah kamu punya kebiasaan mencatat keuangan?', type: 'textarea' },
+            { id: 'uang_hutang', label: 'Bagaimana sikapmu terhadap hutang? Apakah kamu saat ini memiliki hutang yang perlu diketahui pasanganmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Tanggungan & Kondisi Finansial',
+          questions: [
+            { id: 'uang_tanggungan', label: 'Apakah kamu saat ini memiliki tanggungan finansial terhadap keluargamu?', type: 'textarea' },
+            { id: 'uang_sandwich', label: 'Apakah kamu bagian dari sandwich generation? Bagaimana kamu merencanakannya ke depan?', type: 'textarea' },
+            { id: 'uang_aset', label: 'Apakah kamu memiliki aset atau tabungan yang ingin kamu informasikan?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Pengaturan Keuangan dalam Rumah Tangga',
+          questions: [
+            { id: 'uang_ideal', label: 'Bagaimana menurutmu pengaturan keuangan yang ideal dalam rumah tangga?', type: 'textarea' },
+            { id: 'uang_sistem', label: 'Apakah kamu setuju dengan sistem keuangan gabungan, terpisah, atau kombinasi keduanya?', type: 'textarea' },
+            { id: 'uang_nafkah', label: 'Bagaimana pendapatmu soal nafkah — siapa yang bertanggung jawab, dan bagaimana jika kondisinya berubah?', type: 'textarea' },
+            { id: 'uang_istri_kerja', label: 'Bagaimana pandanganmu tentang pasanganmu yang bekerja? Dan bagaimana jika penghasilan pasanganmu lebih besar darimu?', type: 'textarea' },
+            { id: 'uang_kemandirian', label: 'Bagaimana pandanganmu tentang kemandirian finansial istri — apakah kamu mendukung istri untuk tetap memiliki kemampuan dan akses finansialnya sendiri?', type: 'textarea' },
+            { id: 'uang_terbuka', label: 'Apakah kamu nyaman berdiskusi terbuka soal uang dengan pasanganmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Masa Depan Finansial',
+          questions: [
+            { id: 'uang_investasi', label: 'Apakah kamu punya rencana investasi atau tabungan jangka panjang?', type: 'textarea' },
+            { id: 'uang_darurat', label: 'Bagaimana kamu mempersiapkan dana darurat untuk keluargamu?', type: 'textarea' },
+            { id: 'uang_senja', label: 'Apakah kamu punya bayangan bagaimana tetap memiliki penghasilan aktif di masa senja — misalnya melalui aset, usaha, atau passive income?', type: 'textarea' },
+            { id: 'uang_pensiun', label: 'Apakah kamu sudah mempersiapkan dana pensiunmu — misalnya melalui tabungan, investasi, atau program pensiun?', type: 'textarea' },
+            { id: 'uang_impian', label: 'Apakah kamu punya impian finansial yang ingin dicapai bersama pasangan?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'parenting_a',
+      title: 'Pengasuhan',
+      desc: 'Bagaimana kamu membayangkan menjadi orang tua — nilai, pola asuh, dan kesiapanmu.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Keputusan Dasar',
+          questions: [
+            { id: 'pa_ingin', label: 'Apakah kamu ingin memiliki anak? Jika ya, berapa dan kapan?', type: 'textarea' },
+            { id: 'pa_jarak', label: 'Bagaimana jarak usia antar anak yang kamu bayangkan?', type: 'textarea' },
+            { id: 'pa_tidak_sesuai', label: 'Bagaimana sikapmu jika kehamilan tidak sesuai rencana — lebih cepat, lebih lambat, atau tidak terduga?', type: 'textarea' },
+            { id: 'pa_biologis', label: 'Bagaimana jika kalian menghadapi kesulitan memiliki anak secara biologis? Apakah kamu terbuka untuk adopsi atau opsi lainnya?', type: 'textarea' },
+            { id: 'pa_belajar', label: 'Apakah kamu siap untuk terus belajar menjadi orang tua yang lebih baik?', type: 'textarea' },
+            { id: 'pa_revisi', label: 'Apakah kamu bersedia merevisi cara pandangmu soal parenting jika ternyata ada yang keliru — meski itu sudah lama kamu yakini?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Pola Asuh & Bonding',
+          questions: [
+            { id: 'pa_pola', label: 'Bagaimana gambaran pola asuh yang ingin kamu terapkan?', type: 'textarea' },
+            { id: 'pa_hindari', label: 'Apakah ada pola asuh dari orang tuamu yang ingin kamu terapkan atau justru hindari?', type: 'textarea' },
+            { id: 'pa_disiplin', label: 'Bagaimana caramu mendisiplinkan anak tanpa melukai harga dirinya?', type: 'textarea' },
+            { id: 'pa_dekat', label: 'Bagaimana caramu membangun kedekatan dengan anak tanpa kehilangan otoritasmu sebagai orang tua?', type: 'textarea' },
+            { id: 'pa_maaf', label: 'Apakah kamu siap untuk meminta maaf kepada anakmu ketika kamu melakukan kesalahan?', type: 'textarea' },
+            { id: 'pa_jadwal', label: 'Apakah kamu memiliki jadwal khusus yang benar-benar akan kamu habiskan bersama keluarga kecilmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Support System & Pembagian Peran',
+          questions: [
+            { id: 'pa_lelah', label: 'Jika kamu dan pasanganmu lelah dan tidak ada support system lain, bagaimana kamu akan membagi peran?', type: 'textarea' },
+            { id: 'pa_daycare', label: 'Apakah kamu terbuka untuk menitipkan anak ke daycare, menyewa nanny, atau ART jika pasanganmu membutuhkan dukungan dalam pengasuhan?', type: 'textarea' },
+            { id: 'pa_bonding_kerja', label: 'Jika kamu dan pasangan sama-sama bekerja penuh, bagaimana kamu memastikan tetap bisa membangun bonding yang bermakna dengan anakmu?', type: 'textarea' },
+            { id: 'pa_resign', label: 'Apakah kamu terbuka dengan keputusan salah satu dari kalian untuk resign demi pengasuhan anak? Bagaimana kamu mendukung pasanganmu — baik secara emosional maupun finansial — jika keputusan itu diambil?', type: 'textarea' },
+            { id: 'pa_profesional', label: 'Apakah kamu terbuka untuk mencari bantuan profesional seperti konselor keluarga atau psikolog anak jika diperlukan?', type: 'textarea' },
+            { id: 'pa_khusus', label: 'Apakah kamu siap mendampingi dan mencari bantuan profesional jika anakmu memerlukan perhatian atau penanganan khusus dalam tumbuh kembangnya?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Keluarga Besar & Pengasuhan',
+          questions: [
+            { id: 'pa_kel_besar', label: 'Seberapa besar kamu ingin melibatkan keluarga besar dalam pengasuhan anak?', type: 'textarea' },
+            { id: 'pa_kel_konflik', label: 'Jika keluarga besar menerapkan pola asuh yang tidak sesuai dengan nilai yang kamu dan pasanganmu anut, bagaimana kamu mengambil keputusan?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Nilai yang Ingin Diwariskan',
+          questions: [
+            { id: 'pa_nilai', label: 'Nilai atau karakter apa yang paling ingin kamu tanamkan pada anakmu?', type: 'textarea' },
+            { id: 'pa_kenang', label: 'Bagaimana kamu ingin anakmu mengenang masa kecilnya?', type: 'textarea' },
+            { id: 'pa_tanggung', label: 'Apa yang menurutmu menjadi tanggung jawab terbesar seorang orang tua?', type: 'textarea' },
+            { id: 'pa_favorit', label: 'Bagaimana kamu memastikan setiap anak merasa dicintai secara setara tanpa favoritisme?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'parenting_b',
+      title: 'Pendidikan Anak',
+      desc: 'Bagaimana kamu membayangkan pendidikan dan tumbuh kembang anakmu.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Pendidikan Formal',
+          questions: [
+            { id: 'pb_moral', label: 'Bagaimana pandanganmu tentang urutan prioritas pendidikan anak — apakah fondasi moral dan agama perlu dibangun lebih dulu sebelum pendidikan umum lainnya?', type: 'textarea' },
+            { id: 'pb_sekolah', label: 'Bagaimana kamu membayangkan pendidikan anak — sekolah negeri, swasta, berbasis agama, internasional, homeschool, atau kombinasi?', type: 'textarea' },
+            { id: 'pb_riset', label: 'Apakah kamu siap untuk meriset pilihan sekolah secara matang sebelum mengambil keputusan?', type: 'textarea' },
+            { id: 'pb_jauh', label: 'Apakah kamu berkenan jika anak memilih sekolah yang jauh dari rumah?', type: 'textarea' },
+            { id: 'pb_dana', label: 'Apakah kamu sudah memikirkan persiapan dana pendidikan anak?', type: 'textarea' },
+            { id: 'pb_finansial', label: 'Jika kondisi finansial tidak sesuai target, apakah kamu bersedia meminimalisir pengeluaran lain demi memprioritaskan pendidikan anak?', type: 'textarea' },
+            { id: 'pb_prestasi', label: 'Seberapa penting prestasi akademik menurutmu dibanding karakter anak?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ekstrakurikuler & Minat Anak',
+          questions: [
+            { id: 'pb_minat', label: 'Bagaimana caramu mengenali dan mendukung minat anakmu?', type: 'textarea' },
+            { id: 'pb_ekskul_kapan', label: 'Kapan menurutmu waktu yang tepat untuk mulai mengenalkan ekstrakurikuler?', type: 'textarea' },
+            { id: 'pb_beda_minat', label: 'Bagaimana sikapmu jika minat anakmu berbeda jauh dari ekspektasimu?', type: 'textarea' },
+            { id: 'pb_dukung', label: 'Apakah kamu siap mendukung minat anak secara konsisten — baik waktu maupun biaya?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Tumbuh Kembang & Dunia Sosial',
+          questions: [
+            { id: 'pb_sosial', label: 'Bagaimana kamu akan mendampingi anak dalam memahami hubungan sosialnya seiring bertambahnya usia?', type: 'textarea' },
+            { id: 'pb_seks', label: 'Apakah kamu siap memberikan pendidikan seks yang sesuai usia kepada anakmu? Bagaimana caramu menyampaikannya?', type: 'textarea' },
+            { id: 'pb_kamar', label: 'Apakah kamu setuju dengan pemisahan kamar berdasarkan gender saat anak mulai tumbuh besar?', type: 'textarea' },
+            { id: 'pb_digital', label: 'Bagaimana kamu mempersiapkan anak untuk menghadapi dunia digital dan pergaulan yang semakin kompleks?', type: 'textarea' },
+            { id: 'pb_aman', label: 'Bagaimana caramu menjadi tempat yang aman bagi anak untuk bercerita — termasuk hal-hal yang mungkin membuatmu tidak nyaman mendengarnya?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Kemandirian & Masa Depan Anak',
+          questions: [
+            { id: 'pb_mandiri', label: 'Pada usia berapa kamu mulai mengajarkan kemandirian kepada anakmu? Dalam hal apa saja?', type: 'textarea' },
+            { id: 'pb_pilihan', label: 'Bagaimana sikapmu jika pilihan hidup anakmu berbeda dari yang kamu harapkan — karir, pasangan, atau gaya hidup?', type: 'textarea' },
+            { id: 'pb_biaya', label: 'Sampai sejauh mana kamu akan membiayai kehidupan anak? Apakah ada batasnya?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'tugas',
+      title: 'Pembagian Tugas',
+      desc: 'Ekspektasi tentang siapa ngapain di rumah — karena konflik kecil sering berakar dari hal yang tidak pernah dibicarakan.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Pandangan Dasar',
+          questions: [
+            { id: 'tugas_pandangan', label: 'Bagaimana pandanganmu tentang pembagian tugas rumah tangga antara suami dan istri?', type: 'textarea' },
+            { id: 'tugas_bersama', label: 'Apakah kamu percaya tugas rumah tangga adalah tanggung jawab bersama, atau ada pembagian peran yang jelas?', type: 'textarea' },
+            { id: 'tugas_keluarga', label: 'Bagaimana keluargamu dulu membagi tugas rumah tangga? Apakah itu memengaruhi pandanganmu sekarang?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Praktik Sehari-hari',
+          questions: [
+            { id: 'tugas_rela', label: 'Pekerjaan rumah apa yang kamu tidak keberatan lakukan secara rutin?', type: 'textarea' },
+            { id: 'tugas_delegasi', label: 'Adakah pekerjaan rumah yang kamu harap bisa dibagi atau didelegasikan?', type: 'textarea' },
+            { id: 'tugas_tidak_beres', label: 'Bagaimana sikapmu jika pasanganmu tidak melakukan bagiannya?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Me Time & Support System',
+          questions: [
+            { id: 'tugas_metime', label: 'Apakah kamu percaya setiap individu dalam pernikahan butuh me time? Bagaimana kamu memfasilitasi itu untuk pasanganmu?', type: 'textarea' },
+            { id: 'tugas_bantuan', label: 'Apakah kamu terbuka untuk menggunakan bantuan luar — seperti asisten rumah tangga — jika diperlukan?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ketika Kondisi Berubah',
+          questions: [
+            { id: 'tugas_berubah', label: 'Bagaimana pembagian tugas menurutmu harus menyesuaikan jika salah satu dari kalian sakit, bekerja lebih keras, atau punya bayi baru?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'kesehatan',
+      title: 'Kesehatan',
+      desc: 'Dalam pernikahan, kesehatan satu orang adalah urusan berdua.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Kesehatan Fisik',
+          questions: [
+            { id: 'sehat_kondisi', label: 'Apakah kamu memiliki kondisi kesehatan fisik yang perlu diketahui pasanganmu — seperti penyakit kronis, alergi serius, atau kondisi genetik?', type: 'textarea' },
+            { id: 'sehat_sebab', label: 'Apakah kamu tahu mengapa tubuhmu memiliki kondisi tersebut — apakah karena faktor genetik atau kebiasaan hidup?', type: 'textarea' },
+            { id: 'sehat_kebiasaan', label: 'Bagaimana kebiasaan hidupmu sehari-hari dalam menjaga kesehatan — pola makan, olahraga, tidur?', type: 'textarea' },
+            { id: 'sehat_rutin', label: 'Apakah kamu rutin melakukan pemeriksaan kesehatan?', type: 'textarea' },
+            { id: 'sehat_dokter', label: 'Bagaimana sikapmu terhadap pengobatan medis — apakah kamu tipe yang segera ke dokter atau cenderung menunda?', type: 'textarea' },
+            { id: 'sehat_checkup', label: 'Apakah kamu terbuka untuk melakukan medical check-up bersama sebelum menikah?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Kesehatan Mental',
+          questions: [
+            { id: 'sehat_mental', label: 'Apakah kamu pernah atau sedang menghadapi kondisi kesehatan mental yang perlu diketahui pasanganmu?', type: 'textarea' },
+            { id: 'sehat_pemicu', label: 'Apakah kamu mengetahui apa yang menjadi pemicu kondisi mentalmu — apakah dari trauma masa lalu, luka, atau pengalaman tertentu?', type: 'textarea' },
+            { id: 'sehat_kenali', label: 'Bagaimana caramu mengenali ketika kamu sedang tidak baik-baik saja secara emosional?', type: 'textarea' },
+            { id: 'sehat_profesional', label: 'Apakah kamu terbuka untuk mencari bantuan profesional seperti psikolog atau konselor jika diperlukan?', type: 'textarea' },
+            { id: 'sehat_sama_penting', label: 'Bagaimana sikapmu terhadap kesehatan mental secara umum — apakah kamu percaya ini sama pentingnya dengan kesehatan fisik?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Kesiapan & Komitmen',
+          questions: [
+            { id: 'sehat_komitmen', label: 'Jika suatu saat pasanganmu mengetahui kondisi kesehatanmu yang belum terdeteksi sebelumnya, apakah kamu berkomitmen untuk mencari pertolongan — baik untuk kondisi fisik maupun mental?', type: 'textarea' },
+            { id: 'sehat_dampingi', label: 'Jika pasanganmu menghadapi kondisi kesehatan yang serius, seberapa jauh kamu siap untuk mendampingi?', type: 'textarea' },
+            { id: 'sehat_jaga', label: 'Bagaimana kamu akan menjaga kesehatan dirimu agar tetap bisa hadir sepenuhnya untuk keluargamu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Hari Tua & Kualitas Hidup',
+          questions: [
+            { id: 'sehat_tua', label: 'Bagaimana kamu membayangkan kehidupanmu di hari tua — tinggal mandiri, bersama anak, atau di fasilitas perawatan lansia? Apakah kamu terbuka mendiskusikan ini dengan pasanganmu sejak sekarang?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'trauma',
+      title: 'Trauma',
+      desc: 'Luka yang tidak dikenali akan muncul dalam cara-cara yang tidak terduga dalam pernikahan.',
+      safeSpace: true,
+      sections: [
+        {
+          title: 'Mengenal Lukamu',
+          questions: [
+            { id: 'trauma_momen', label: 'Apakah ada momen dalam hidupmu yang terasa sangat menyakitkan dan sulit untuk dilupakan?', type: 'textarea' },
+            { id: 'trauma_ingatan', label: 'Apakah ada ingatan masa lalu yang tiba-tiba muncul tanpa kamu undang — seolah-olah kejadian itu baru saja terjadi?', type: 'textarea' },
+            { id: 'trauma_topik', label: 'Apakah ada topik, situasi, atau perilaku tertentu yang langsung membuatmu tidak nyaman atau menarik diri, tanpa kamu tahu persis alasannya?', type: 'textarea' },
+            { id: 'trauma_berlebihan', label: 'Pernahkah kamu merasa sangat marah, sedih, atau takut secara berlebihan dalam situasi yang sebetulnya tidak terlalu besar?', type: 'textarea' },
+            { id: 'trauma_tubuh', label: 'Apakah ada bagian tubuhmu yang sering terasa tegang — seperti bahu, rahang, atau perut — meskipun kamu tidak sedang melakukan sesuatu yang berat?', type: 'textarea' },
+            { id: 'trauma_gelisah', label: 'Saat suasana sedang tenang, apakah kamu justru merasa gelisah seolah sedang menunggu sesuatu yang buruk terjadi?', type: 'textarea' },
+            { id: 'trauma_percaya', label: 'Apakah kamu merasa sulit mempercayai niat baik orang lain — bahkan orang yang belum pernah menyakitimu?', type: 'textarea' },
+            { id: 'trauma_sinis', label: 'Pernahkah kamu bersikap sinis atau defensif lebih dulu, sebelum orang lain sempat melakukan apapun kepadamu?', type: 'textarea' },
+            { id: 'trauma_tarik', label: 'Apakah kamu sering menarik diri karena merasa tidak ada yang benar-benar bisa mengerti bebanmu?', type: 'textarea' },
+            { id: 'trauma_keras', label: 'Apakah kamu jauh lebih keras menghakimi dirimu sendiri dibanding menghakimi orang lain yang melakukan kesalahan yang sama?', type: 'textarea' },
+            { id: 'trauma_kosong', label: 'Pernahkah kamu merasa seolah-olah kamu baik-baik saja di luar, tapi di dalam kamu merasa kosong atau tidak utuh?', type: 'textarea' },
+            { id: 'trauma_nilai', label: 'Apakah kamu merasa nilai dirimu sangat bergantung pada seberapa berguna atau produktif kamu bagi orang lain?', type: 'textarea' },
+            { id: 'trauma_depan', label: 'Apakah kamu kesulitan membayangkan bahwa hidupmu ke depan bisa terasa lebih baik dan lebih ringan?', type: 'textarea' },
+            { id: 'trauma_kalimat', label: 'Apakah ada kalimat atau kritikan tertentu yang langsung membuatmu ingin meledak atau justru menghilang? Mengapa itu terasa begitu menyakitkan?', type: 'textarea' },
+            { id: 'trauma_pola', label: 'Jika kamu melihat ke belakang, apakah masalah dalam hubunganmu — pertemanan maupun asmara — cenderung memiliki pola yang sama?', type: 'textarea' },
+            { id: 'trauma_ulangi', label: 'Pernahkah kamu menyadari bahwa kamu memperlakukan orang lain dengan cara yang dulu paling kamu benci dari lingkungan atau orang-orang di sekitarmu?', type: 'textarea' },
+            { id: 'trauma_lega', label: 'Setelah meluapkan emosi atau bersikap tajam kepada seseorang, apakah kamu merasa lega sesaat lalu kemudian hampa atau menyesal?', type: 'textarea' },
+            { id: 'trauma_lelah', label: 'Apakah kamu merasa lelah karena harus selalu menjaga diri dan berhati-hati setiap kali bersama orang lain?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Dampak dalam Relasi',
+          questions: [
+            { id: 'trauma_relasi', label: 'Bagaimana lukamu selama ini memengaruhi cara kamu berhubungan dengan orang-orang terdekatmu?', type: 'textarea' },
+            { id: 'trauma_pemicu', label: 'Adakah situasi atau kata-kata tertentu yang bisa memicu responmu secara tidak terduga — yang perlu diketahui pasanganmu?', type: 'textarea' },
+            { id: 'trauma_sakit', label: 'Apakah kamu pernah tanpa sadar menyakiti orang yang kamu cintai karena luka yang belum selesai?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Proses Healing',
+          questions: [
+            { id: 'trauma_pulih', label: 'Apakah kamu sedang atau pernah menjalani proses pemulihan — baik secara mandiri, spiritual, maupun dengan bantuan profesional?', type: 'textarea' },
+            { id: 'trauma_percaya_pulih', label: 'Apakah kamu percaya bahwa luka masa lalu bisa disembuhkan? Bagaimana perjalananmu dengan itu?', type: 'textarea' },
+            { id: 'trauma_bersama', label: 'Apakah kamu terbuka untuk menjalani proses healing bersama pasanganmu jika diperlukan?', type: 'textarea' },
+            { id: 'trauma_siap', label: 'Apakah kamu siap untuk memulai proses healing — bukan hanya untuk dirimu sendiri, tapi untuk orang-orang yang kamu cintai?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Luka & Parenting',
+          questions: [
+            { id: 'trauma_anak', label: 'Apakah kamu khawatir bahwa luka masa lalumu bisa memengaruhi cara kamu mengasuh anak?', type: 'textarea' },
+            { id: 'trauma_wariskan', label: 'Apa yang sudah atau akan kamu lakukan untuk memastikan lukamu tidak diwariskan kepada anakmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Harapan',
+          questions: [
+            { id: 'trauma_butuh', label: 'Apa yang kamu butuhkan dari pasanganmu ketika lukamu sedang muncul ke permukaan?', type: 'textarea' },
+            { id: 'trauma_ruang', label: 'Apakah kamu siap untuk juga menjadi ruang yang aman bagi luka pasanganmu?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'lovelang',
+      title: 'Love Language',
+      desc: 'Bagaimana kamu memberi dan menerima cinta — karena banyak pasangan yang saling sayang tapi saling merasa tidak dicintai.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Mengenal Love Language',
+          questions: [
+            { id: 'll_terasa', label: 'Apa yang paling membuatmu merasa dicintai — kata-kata penyemangat, waktu berkualitas bersama, sentuhan fisik seperti pelukan, hadiah kecil, atau bantuan nyata dalam keseharian?', type: 'textarea' },
+            { id: 'll_ekspresi', label: 'Bagaimana biasanya kamu mengekspresikan rasa sayangmu kepada orang yang kamu cintai?', type: 'textarea' },
+            { id: 'll_pernah', label: 'Pernahkah kamu merasa sudah memberikan banyak tapi pasanganmu tetap merasa kurang? Atau sebaliknya?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Keintiman Emosional',
+          questions: [
+            { id: 'll_nyaman', label: 'Seberapa nyaman kamu berbagi perasaan dan kekhawatiranmu dengan orang terdekat?', type: 'textarea' },
+            { id: 'll_terbuka', label: 'Apakah kamu tipe yang terbuka secara emosional, atau kamu perlu waktu dan kepercayaan yang dalam sebelum bisa membuka diri?', type: 'textarea' },
+            { id: 'll_hadir', label: 'Bagaimana caramu menunjukkan bahwa kamu hadir — bukan hanya secara fisik, tapi juga secara emosional?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Menjaga Kehangatan Jangka Panjang',
+          questions: [
+            { id: 'll_jangka', label: 'Bagaimana menurutmu cara menjaga kehangatan dan kedekatan dalam hubungan yang sudah berjalan lama?', type: 'textarea' },
+            { id: 'll_rawat', label: 'Apakah kamu percaya bahwa rasa cinta dalam pernikahan perlu terus dirawat secara aktif? Bagaimana caramu melakukannya?', type: 'textarea' },
+            { id: 'll_kecil', label: 'Apa hal kecil yang menurutmu bisa membuat pasangan merasa dihargai dalam keseharian?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Kebutuhan & Batasan',
+          questions: [
+            { id: 'll_fisik', label: 'Apakah kamu nyaman dengan ekspresi kasih sayang secara fisik seperti pelukan atau genggaman tangan dalam keseharian?', type: 'textarea' },
+            { id: 'll_tidak_nyaman', label: 'Adakah cara tertentu yang justru membuatmu tidak nyaman ketika seseorang mencoba mengekspresikan kasih sayang — yang perlu diketahui pasanganmu?', type: 'textarea' },
+            { id: 'll_jauh', label: 'Apa yang kamu butuhkan dari pasanganmu ketika kamu sedang merasa jauh atau disconnected?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'konflik',
+      title: 'Konflik',
+      desc: 'Yang membedakan pernikahan yang bertahan bukan absennya konflik, tapi bagaimana konflik itu dihadapi.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Gaya Komunikasi',
+          questions: [
+            { id: 'kom_cara', label: 'Bagaimana caramu menyampaikan sesuatu yang mengganjal hatimu kepada orang terdekat?', type: 'textarea' },
+            { id: 'kom_proses', label: 'Apakah kamu tipe yang langsung mengungkapkan perasaan, atau kamu perlu waktu untuk memprosesnya dulu sebelum bicara?', type: 'textarea' },
+            { id: 'kom_media', label: 'Apakah kamu lebih nyaman berkomunikasi secara langsung, lewat pesan, atau cara lain?', type: 'textarea' },
+            { id: 'kom_dipahami', label: 'Bagaimana caramu memastikan bahwa apa yang kamu sampaikan benar-benar dipahami oleh pasanganmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Saat Konflik Terjadi',
+          questions: [
+            { id: 'kom_marah', label: 'Apa yang biasanya kamu lakukan ketika kamu merasa marah atau kecewa terhadap pasanganmu?', type: 'textarea' },
+            { id: 'kom_waktu', label: 'Apakah kamu tipe yang perlu waktu sendiri dulu sebelum bisa berdiskusi, atau kamu lebih suka menyelesaikannya segera?', type: 'textarea' },
+            { id: 'kom_selesai', label: 'Bagaimana caramu memastikan bahwa konflik diselesaikan — bukan hanya diredam atau diabaikan?', type: 'textarea' },
+            { id: 'kom_sesali', label: 'Pernahkah kamu mengatakan sesuatu saat marah yang kemudian kamu sesali? Bagaimana kamu menyikapinya?', type: 'textarea' },
+            { id: 'kom_bedakan', label: 'Apakah kamu bisa membedakan antara menyerang masalah dan menyerang orangnya?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Mendengar & Memahami',
+          questions: [
+            { id: 'kom_dengar', label: 'Apakah kamu merasa sudah menjadi pendengar yang baik? Apa artinya mendengarkan bagimu?', type: 'textarea' },
+            { id: 'kom_solusi', label: 'Ketika pasanganmu sedang bercerita tentang masalahnya, apa yang biasanya kamu lakukan — mencoba memberi solusi, atau cukup hadir dan mendengar?', type: 'textarea' },
+            { id: 'kom_tidak_setuju', label: 'Bagaimana reaksimu ketika kamu tidak setuju dengan pendapat pasanganmu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Perbaikan & Pertumbuhan',
+          questions: [
+            { id: 'kom_maaf', label: 'Apakah kamu mudah meminta maaf ketika kamu salah? Bagaimana caramu melakukannya?', type: 'textarea' },
+            { id: 'kom_maafkan', label: 'Apakah kamu mudah memaafkan? Bagaimana kamu memproses rasa sakit sebelum bisa memaafkan?', type: 'textarea' },
+            { id: 'kom_jembatan', label: 'Apakah kamu percaya bahwa sebuah konflik bisa menjadi jembatan untuk saling memahami lebih dalam?', type: 'textarea' },
+            { id: 'kom_ulang', label: 'Bagaimana caramu memastikan bahwa masalah yang sama tidak terus berulang?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Batasan & Komitmen',
+          questions: [
+            { id: 'kom_batas', label: 'Adakah hal yang menurutmu tidak boleh terjadi dalam sebuah pertengkaran — kata-kata atau perilaku yang kamu anggap sebagai batas yang tidak boleh dilanggar?', type: 'textarea' },
+            { id: 'kom_privasi', label: 'Apakah kamu berkomitmen untuk tidak melibatkan orang luar dalam konflik rumah tanggamu?', type: 'textarea' },
+            { id: 'kom_mediator', label: 'Apakah kamu terbuka untuk mencari bantuan mediator atau konselor jika konflik terasa tidak bisa diselesaikan berdua?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'relationship',
+      title: 'Relasi Sosial',
+      desc: 'Cara seseorang memperlakukan orang lain di luar rumah adalah cerminan karakternya.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Hubungan dengan Teman',
+          questions: [
+            { id: 'rel_penting', label: 'Seberapa penting pertemanan bagimu dalam kehidupanmu sehari-hari?', type: 'textarea' },
+            { id: 'rel_tipe', label: 'Apakah kamu tipe yang punya sedikit teman dekat atau banyak teman dalam lingkaran yang lebih luas?', type: 'textarea' },
+            { id: 'rel_jaga', label: 'Bagaimana caramu menjaga pertemanan yang sudah lama — terutama ketika kesibukan dan prioritas hidup berubah setelah menikah?', type: 'textarea' },
+            { id: 'rel_tanpa', label: 'Apakah kamu nyaman jika pasanganmu menghabiskan waktu dengan teman-temannya tanpa kamu?', type: 'textarea' },
+            { id: 'rel_lawan_jenis', label: 'Bagaimana sikapmu terhadap pertemanan pasanganmu dengan lawan jenis?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Hubungan dengan Keluarga',
+          questions: [
+            { id: 'rel_frekuensi', label: 'Seberapa sering kamu berinteraksi dengan keluarga besarmu? Apakah itu terasa seperti keharusan atau kesenangan?', type: 'textarea' },
+            { id: 'rel_seimbang', label: 'Bagaimana caramu menyeimbangkan loyalitas terhadap keluarga asalmu dengan komitmen terhadap keluarga barumu?', type: 'textarea' },
+            { id: 'rel_dinamika', label: 'Apakah ada hal tertentu dalam keluargamu — seperti pola hubungan, kebiasaan, atau situasi yang sedang terjadi — yang menurutmu penting untuk diketahui pasanganmu sejak awal?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ketika Ada Hal yang Tidak Mengenakkan',
+          questions: [
+            { id: 'rel_tidak_enak', label: 'Bagaimana caramu menyikapi teman atau anggota keluarga yang bersikap tidak menyenangkan terhadap pasanganmu?', type: 'textarea' },
+            { id: 'rel_konfrontasi', label: 'Apakah kamu tipe yang langsung mengkonfrontasi masalah dalam pertemanan, atau kamu cenderung menghindari konflik?', type: 'textarea' },
+            { id: 'rel_kehilangan', label: 'Pernahkah kamu kehilangan pertemanan yang penting? Apa yang kamu pelajari dari itu?', type: 'textarea' },
+            { id: 'rel_khianat', label: 'Bagaimana caramu merespons ketika seseorang yang kamu percaya mengkhianatimu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Batasan dalam Relasi Sosial',
+          questions: [
+            { id: 'rel_batas', label: 'Apakah kamu punya batasan yang jelas antara kehidupan pribadimu dan lingkungan sosialmu?', type: 'textarea' },
+            { id: 'rel_bagikan', label: 'Seberapa banyak hal tentang rumah tanggamu yang kamu rasa nyaman untuk dibagikan kepada teman atau keluarga?', type: 'textarea' },
+            { id: 'rel_privasi', label: 'Apakah kamu berkomitmen untuk menjaga privasi rumah tanggamu dari lingkungan luar?', type: 'textarea' },
+            { id: 'rel_device', label: 'Bagaimana pandanganmu tentang keterbukaan akses terhadap device dan akun media sosial dalam pernikahan — apakah itu bentuk kepercayaan, atau justru pelanggaran privasi? Dan bagaimana kalian akan menyepakatinya bersama?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'ekspektasi',
+      title: 'Ekspektasi',
+      desc: 'Ekspektasi yang tidak diucapkan adalah sumber kekecewaan terbesar dalam rumah tangga.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Bayangan tentang Pernikahan',
+          questions: [
+            { id: 'eks_bayangan', label: 'Sebelum menikah, bagaimana kamu membayangkan kehidupan pernikahan itu?', type: 'textarea' },
+            { id: 'eks_asal', label: 'Dari mana bayangan itu terbentuk — dari keluarga, teman, tontonan, atau hal lain?', type: 'textarea' },
+            { id: 'eks_tidak_realistis', label: 'Apakah ada ekspektasi tentang pernikahan yang kamu sadari belakangan ternyata tidak realistis?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ekspektasi terhadap Pasangan',
+          questions: [
+            { id: 'eks_harap', label: 'Apa yang paling kamu harapkan dari pasanganmu dalam kehidupan sehari-hari?', type: 'textarea' },
+            { id: 'eks_standar', label: 'Apakah kamu punya standar atau ekspektasi tertentu yang kamu rasa perlu diketahui pasanganmu sejak awal?', type: 'textarea' },
+            { id: 'eks_sampaikan', label: 'Bagaimana caramu menyampaikan ekspektasimu tanpa membuat pasanganmu merasa dihakimi atau tidak cukup?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ekspektasi terhadap Diri Sendiri',
+          questions: [
+            { id: 'eks_berikan', label: 'Apa yang paling ingin kamu berikan dalam sebuah pernikahan?', type: 'textarea' },
+            { id: 'eks_siap', label: 'Apakah kamu merasa sudah siap — secara emosional, mental, dan spiritual — untuk menikah?', type: 'textarea' },
+            { id: 'eks_tumbuh', label: 'Bagaimana caramu memastikan bahwa kamu terus bertumbuh sebagai pasangan dan sebagai individu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ketika Ekspektasi Tidak Terpenuhi',
+          questions: [
+            { id: 'eks_tidak_sesuai', label: 'Bagaimana sikapmu ketika kenyataan pernikahan tidak sesuai dengan yang kamu bayangkan?', type: 'textarea' },
+            { id: 'eks_tidak_sempurna', label: 'Apakah kamu tipe yang bisa menerima bahwa pasanganmu tidak sempurna — dan bahwa kamu pun demikian?', type: 'textarea' },
+            { id: 'eks_kecewa', label: 'Bagaimana caramu menavigasi kekecewaan dalam pernikahan tanpa merusak hubungan?', type: 'textarea' },
+            { id: 'eks_menyerah', label: 'Jika suatu saat salah satu dari kalian merasa bosan atau ingin menyerah — apa yang akan kamu lakukan sebelum mengambil keputusan besar?', type: 'textarea' },
+            { id: 'eks_khianat', label: 'Bagaimana sikapmu jika kepercayaan dalam pernikahanmu dikhianati? Apakah kamu percaya sebuah pernikahan bisa pulih dari pengkhianatan?', type: 'textarea' },
+            { id: 'eks_profesional', label: 'Apakah kamu berkomitmen untuk mencari bantuan profesional sebelum memutuskan untuk mengakhiri pernikahan?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Komitmen Jangka Panjang',
+          questions: [
+            { id: 'eks_seumur', label: 'Bagaimana pandanganmu tentang pernikahan yang bertahan seumur hidup — apakah itu sesuatu yang kamu yakini dan perjuangkan?', type: 'textarea' },
+            { id: 'eks_pranikah', label: 'Bagaimana pandanganmu tentang perjanjian pranikah — apakah kamu melihatnya sebagai bentuk ketidakpercayaan, atau justru sebagai kesepakatan yang melindungi kedua belah pihak?', type: 'textarea' },
+            { id: 'eks_fondasi', label: 'Apa yang menurutmu menjadi fondasi terkuat sebuah pernikahan yang sehat dan bertahan lama?', type: 'textarea' },
+            { id: 'eks_bertahan', label: 'Ketika semuanya terasa berat, apa yang akan membuatmu memilih untuk tetap bertahan dan memperjuangkan pernikahanmu?', type: 'textarea' },
+            { id: 'eks_meninggal', label: 'Apakah kamu sudah memikirkan skenario jika salah satu dari kalian lebih dulu dipanggil? Apakah ada persiapan — finansial, legal, maupun emosional — untuk menghadapi kemungkinan itu?', type: 'textarea' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'respon',
+      title: 'Respon',
+      desc: 'Karakter seseorang yang sesungguhnya baru terlihat ketika tekanan datang.',
+      safeSpace: false,
+      sections: [
+        {
+          title: 'Ketika Dirinya Terhimpit',
+          questions: [
+            { id: 'res_berat', label: 'Bagaimana caramu menghadapi situasi yang terasa sangat berat — finansial, emosional, atau fisik?', type: 'textarea' },
+            { id: 'res_bantuan', label: 'Apakah kamu tipe yang mencari bantuan ketika kesulitan, atau cenderung menanggung sendiri?', type: 'textarea' },
+            { id: 'res_titik', label: 'Ketika kamu sedang di titik terendah, apa yang paling kamu butuhkan dari orang terdekatmu?', type: 'textarea' },
+            { id: 'res_jujur', label: 'Apakah kamu bisa dengan jujur mengakui kepada pasanganmu bahwa kamu sedang tidak baik-baik saja?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ketika Pasangan Terhimpit',
+          questions: [
+            { id: 'res_hadir', label: 'Bagaimana caramu hadir untuk pasanganmu ketika dia sedang dalam kondisi terburuknya?', type: 'textarea' },
+            { id: 'res_solusi', label: 'Apakah kamu tipe yang langsung menawarkan solusi, atau lebih dulu mendengarkan dan menemaninya?', type: 'textarea' },
+            { id: 'res_tumpuan', label: 'Apakah kamu siap untuk menjadi penopang ketika pasanganmu sedang tidak kuat — tanpa membuatnya merasa lemah?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Menghadapi Kekurangan Pasangan',
+          questions: [
+            { id: 'res_kurang', label: 'Bagaimana sikapmu ketika kamu menyadari kekurangan pasanganmu yang tidak kamu ketahui sebelumnya?', type: 'textarea' },
+            { id: 'res_apa_adanya', label: 'Apakah kamu tipe yang bisa menerima pasangan apa adanya, atau kamu cenderung ingin mengubahnya?', type: 'textarea' },
+            { id: 'res_sampaikan', label: 'Bagaimana caramu menyampaikan ketidaknyamanan terhadap kebiasaan pasanganmu tanpa membuatnya merasa diserang?', type: 'textarea' },
+            { id: 'res_tunggu', label: 'Apakah kamu percaya bahwa seseorang bisa berubah — dan seberapa jauh kamu bersedia menunggu dan mendampingi proses itu?', type: 'textarea' },
+          ]
+        },
+        {
+          title: 'Ketika Semuanya Terasa Berat',
+          questions: [
+            { id: 'res_pulih', label: 'Apakah kamu punya cara untuk memulihkan dirimu sendiri ketika kamu merasa habis — secara energi maupun emosi?', type: 'textarea' },
+            { id: 'res_harapan', label: 'Bagaimana caramu menjaga harapan ketika situasi rumah tangga sedang tidak ideal?', type: 'textarea' },
+            { id: 'res_cukup', label: 'Apa yang akan kamu lakukan ketika kamu merasa sudah memberikan segalanya tapi tetap merasa tidak cukup?', type: 'textarea' },
+          ]
+        }
+      ]
+    }
+  ];
+
+  // ── STATE ──
+  let currentTab = 0;
+  let answers = {};
+
+  // ── INIT ──
+  function startApp() {
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    renderNav();
+    renderAllTabs();
+    showTab(0);
+    loadAnswers();
+  }
+
+  function renderNav() {
+    const nav = document.getElementById('tabNavInner');
+    nav.innerHTML = tabs.map((t, i) => `
+      <button class="tab-btn" id="nav-${i}" onclick="showTab(${i})">${t.title}</button>
+    `).join('');
+  }
+
+  function renderAllTabs() {
+    const container = document.getElementById('tabContents');
+    container.innerHTML = tabs.map((tab, tabIndex) => `
+      <div class="tab-content" id="tab-${tabIndex}">
+        <div class="tab-header">
+          <div class="tab-number">Tab ${tabIndex + 1} dari ${tabs.length}</div>
+          <h2 class="tab-title">${tab.title}</h2>
+          <p class="tab-desc">${tab.desc}</p>
+        </div>
+        ${tab.safeSpace ? `<div class="safe-space-note">Bagian ini adalah ruang yang aman. Tidak ada jawaban yang benar atau salah. Ceritakan hanya sebatas yang kamu nyaman untuk bagikan.</div>` : ''}
+        ${tab.sections.map(section => `
+          <div class="question-section">
+            ${section.title ? `<h3 class="section-title">${section.title}</h3>` : ''}
+            ${section.questions.map(q => renderQuestion(q)).join('')}
+          </div>
+        `).join('')}
+        <div class="tab-nav-btns">
+          ${tabIndex > 0 ? `<button class="btn-nav btn-prev" onclick="showTab(${tabIndex - 1})">← Sebelumnya</button>` : '<div></div>'}
+          ${tabIndex < tabs.length - 1
+            ? `<button class="btn-nav btn-next" onclick="showTab(${tabIndex + 1})">Selanjutnya →</button>`
+            : `<button class="btn-nav btn-finish" onclick="downloadPDF()">Unduh PDF ↓</button>`
+          }
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderQuestion(q) {
+    if (q.type === 'photo') {
+      return `
+        <div class="question-item">
+          <div class="question-label">${q.label}</div>
+          <div class="photo-upload" onclick="document.getElementById('photo-input').click()">
+            <div class="photo-upload-text">Ketuk untuk unggah foto</div>
+            <div class="photo-upload-sub">JPG, PNG — maks. 5MB</div>
+          </div>
+          <input type="file" id="photo-input" accept="image/*" style="display:none" />
+        </div>
+      `;
+    }
+    const isShort = q.type === 'single';
+    return `
+      <div class="question-item">
+        <label class="question-label" for="${q.id}">${q.label}</label>
+        <textarea
+          class="question-input ${isShort ? 'single-line' : ''}"
+          id="${q.id}"
+          rows="${isShort ? 1 : 4}"
+          oninput="saveAnswer('${q.id}', this.value)"
+          placeholder="Tuliskan jawabanmu di sini..."
+        ></textarea>
+      </div>
+    `;
+  }
+
+  function showTab(index) {
+    // Hide all
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+    // Show target
+    document.getElementById(`tab-${index}`).classList.add('active');
+    document.getElementById(`nav-${index}`).classList.add('active');
+
+    currentTab = index;
+    updateProgress();
+
+    // Scroll nav to active tab
+    const activeBtn = document.getElementById(`nav-${index}`);
+    activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress() {
+    const pct = ((currentTab + 1) / tabs.length) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `Tab ${currentTab + 1} dari ${tabs.length}`;
+  }
+
+  function saveAnswer(id, value) {
+    answers[id] = value;
+    localStorage.setItem('valreez_answers', JSON.stringify(answers));
+  }
+
+  function loadAnswers() {
+    const saved = localStorage.getItem('valreez_answers');
+    if (saved) {
+      answers = JSON.parse(saved);
+      Object.entries(answers).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      });
+    }
+  }
+
+  function downloadPDF() {
+    const name = answers['nama'] || 'Anonim';
+    let html = `
+      <html><head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: Georgia, serif; color: #2C2C2C; padding: 48px; max-width: 700px; margin: 0 auto; }
+        h1 { font-size: 32px; font-weight: 300; color: #4A5C4E; margin-bottom: 4px; }
+        .subtitle { font-size: 12px; letter-spacing: 3px; color: #C4977A; text-transform: uppercase; margin-bottom: 48px; }
+        h2 { font-size: 22px; font-weight: 400; color: #4A5C4E; margin-top: 48px; margin-bottom: 4px; border-bottom: 1px solid #C8D8C9; padding-bottom: 8px; }
+        h3 { font-size: 14px; font-weight: 400; font-style: italic; color: #7A9B7F; margin-top: 24px; margin-bottom: 12px; }
+        .qa { margin-bottom: 20px; }
+        .question { font-size: 12px; color: #5A5A5A; margin-bottom: 6px; line-height: 1.6; }
+        .answer { font-size: 13px; color: #2C2C2C; line-height: 1.8; padding: 12px; background: #F7F3ED; border-left: 2px solid #C8D8C9; }
+        .empty { color: #aaa; font-style: italic; }
+        .footer { margin-top: 64px; text-align: center; font-size: 10px; color: #aaa; letter-spacing: 2px; text-transform: uppercase; }
+      </style>
+      </head><body>
+      <h1>Valreez</h1>
+      <div class="subtitle">Part of Inarte &nbsp;·&nbsp; Refleksi Pra-Nikah</div>
+    `;
+
+    tabs.forEach(tab => {
+      html += `<h2>${tab.title}</h2>`;
+      tab.sections.forEach(section => {
+        if (section.title) html += `<h3>${section.title}</h3>`;
+        section.questions.forEach(q => {
+          if (q.type === 'photo') return;
+          const ans = answers[q.id];
+          html += `
+            <div class="qa">
+              <div class="question">${q.label}</div>
+              <div class="answer ${!ans ? 'empty' : ''}">${ans || 'Belum diisi'}</div>
+            </div>
+          `;
+        });
+      });
+    });
+
+    html += `<div class="footer">Valreez — Part of Inarte &nbsp;·&nbsp; ${new Date().toLocaleDateString('id-ID', {year:'numeric',month:'long',day:'numeric'})}</div></body></html>`;
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Valreez_${name}_${new Date().toISOString().split('T')[0]}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>
