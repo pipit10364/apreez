@@ -911,6 +911,191 @@ body {
 }
 
 /* ══════════════════════════════════════
+   MODAL OVERLAY — cap cup cup!
+══════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s var(--ease-smooth);
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-sheet {
+  background: var(--bg);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 640px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform .35s var(--ease);
+  overflow: hidden;
+}
+.modal-overlay.open .modal-sheet {
+  transform: translateY(0);
+}
+
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  margin: 12px auto 0;
+  flex-shrink: 0;
+}
+
+.modal-header {
+  padding: 12px 20px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal-tab-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.modal-close {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  color: var(--text3);
+  transition: var(--transition);
+}
+.modal-close:hover { border-color: var(--card); color: var(--card); }
+
+.modal-progress-bar {
+  height: 3px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.modal-progress-fill {
+  height: 100%;
+  background: var(--card);
+  transition: width .4s var(--ease-smooth);
+}
+
+.modal-body {
+  flex: 1;
+  padding: 24px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: fadeUp .3s var(--ease) both;
+}
+
+.modal-question {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.modal-textarea {
+  flex: 1;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text);
+  outline: none;
+  resize: none;
+  transition: var(--transition);
+  min-height: 120px;
+  line-height: 1.8;
+}
+.modal-textarea:focus { border-color: var(--card); background: var(--bg3); }
+.modal-textarea::placeholder { color: var(--text3); font-style: italic; }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  padding: 14px 24px 20px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-nav {
+  display: flex;
+  gap: 8px;
+}
+.modal-nav-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  color: var(--text3);
+  transition: var(--transition);
+}
+.modal-nav-btn:hover:not(:disabled) { border-color: var(--card); color: var(--card); }
+.modal-nav-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+.modal-save {
+  flex: 1;
+  max-width: 200px;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--card);
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.modal-save:hover { background: var(--card-hover); }
+
+.modal-pos {
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* Block pop animation when answered */
+@keyframes blockFill {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.6); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.mosaic-block.just-filled {
+  animation: blockFill .4s var(--ease) both;
+}
+
+/* ══════════════════════════════════════
    ANIMATIONS
 ══════════════════════════════════════ */
 @keyframes fadeUp {
@@ -1109,6 +1294,32 @@ body {
     <div class="nara-actions">
       <button class="btn-nara" onclick="loadNara()" style="font-family:'DM Sans',sans-serif;font-size:11px;font-style:normal;letter-spacing:1px;">Minta refleksi baru</button>
       <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL OVERLAY — cap cup cup! ══════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleModalOverlayClick(event)">
+  <div class="modal-sheet" id="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-tab-label" id="modal-tab-label"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-progress-bar">
+      <div class="modal-progress-fill" id="modal-prog-fill"></div>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <div class="modal-question" id="modal-question"></div>
+      <textarea class="modal-textarea" id="modal-ta" placeholder="Tulis jawabanmu dengan jujur..." rows="5"></textarea>
+    </div>
+    <div class="modal-actions">
+      <div class="modal-nav">
+        <button class="modal-nav-btn" id="modal-prev" onclick="modalPrev()" title="Sebelumnya">‹</button>
+        <button class="modal-nav-btn" id="modal-next" onclick="modalNext()" title="Selanjutnya">›</button>
+      </div>
+      <span class="modal-pos" id="modal-pos"></span>
+      <button class="modal-save" onclick="modalSave()">Simpan ✓</button>
     </div>
   </div>
 </div>
@@ -1937,14 +2148,153 @@ function openSubtab(ti, si) {
 }
 
 // ══════════════════════════════════════
-// ANSWER SCREEN — cap cup cup!
+// MODAL — cap cup cup flow
 // ══════════════════════════════════════
-function openQuestion(ti, si, qi) {
+let modalMode = false; // true = from mosaic, false = from list
+let modalQ = []; // flat list of {tabIdx, subIdx, qIdx, question, tabName, stName} for current context
+
+function openModal(ti, si, qi) {
+  modalMode = true;
   currentTabIdx = ti;
   currentSubIdx = si;
   currentQIdx = qi;
-  renderAnswerScreen();
-  goTo('s-answer');
+
+  // Build flat question list for this entire tab (for prev/next navigation)
+  modalQ = [];
+  const tab = TABS[ti];
+  tab.subtabs?.forEach((st, stIdx) => {
+    st.questions.forEach((q, qIdx) => {
+      modalQ.push({ tabIdx: ti, subIdx: stIdx, qIdx, question: q, tabName: tab.name, stName: st.name, tabIcon: tab.icon });
+    });
+  });
+
+  // Find index of clicked question in flat list
+  let startIdx = 0;
+  modalQ.forEach((q, i) => { if(q.subIdx === si && q.qIdx === qi) startIdx = i; });
+  currentQIdx = startIdx; // reuse as flat index for modal
+
+  renderModal();
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('modal-ta')?.focus(), 350);
+}
+
+function renderModal() {
+  const q = modalQ[currentQIdx];
+  if(!q) return;
+
+  const key = getQId(q.tabIdx, q.subIdx, q.qIdx);
+  const val = answers[key] || '';
+  const total = modalQ.length;
+  const pct = Math.round((currentQIdx + 1) / total * 100);
+
+  document.getElementById('modal-tab-label').textContent = `${q.tabIcon} ${q.tabName} · ${q.stName}`;
+  document.getElementById('modal-question').textContent = q.question;
+  document.getElementById('modal-prog-fill').style.width = pct + '%';
+  document.getElementById('modal-pos').textContent = `${currentQIdx + 1} / ${total}`;
+  document.getElementById('modal-ta').value = val;
+
+  // Animate body
+  const body = document.getElementById('modal-body');
+  body.style.animation = 'none';
+  body.offsetHeight;
+  body.style.animation = '';
+
+  // Update nav buttons
+  document.getElementById('modal-prev').disabled = currentQIdx === 0;
+  document.getElementById('modal-next').disabled = currentQIdx === total - 1;
+}
+
+function modalSave() {
+  const q = modalQ[currentQIdx];
+  const key = getQId(q.tabIdx, q.subIdx, q.qIdx);
+  const val = document.getElementById('modal-ta').value;
+  const wasAnswered = !!answers[key]?.trim();
+  answers[key] = val;
+  saveState();
+
+  // Animate the specific mosaic block
+  animateMosaicBlock(q.tabIdx, q.subIdx, q.qIdx, !!val.trim());
+
+  // Update counts
+  updateMosaicCounts();
+  updateTabCard(q.tabIdx);
+
+  // Go to next question automatically if not last
+  if(currentQIdx < modalQ.length - 1) {
+    currentQIdx++;
+    renderModal();
+  } else {
+    closeModal();
+  }
+}
+
+function modalPrev() {
+  // Save current before navigating
+  const q = modalQ[currentQIdx];
+  const val = document.getElementById('modal-ta').value;
+  if(val.trim()) { answers[getQId(q.tabIdx, q.subIdx, q.qIdx)] = val; saveState(); }
+  if(currentQIdx > 0) { currentQIdx--; renderModal(); }
+}
+
+function modalNext() {
+  // Save current before navigating
+  const q = modalQ[currentQIdx];
+  const val = document.getElementById('modal-ta').value;
+  if(val.trim()) { answers[getQId(q.tabIdx, q.subIdx, q.qIdx)] = val; saveState(); }
+  if(currentQIdx < modalQ.length - 1) { currentQIdx++; renderModal(); }
+}
+
+function closeModal() {
+  // Save on close too
+  const q = modalQ[currentQIdx];
+  if(q) {
+    const val = document.getElementById('modal-ta')?.value || '';
+    if(val.trim()) { answers[getQId(q.tabIdx, q.subIdx, q.qIdx)] = val; saveState(); }
+  }
+  document.getElementById('modal-overlay').classList.remove('open');
+  // Refresh dashboard
+  renderMosaic();
+  renderTabGrid();
+  updateMosaicCounts();
+}
+
+function handleModalOverlayClick(e) {
+  if(e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function animateMosaicBlock(ti, si, qi, filled) {
+  // Find the block in the mosaic grid and animate it
+  const rows = document.querySelectorAll('.mosaic-row');
+  if(!rows[ti]) return;
+  const blocks = rows[ti].querySelectorAll('.mosaic-block');
+
+  // Calculate flat index within this tab's row
+  let flatIdx = 0;
+  const tab = TABS[ti];
+  let found = false;
+  tab.subtabs?.forEach((st, stIdx) => {
+    st.questions.forEach((_, qIdx) => {
+      if(stIdx === si && qIdx === qi) found = true;
+      if(!found) flatIdx++;
+    });
+  });
+
+  const block = blocks[flatIdx];
+  if(!block) return;
+  if(filled) block.classList.add('filled');
+  else block.classList.remove('filled');
+  block.classList.remove('just-filled');
+  block.offsetHeight;
+  block.classList.add('just-filled');
+  setTimeout(() => block.classList.remove('just-filled'), 400);
+}
+
+// ══════════════════════════════════════
+// ANSWER SCREEN — full screen (from list)
+// ══════════════════════════════════════
+function openQuestion(ti, si, qi) {
+  // Always use modal for better UX
+  openModal(ti, si, qi);
 }
 
 function renderAnswerScreen() {
@@ -2034,6 +2384,12 @@ function updateMosaicBlock() {
   const fc = document.getElementById('mosaic-count');
   if(fc) fc.innerHTML = `${filled} <span>/ ${total} pertanyaan</span>`;
   renderMosaic();
+}
+function updateMosaicCounts() {
+  const filled = getFilledQ();
+  const total = getTotalQ();
+  const fc = document.getElementById('mosaic-count');
+  if(fc) fc.innerHTML = `${filled} <span>/ ${total} pertanyaan</span>`;
 }
 function updateTabCard(ti) {
   const cards = document.querySelectorAll('#tab-grid .tab-card');
