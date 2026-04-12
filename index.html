@@ -287,7 +287,7 @@ body {
 .mosaic-wrap {
   background: var(--bg2);
   border-radius: var(--radius-lg);
-  padding: 16px;
+  padding: 14px;
   border: 1px solid var(--border);
 }
 
@@ -939,15 +939,40 @@ body {
     height: auto;
   }
   /* On mobile: right (mosaic) comes first visually */
-  .dash-left { order: 2; border-right: none; border-top: 1px solid var(--border); }
-  .dash-right { order: 1; border-bottom: 1px solid var(--border); }
+  .dash-left { order: 2; border-right: none; border-top: 1px solid var(--border); padding: 12px; }
+  .dash-right { order: 1; border-bottom: 1px solid var(--border); padding: 14px; }
   .dash-actions-row { order: 3; grid-column: 1; }
-  .tab-grid { grid-template-columns: repeat(3, 1fr); }
-  .tab-card.profil-card { grid-column: 1 / -1; }
+
+  /* 8 columns icon-only on mobile */
+  .tab-grid { grid-template-columns: repeat(8, 1fr); gap: 6px; }
+  .tab-card {
+    min-height: 44px;
+    padding: 8px 4px;
+    align-items: center;
+    justify-content: center;
+  }
+  .tab-card .tab-name { display: none; }
+  .tab-card .tab-pct { display: none; }
+  .tab-card .tab-icon { margin-bottom: 0; font-size: 18px; }
+
+  /* Profil takes full row on mobile */
+  .tab-card.profil-card {
+    grid-column: 1 / -1;
+    min-height: 40px;
+    padding: 10px 14px;
+  }
+  .tab-card.profil-card .tab-name { display: block; }
+  .tab-card.profil-card .tab-pct { display: block; }
+
+  /* Smaller mosaic blocks on mobile */
+  .mosaic-block { width: 8px; height: 8px; border-radius: 3px; }
+  .mosaic-row { gap: 2px; }
+  .mosaic-grid { gap: 2px; }
+  .mosaic-sub { display: none; }
 }
 
 @media (max-width: 380px) {
-  .tab-grid { grid-template-columns: repeat(2, 1fr); }
+  .tab-grid { grid-template-columns: repeat(4, 1fr); }
 }
 </style>
 </head>
@@ -1685,12 +1710,6 @@ function renderMosaic() {
   if(!grid) return;
   grid.innerHTML = '';
 
-  // Find max questions across all tabs for uniform row width
-  const maxQ = Math.max(...TABS.map((tab, ti) => {
-    if(tab.isProfil) return tab.fields.filter(f=>f.type!=='photo').length;
-    return tab.subtabs ? tab.subtabs.reduce((s,st)=>s+st.questions.length,0) : 0;
-  }));
-
   TABS.forEach((tab, ti) => {
     const row = document.createElement('div');
     row.className = 'mosaic-row';
@@ -1706,38 +1725,44 @@ function renderMosaic() {
       })));
     }
 
-    // Render filled/empty blocks
     questions.forEach((q) => {
       const block = document.createElement('div');
       block.className = 'mosaic-block';
 
+      // ONLY color blocks that are actually answered
       let filled = false;
       if(q.isField) {
         filled = !!answers[`profil__field__${q.fieldIdx}`]?.trim();
       } else {
         filled = isAnswered(q.tabIdx, q.subIdx, q.qIdx);
       }
-
       if(filled) block.classList.add('filled');
 
       block.title = tab.name;
+
+      // Click goes directly to the specific question
       block.onclick = () => {
-        if(q.isField) { openTab(ti); }
-        else { openTab(ti); setTimeout(()=>openQList(ti, q.subIdx),50); }
+        if(q.isField) {
+          openTab(ti);
+        } else {
+          currentTabIdx = ti;
+          currentSubIdx = q.subIdx;
+          currentQIdx = q.qIdx;
+          openQuestion(ti, q.subIdx, q.qIdx);
+        }
       };
       row.appendChild(block);
     });
 
-    // Drip blocks — extra blocks to the right for shorter tabs
-    const dripCount = maxQ - questions.length;
-    for(let d = 0; d < dripCount; d++) {
-      // Only show drip for first few positions, getting sparser
-      if(d > 8) break;
-      // Decreasing probability — earlier drips more likely
-      const chance = 1 - (d / 9);
-      if(Math.random() > chance) continue;
+    // Drip visual — only EMPTY plain blocks, no color, just structural
+    // Shows tabs with fewer questions have "trailing space"
+    // No random coloring — just empty blocks fading out
+    const maxQ = 27; // max questions in any tab (Trauma)
+    const dripNeeded = maxQ - questions.length;
+    for(let d = 0; d < Math.min(dripNeeded, 5); d++) {
       const drip = document.createElement('div');
-      drip.className = 'mosaic-block drip';
+      drip.className = 'mosaic-block';
+      drip.style.opacity = String(0.3 - d * 0.06);
       drip.style.pointerEvents = 'none';
       row.appendChild(drip);
     }
