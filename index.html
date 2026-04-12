@@ -1979,7 +1979,6 @@ function getGreeting() {
 // DASHBOARD
 // ══════════════════════════════════════
 function renderDashboard() {
-function getGreeting() {
   updateDatetime();
   const greet = document.getElementById('dash-greeting');
   if(greet) greet.innerHTML = `${getGreeting()}, <em>${userName}!</em>`;
