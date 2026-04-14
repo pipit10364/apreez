@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Apreez — Part of Inarte</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 /* ══════════════════════════════════════
@@ -1155,9 +1156,164 @@ body {
   animation: blockFill .4s var(--ease) both;
 }
 
+/* Wedding button */
+.btn-wedding {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--pink);
+  background: var(--pink-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+  color: var(--pink);
+}
+.btn-wedding svg { width: 18px; height: 18px; }
+.btn-wedding:hover { background: var(--pink); color: white; }
+
+/* Mosaic badge — appears at end of completed row */
+.mosaic-badge {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  background: var(--peach);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-left: 4px;
+  animation: badgePop .4s var(--ease) both;
+}
+.mosaic-badge svg {
+  width: 10px; height: 10px;
+  stroke: var(--text);
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@keyframes badgePop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* ══════════════════════════════════════
-   ANIMATIONS
+   CELEBRATORY SCREEN
 ══════════════════════════════════════ */
+#s-celebrate {
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg);
+}
+.celebrate-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fadeUp .8s var(--ease) both;
+}
+.celebrate-art {
+  margin-bottom: 32px;
+  color: var(--card);
+}
+.celebrate-art svg {
+  width: 120px;
+  height: 120px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.celebrate-eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 12px;
+}
+.celebrate-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 10vw, 56px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--card);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.celebrate-date {
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+.celebrate-text {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text2);
+  line-height: 1.85;
+  margin-bottom: 36px;
+  max-width: 360px;
+}
+.celebrate-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+.celebrate-btn { flex: 1; }
+.celebrate-back {
+  font-size: 11px;
+  color: var(--text3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: .5px;
+  padding: 8px;
+  transition: color .2s;
+}
+.celebrate-back:hover { color: var(--text2); }
+
+/* ══════════════════════════════════════
+   WEDDING SCREEN
+══════════════════════════════════════ */
+.wedding-intro {
+  margin: 16px 20px;
+  background: linear-gradient(135deg, var(--pink-dim), var(--peach-dim));
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.wedding-intro-icon {
+  margin-bottom: 10px;
+  color: var(--pink);
+}
+.wedding-intro-icon svg {
+  width: 32px; height: 32px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+.wedding-intro-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.wedding-intro-desc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.7;
+  font-weight: 300;
+}
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -1287,8 +1443,45 @@ body {
     <div class="dash-actions-row">
       <button class="btn-nara" onclick="goTo('s-nara'); loadNara()">✦ Kata Nara</button>
       <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
+      <button class="btn-wedding" onclick="goTo('s-wedding')" id="btn-wedding" title="Rencana Pernikahan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+          <circle cx="12" cy="10" r="2.5"/>
+        </svg>
+      </button>
     </div>
   </div>
+</div>
+
+<!-- ══════════ SCREEN: CELEBRATORY ══════════ -->
+<div id="s-celebrate" class="screen">
+  <div class="celebrate-body">
+    <div class="celebrate-art" id="celebrate-art"></div>
+    <div class="celebrate-content">
+      <div class="celebrate-eyebrow">Perjalananmu selesai</div>
+      <div class="celebrate-name" id="celebrate-name"></div>
+      <div class="celebrate-date" id="celebrate-date"></div>
+      <p class="celebrate-text">Kamu sudah berani jujur pada dirimu sendiri. Itu bukan hal yang mudah — dan itu adalah hadiah terbesar yang bisa kamu berikan kepada pasanganmu.</p>
+      <div class="celebrate-actions">
+        <button class="btn-nara celebrate-btn" onclick="goTo('s-nara'); loadNara()">✦ Kata Nara</button>
+        <button class="btn-pdf celebrate-btn" onclick="downloadPDF()">Download PDF</button>
+      </div>
+      <button class="celebrate-back" onclick="goTo('s-dashboard')">Kembali ke dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN: WEDDING ══════════ -->
+<div id="s-wedding" class="screen">
+  <div class="sub-header">
+    <button class="btn-back" onclick="goTo('s-dashboard')">‹</button>
+    <div class="sub-header-info">
+      <div class="sub-header-name" style="font-family:'Cormorant Garamond',serif;font-style:italic;">Rencana Pernikahan</div>
+      <div class="sub-header-count">Pertanyaan bonus untuk yang siap melangkah</div>
+    </div>
+    <button class="btn-sm" onclick="toggleTheme()" id="theme-btn-wedding">☀</button>
+  </div>
+  <div id="wedding-body-wrap"></div>
 </div>
 
 <!-- ══════════ SCREEN 3: TAB (subtabs) ══════════ -->
@@ -1854,28 +2047,94 @@ const TABS = [
 ];
 
 // ══════════════════════════════════════
+// SUPABASE
+// ══════════════════════════════════════
+const SUPA_URL = 'https://fanbsvlzhuhsngsvwfkn.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbmJzdmx6aHVoc25nc3Z3ZmtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDg0NjQsImV4cCI6MjA5MTYyNDQ2NH0.6RRz3y56PtFZLpn3LSwBL986NIc1MmlxjuG44JHryb4';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
 let userName = '';
+let sessionId = null; // Supabase row ID
 let answers = {};
 let currentTabIdx = 0;
 let currentSubIdx = 0;
 let currentQIdx = 0;
 let isDark = false;
+let saveTimer = null; // debounce timer
 
-function loadState() {
+function loadLocalState() {
   try {
     const s = localStorage.getItem('apreez_v3');
-    if (s) { const d = JSON.parse(s); answers = d.answers||{}; userName = d.userName||''; isDark = d.isDark||false; }
+    if (s) {
+      const d = JSON.parse(s);
+      answers  = d.answers  || {};
+      userName = d.userName || '';
+      isDark   = d.isDark   || false;
+      sessionId = d.sessionId || null;
+    }
   } catch(e) {}
 }
-function saveState() {
-  try { localStorage.setItem('apreez_v3', JSON.stringify({answers, userName, isDark})); } catch(e) {}
-}
-loadState();
 
-// Apply theme
-if (isDark) document.documentElement.setAttribute('data-theme','dark');
+function saveLocalState() {
+  try {
+    localStorage.setItem('apreez_v3', JSON.stringify({
+      answers, userName, isDark, sessionId
+    }));
+  } catch(e) {}
+}
+
+// Debounced save to Supabase — waits 1.5s after last keystroke
+function saveState() {
+  saveLocalState(); // always save locally immediately
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveToSupabase(), 1500);
+}
+
+async function saveToSupabase() {
+  if(!sessionId) return;
+  try {
+    await supa.from('sessions').update({
+      answers,
+      updated_at: new Date().toISOString()
+    }).eq('id', sessionId);
+  } catch(e) {
+    console.warn('Supabase save failed, data safe in localStorage', e);
+  }
+}
+
+async function createSession(name) {
+  try {
+    const { data, error } = await supa.from('sessions').insert({
+      user_name: name,
+      answers: {}
+    }).select().single();
+    if(error) throw error;
+    return data.id;
+  } catch(e) {
+    console.warn('Could not create Supabase session', e);
+    return null;
+  }
+}
+
+async function loadFromSupabase(id) {
+  try {
+    const { data, error } = await supa.from('sessions').select('*').eq('id', id).single();
+    if(error) throw error;
+    if(data && data.answers) {
+      answers = data.answers;
+      saveLocalState();
+    }
+  } catch(e) {
+    console.warn('Could not load from Supabase, using localStorage', e);
+  }
+}
+
+loadLocalState();
+
+// Theme applied in DOMContentLoaded
 
 // ══════════════════════════════════════
 // HELPERS
@@ -1922,6 +2181,7 @@ function goTo(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
   updateThemeIcons();
+  if(id === 's-wedding') renderWedding();
 }
 
 function toggleTheme() {
@@ -1932,7 +2192,7 @@ function toggleTheme() {
 }
 function updateThemeIcons() {
   const icon = isDark ? '☾' : '☀';
-  ['theme-btn','theme-btn2','theme-btn3','theme-btn4','theme-btn5','theme-btn6'].forEach(id=>{
+  ['theme-btn','theme-btn2','theme-btn3','theme-btn4','theme-btn5','theme-btn6','theme-btn-wedding'].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.textContent = icon;
   });
@@ -1941,13 +2201,30 @@ function updateThemeIcons() {
 // ══════════════════════════════════════
 // LANDING
 // ══════════════════════════════════════
-function startApp() {
+async function startApp() {
   const n = document.getElementById('name-input').value.trim();
   if (!n) { document.getElementById('name-input').focus(); return; }
+
+  const btn = document.querySelector('.btn-start');
+  btn.textContent = 'Menyiapkan...';
+  btn.disabled = true;
+
   userName = n;
-  saveState();
+
+  // Create new Supabase session if none exists
+  if(!sessionId) {
+    sessionId = await createSession(n);
+  } else {
+    // Load existing data from Supabase
+    await loadFromSupabase(sessionId);
+  }
+
+  saveLocalState();
   renderDashboard();
   goTo('s-dashboard');
+
+  btn.textContent = 'Mulai Refleksi';
+  btn.disabled = false;
 }
 
 // ══════════════════════════════════════
@@ -2051,6 +2328,9 @@ function renderMosaic() {
       drip.style.pointerEvents = 'none';
       row.appendChild(drip);
     }
+
+    // Badge if tab complete
+    renderMosaicBadge(row, ti);
 
     grid.appendChild(row);
   });
@@ -2292,42 +2572,54 @@ function renderModal() {
 
 function modalSave() {
   const q = modalQ[currentQIdx];
-  const key = getQId(q.tabIdx, q.subIdx, q.qIdx);
+  const isWedding = q.isWedding || q.tabIdx === -1;
+  const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = document.getElementById('modal-ta').value;
-  const wasAnswered = !!answers[key]?.trim();
   answers[key] = val;
   saveState();
 
-  // Animate the specific mosaic block
-  animateMosaicBlock(q.tabIdx, q.subIdx, q.qIdx, !!val.trim());
+  if(!isWedding) {
+    animateMosaicBlock(q.tabIdx, q.subIdx, q.qIdx, !!val.trim());
+    updateMosaicCounts();
+    updateTabCard(q.tabIdx);
+    // Check if all done!
+    checkAndCelebrate();
+  }
 
-  // Update counts
-  updateMosaicCounts();
-  updateTabCard(q.tabIdx);
-
-  // Go to next question automatically if not last
   if(currentQIdx < modalQ.length - 1) {
     currentQIdx++;
-    renderModal();
+    if(isWedding) renderWeddingModal();
+    else renderModal();
   } else {
     closeModal();
+    if(isWedding) { renderWedding(); goTo('s-wedding'); }
   }
 }
 
 function modalPrev() {
-  // Save current before navigating
   const q = modalQ[currentQIdx];
+  const isWedding = q.isWedding || q.tabIdx === -1;
+  const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = document.getElementById('modal-ta').value;
-  if(val.trim()) { answers[getQId(q.tabIdx, q.subIdx, q.qIdx)] = val; saveState(); }
-  if(currentQIdx > 0) { currentQIdx--; renderModal(); }
+  if(val.trim()) { answers[key] = val; saveState(); }
+  if(currentQIdx > 0) {
+    currentQIdx--;
+    if(isWedding) renderWeddingModal();
+    else renderModal();
+  }
 }
 
 function modalNext() {
-  // Save current before navigating
   const q = modalQ[currentQIdx];
+  const isWedding = q.isWedding || q.tabIdx === -1;
+  const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = document.getElementById('modal-ta').value;
-  if(val.trim()) { answers[getQId(q.tabIdx, q.subIdx, q.qIdx)] = val; saveState(); }
-  if(currentQIdx < modalQ.length - 1) { currentQIdx++; renderModal(); }
+  if(val.trim()) { answers[key] = val; saveState(); }
+  if(currentQIdx < modalQ.length - 1) {
+    currentQIdx++;
+    if(isWedding) renderWeddingModal();
+    else renderModal();
+  }
 }
 
 function closeModal() {
@@ -2596,17 +2888,219 @@ function downloadPDF() {
 }
 
 // ══════════════════════════════════════
-// INIT
+// WEDDING TAB DATA
 // ══════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
+const WEDDING_TAB = {
+  id: 'wedding',
+  name: 'Rencana Pernikahan',
+  subtabs: [
+    {name: 'Visi & Prioritas', questions: [
+      'Seperti apa hari pernikahanmu dalam bayangan — besar atau intim, mewah atau sederhana?',
+      'Life after marriage jauh lebih panjang dari satu hari pernikahan. Apakah kamu akan membuat wedding lebih sederhana karena memikirkan kehidupan setelahnya, atau kamu merasa ini once in a lifetime yang harus maksimal?',
+      'Seberapa penting hari H dibanding kehidupan setelahnya?',
+      'Ada momen spesifik yang paling ingin kamu rasakan di hari itu?',
+    ]},
+    {name: 'Konsep & Logistik', questions: [
+      'Mau diadakan akad dan pesta di hari yang sama atau berbeda?',
+      'Satu tempat atau dua tempat berbeda untuk akad dan resepsi?',
+      'Pesta mau diadakan pagi, siang, sore, atau malam?',
+      'Apakah ada adat atau tradisi keluarga yang ingin atau harus dimasukkan?',
+      'Sudah ada bayangan soal katering — prasmanan, set menu, atau yang lain?',
+    ]},
+    {name: 'Tim & Vendor', questions: [
+      'Sudah ada MUA yang ditaksir atau kriteria rias yang diinginkan?',
+      'Apakah kamu ingin menggunakan Wedding Organizer? Sudah ada yang diincar?',
+      'Apakah kamu ingin punya bridesmaid atau groomsman?',
+      'Dokumentasi seperti apa yang paling penting bagimu — foto, video, atau keduanya?',
+    ]},
+    {name: 'Tamu & Pengalaman', questions: [
+      'Berapa kisaran jumlah tamu yang kamu bayangkan?',
+      'Untuk tamu yang datang dari jauh, apakah kamu akan menyediakan akomodasi atau panduan khusus untuk mereka?',
+      'Bagaimana rencanamu untuk uang amplop dari tamu — apakah sudah ada gambaran akan digunakan untuk apa?',
+      'Setelah pesta selesai, mau langsung honeymoon atau ada rencana lain?',
+    ]},
+    {name: 'Budget, Legal & Keluarga', questions: [
+      'Berapa budget pernikahan yang menurutmu realistis?',
+      'Siapa yang menanggung biaya — kamu, pasangan, keluarga, atau bersama?',
+      'Bagaimana sikapmu kalau budget tidak sesuai impian?',
+      'Apakah kamu memahami dokumen apa saja yang diperlukan untuk pernikahan yang sah secara hukum dan agama?',
+      'Apakah kamu dan pasangan berencana mencatatkan pernikahan secara resmi di negara tempat tinggalmu?',
+      'Sudahkah kamu memastikan bahwa pernikahanmu akan sah secara hukum — bukan hanya secara adat atau agama saja?',
+      'Seberapa besar keluarga dilibatkan dalam keputusan wedding? Bagaimana kalau keinginan mereka berbeda dari yang kamu mau?',
+    ]},
+  ]
+};
+
+function getWeddingQId(si, qi) {
+  return `wedding__${si}__${qi}`;
+}
+function isWeddingAnswered(si, qi) {
+  const v = answers[getWeddingQId(si, qi)];
+  return v && v.trim().length > 0;
+}
+
+// ══════════════════════════════════════
+// WEDDING SCREEN
+// ══════════════════════════════════════
+function renderWedding() {
+  const wrap = document.getElementById('wedding-body-wrap');
+  if(!wrap) return;
+
+  let html = `
+    <div class="wedding-intro">
+      <div class="wedding-intro-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      </div>
+      <div class="wedding-intro-title">Selamat, kamu sudah sampai di sini.</div>
+      <div class="wedding-intro-desc">Bagian ini bukan tentang pesta yang sempurna — tapi tentang memastikan kamu dan pasangan melangkah dengan persiapan yang nyata.</div>
+    </div>
+    <div class="subtab-list">`;
+
+  WEDDING_TAB.subtabs.forEach((st, si) => {
+    const total = st.questions.length;
+    const filled = st.questions.filter((_,qi) => isWeddingAnswered(si,qi)).length;
+    const badgeClass = filled===total?'done':filled===0?'empty':'';
+    html += `
+      <div class="subtab-card" onclick="openWeddingQList(${si})">
+        <div class="subtab-left">
+          <div class="subtab-name">${st.name}</div>
+          <div class="subtab-meta">${total} pertanyaan</div>
+        </div>
+        <span class="subtab-badge ${badgeClass}">${filled}/${total}</span>
+      </div>`;
+  });
+
+  html += `</div>`;
+  wrap.innerHTML = html;
+}
+
+function openWeddingQList(si) {
+  const st = WEDDING_TAB.subtabs[si];
+  document.getElementById('qlist-title').textContent = st.name;
+  const filled = st.questions.filter((_,qi)=>isWeddingAnswered(si,qi)).length;
+  document.getElementById('qlist-count').textContent = `${filled} dari ${st.questions.length} dijawab`;
+  document.getElementById('qlist-back').onclick = () => { renderWedding(); goTo('s-wedding'); };
+
+  const body = document.getElementById('qlist-body');
+  body.innerHTML = '';
+  st.questions.forEach((q, qi) => {
+    const answered = isWeddingAnswered(si, qi);
+    const item = document.createElement('div');
+    item.className = 'q-item' + (answered?' answered':'');
+    item.innerHTML = `<div class="q-dot"></div><div class="q-text">${q}</div><div class="q-check">✓</div>`;
+    item.onclick = () => openWeddingQuestion(si, qi);
+    body.appendChild(item);
+  });
+  goTo('s-qlist');
+}
+
+function openWeddingQuestion(si, qi) {
+  // Build flat list for this wedding subtab
+  modalQ = [];
+  WEDDING_TAB.subtabs[si].questions.forEach((q, qIdx) => {
+    modalQ.push({
+      tabIdx: -1, // special flag for wedding
+      subIdx: si, qIdx: qIdx,
+      question: q,
+      tabName: 'Rencana Pernikahan',
+      stName: WEDDING_TAB.subtabs[si].name,
+      isWedding: true
+    });
+  });
+  // Find start index
+  currentQIdx = qi;
+  renderWeddingModal();
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('modal-ta')?.focus(), 350);
+}
+
+function renderWeddingModal() {
+  const q = modalQ[currentQIdx];
+  if(!q) return;
+  const key = getWeddingQId(q.subIdx, q.qIdx);
+  const val = answers[key] || '';
+  const total = modalQ.length;
+  const pct = Math.round((currentQIdx+1)/total*100);
+  document.getElementById('modal-tab-label').textContent = `${q.tabName} · ${q.stName}`;
+  document.getElementById('modal-question').textContent = q.question;
+  document.getElementById('modal-prog-fill').style.width = pct+'%';
+  document.getElementById('modal-pos').textContent = `${currentQIdx+1} / ${total}`;
+  document.getElementById('modal-ta').value = val;
+  document.getElementById('modal-prev').disabled = currentQIdx === 0;
+  document.getElementById('modal-next').disabled = currentQIdx === total-1;
+}
+
+// ══════════════════════════════════════
+// CELEBRATORY SCREEN
+// ══════════════════════════════════════
+function checkAndCelebrate() {
+  const total = getTotalQ();
+  const filled = getFilledQ();
+  if(filled >= total && total > 0) {
+    showCelebration();
+  }
+}
+
+function showCelebration() {
+  const el = document.getElementById('celebrate-name');
+  if(el) el.textContent = userName;
+  const dateEl = document.getElementById('celebrate-date');
+  if(dateEl) {
+    const now = new Date();
+    dateEl.textContent = now.toLocaleDateString('id-ID',{
+      weekday:'long', year:'numeric', month:'long', day:'numeric'
+    });
+  }
+  // Set line art — solo figure
+  const artEl = document.getElementById('celebrate-art');
+  if(artEl) {
+    artEl.innerHTML = `<svg viewBox="0 0 120 120">
+      <!-- Figure -->
+      <circle cx="60" cy="28" r="12" />
+      <path d="M40 55 Q40 42 60 42 Q80 42 80 55"/>
+      <path d="M40 55 L35 85 M80 55 L85 85"/>
+      <path d="M40 68 L80 68"/>
+      <!-- Arms up celebrating -->
+      <path d="M40 60 Q28 48 22 38 M80 60 Q92 48 98 38"/>
+      <!-- Stars/sparkles -->
+      <path d="M18 30 L18 26 M16 28 L20 28"/>
+      <path d="M100 26 L100 22 M98 24 L102 24"/>
+      <path d="M55 12 L55 8 M53 10 L57 10"/>
+      <path d="M72 16 L74 14 M72 14 L74 16"/>
+      <path d="M46 16 L44 14 M44 16 L46 14"/>
+      <!-- Ground/bloom -->
+      <path d="M35 88 Q60 95 85 88"/>
+      <path d="M45 88 Q50 100 60 102 Q70 100 75 88"/>
+    </svg>`;
+  }
+  goTo('s-celebrate');
+}
+
+// ══════════════════════════════════════
+// BADGE in mosaic
+// ══════════════════════════════════════
+function renderMosaicBadge(row, ti) {
+  const total = getTabTotal(ti);
+  const filled = getTabFilled(ti);
+  if(filled >= total && total > 0) {
+    const badge = document.createElement('div');
+    badge.className = 'mosaic-badge';
+    badge.title = `${TABS[ti].name} selesai!`;
+    badge.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>`;
+    row.appendChild(badge);
+  }
+}
+document.addEventListener('DOMContentLoaded', async () => {
   // Theme
   updateThemeIcons();
+
+  // Apply saved theme
+  if(isDark) document.documentElement.setAttribute('data-theme','dark');
 
   // Enter key on name input
   const nameInput = document.getElementById('name-input');
   if(nameInput) {
     nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') startApp(); });
-    // Pre-fill if returning user
     if(userName) nameInput.value = userName;
   }
 
@@ -2614,8 +3108,13 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDatetime();
   setInterval(updateDatetime, 1000);
 
-  // If returning user, skip landing
-  if(userName) {
+  // If returning user, load latest data from Supabase then show dashboard
+  if(userName && sessionId) {
+    await loadFromSupabase(sessionId);
+    renderDashboard();
+    goTo('s-dashboard');
+  } else if(userName) {
+    // Has name but no session — show dashboard with local data
     renderDashboard();
     goTo('s-dashboard');
   }
