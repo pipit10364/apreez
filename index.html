@@ -376,7 +376,8 @@ body {
 
 .btn-nara {
   flex: 1;
-  padding: 12px;
+  height: 44px;
+  padding: 0 12px;
   border-radius: var(--radius);
   border: 1.5px solid var(--pink);
   background: var(--pink-dim);
@@ -389,12 +390,16 @@ body {
   transition: var(--transition);
   text-align: center;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .btn-nara:hover { background: var(--pink); color: white; }
 
 .btn-pdf {
   flex: 1;
-  padding: 12px;
+  height: 44px;
+  padding: 0 12px;
   border-radius: var(--radius);
   border: none;
   background: var(--taupe);
@@ -1336,8 +1341,261 @@ body {
 .pop { animation: blockPop .3s var(--ease); }
 
 /* ══════════════════════════════════════
-   RESPONSIVE
+   AUTH SCREEN
 ══════════════════════════════════════ */
+#auth-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-wrap {
+  width: 100%;
+  max-width: 360px;
+  animation: fadeUp .6s var(--ease) both;
+}
+
+.auth-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 4px;
+}
+.auth-logo em { color: var(--card); font-style: italic; }
+
+.auth-eyebrow {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* Mode selector */
+.auth-mode {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.auth-mode-btn {
+  flex: 1;
+  padding: 12px 8px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text2);
+  transition: var(--transition);
+  text-align: center;
+  line-height: 1.4;
+}
+.auth-mode-btn.active {
+  border-color: var(--card);
+  background: var(--bg3);
+  color: var(--card);
+}
+.auth-mode-btn span {
+  display: block;
+  font-size: 10px;
+  font-weight: 300;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.auth-mode-btn.active span { color: var(--card); opacity: .7; }
+
+/* Tabs masuk/daftar */
+.auth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.auth-tab {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  color: var(--text2);
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.auth-tab.active {
+  background: var(--card);
+  color: white;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.auth-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text2);
+  letter-spacing: .3px;
+}
+.auth-input {
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: var(--transition);
+  width: 100%;
+}
+.auth-input:focus { border-color: var(--card); background: var(--bg3); }
+.auth-input::placeholder { color: var(--text3); }
+
+.auth-btn-primary {
+  width: 100%;
+  padding: 13px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--card);
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 8px;
+}
+.auth-btn-primary:hover { background: var(--card-hover); }
+.auth-btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+
+.auth-btn-google {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  background: var(--bg2);
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.auth-btn-google:hover { border-color: var(--card); color: var(--text); }
+
+.auth-msg {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.auth-msg.error {
+  background: var(--pink-dim);
+  color: var(--pink);
+  border: 1px solid var(--pink);
+}
+.auth-msg.success {
+  background: var(--bg2);
+  color: var(--card);
+  border: 1px solid var(--card);
+}
+
+.auth-guest {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--text3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: underline;
+  transition: color .2s;
+}
+.auth-guest:hover { color: var(--text2); }
+
+/* Couple partner code */
+.couple-code-box {
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  display: none;
+}
+.couple-code-label {
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.couple-code-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--card);
+  letter-spacing: 4px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.couple-code-copy {
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 11px;
+  color: var(--text3);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: var(--transition);
+}
+.couple-code-copy:hover { border-color: var(--card); color: var(--card); }
+
+/* Mode badge di dashboard */
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 4px;
+}
+.mode-badge:hover { border-color: var(--card); color: var(--card); }
+.mode-badge svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; }
 @media (max-width: 640px) {
   .dash-body {
     grid-template-columns: 1fr;
@@ -1385,26 +1643,99 @@ body {
 </head>
 <body>
 
-<!-- ══════════ SCREEN 1: LANDING ══════════ -->
-<div id="s-landing" class="screen active">
-  <div class="landing-logo">Ap<em>reez</em></div>
-  <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀</button>
+<!-- ══════════ AUTH SCREEN ══════════ -->
+<div id="auth-screen">
+  <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" style="position:fixed;top:20px;right:24px;">☀</button>
+  <div class="auth-wrap">
+    <div class="auth-logo">Ap<em>reez</em></div>
+    <div class="auth-eyebrow">Refleksi Pra-Nikah · Part of Inarte</div>
 
-  <div class="landing-hero">
-    <div class="landing-eyebrow">Refleksi Pra-Nikah · Part of Inarte</div>
-    <h1 class="landing-title">
-      Mengenal<br><em>lebih dalam,</em><br>sebelum melangkah.
-    </h1>
-    <p class="landing-desc">
-      Ruang jujur untuk memahami diri sendiri.<br>
-      Tidak ada penilaian di sini. Hanya kejujuran.
-    </p>
-    <div class="landing-form">
-      <input class="landing-input" id="name-input" type="text" placeholder="Siapa namamu?" maxlength="40"/>
-      <button class="btn-start" onclick="startApp()">Mulai Refleksi</button>
+    <!-- Mode: Solo / Couple -->
+    <div class="auth-mode">
+      <button class="auth-mode-btn active" id="mode-solo" onclick="selectMode('solo')">
+        Sendiri
+        <span>Refleksi untuk diri sendiri</span>
+      </button>
+      <button class="auth-mode-btn" id="mode-couple" onclick="selectMode('couple')">
+        Bersama Pasangan
+        <span>Isi bersama, Nara bantu bandingkan</span>
+      </button>
     </div>
-    <p class="landing-note">Jawabanmu tersimpan di perangkatmu · Hanya kamu yang bisa mengaksesnya</p>
+
+    <!-- Couple: input kode pasangan -->
+    <div class="couple-code-box" id="couple-input-box">
+      <div class="couple-code-label">PUNYA KODE PASANGAN?</div>
+      <div class="auth-field" style="margin-bottom:0;">
+        <input class="auth-input" id="partner-code-input" type="text" placeholder="Masukkan kode pasanganmu" maxlength="8" style="text-align:center;letter-spacing:3px;text-transform:uppercase;font-family:'Cormorant Garamond',serif;font-size:18px;"/>
+      </div>
+      <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Atau buat akun dulu, kode akan muncul setelah masuk</div>
+    </div>
+
+    <!-- Tabs: Masuk / Daftar -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-masuk" onclick="switchAuthTab('masuk')">Masuk</button>
+      <button class="auth-tab" id="tab-daftar" onclick="switchAuthTab('daftar')">Daftar</button>
+    </div>
+
+    <!-- Form: Masuk -->
+    <div id="auth-masuk-form">
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" id="auth-email" type="email" placeholder="email@kamu.com" onkeydown="if(event.key==='Enter')authLogin()"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" id="auth-password" type="password" placeholder="Password kamu" onkeydown="if(event.key==='Enter')authLogin()"/>
+      </div>
+      <button class="auth-btn-primary" id="btn-masuk" onclick="authLogin()">Masuk →</button>
+      <button class="auth-btn-google" onclick="authGoogleLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Lanjut dengan Google
+      </button>
+    </div>
+
+    <!-- Form: Daftar -->
+    <div id="auth-daftar-form" style="display:none;">
+      <div class="auth-field">
+        <label class="auth-label">Nama panggilan</label>
+        <input class="auth-input" id="reg-name" type="text" placeholder="Nama yang mau disapa Nara" maxlength="40"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" id="reg-email" type="email" placeholder="email@kamu.com"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" id="reg-password" type="password" placeholder="Min. 6 karakter" onkeydown="if(event.key==='Enter')authRegister()"/>
+      </div>
+      <button class="auth-btn-primary" id="btn-daftar" onclick="authRegister()">Buat Akun →</button>
+      <button class="auth-btn-google" onclick="authGoogleLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Lanjut dengan Google
+      </button>
+    </div>
+
+    <div class="auth-msg" id="auth-msg"></div>
+
+    <button class="auth-guest" onclick="continueAsGuest()">
+      Lanjut tanpa akun · data hanya tersimpan di perangkat ini &amp; tidak bisa couple mode
+    </button>
   </div>
+</div>
+
+<!-- ══════════ SCREEN 1: LANDING (kept for structure, hidden by default) ══════════ -->
+<div id="s-landing" class="screen">
+  <div class="landing-logo">Ap<em>reez</em></div>
 </div>
 
 <!-- ══════════ SCREEN 2: DASHBOARD ══════════ -->
@@ -1415,10 +1746,14 @@ body {
         <div class="dash-datetime" id="dash-datetime"></div>
         <div class="dash-greeting" id="dash-greeting"></div>
         <div class="dash-sub" id="dash-sub"></div>
+        <button class="mode-badge" id="mode-badge" onclick="showModeSettings()">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span id="mode-badge-label">Solo</span>
+        </button>
       </div>
       <div class="dash-header-right">
         <button class="btn-sm" onclick="toggleTheme()" id="theme-btn2">☀</button>
-        <button class="btn-sm" onclick="goTo('s-landing')" title="Keluar">⇥</button>
+        <button class="btn-sm" onclick="authLogout()" title="Keluar">⇥</button>
       </div>
     </div>
   </div>
@@ -1878,6 +2213,8 @@ const TABS = [
         'Apakah kamu memiliki kondisi kesehatan fisik yang perlu diketahui pasanganmu — seperti penyakit kronis, alergi serius, atau kondisi genetik?',
         'Apakah kamu tahu mengapa tubuhmu memiliki kondisi tersebut — apakah karena faktor genetik atau kebiasaan hidup?',
         'Bagaimana kebiasaan hidupmu sehari-hari dalam menjaga kesehatan — pola makan, olahraga, tidur?',
+        'Apakah kamu merokok? Jika iya, apakah kamu terbuka untuk mendiskusikan hal ini dengan pasanganmu?',
+        'Apakah kamu mengonsumsi alkohol? Seberapa sering, dan bagaimana sikapmu jika pasanganmu memiliki pandangan berbeda tentang ini?',
         'Apakah kamu rutin melakukan pemeriksaan kesehatan?',
         'Apakah kamu terbuka untuk melakukan medical check-up bersama sebelum menikah?',
       ]},
@@ -2067,92 +2404,359 @@ const TABS = [
 ];
 
 // ══════════════════════════════════════
-// SUPABASE
+// SUPABASE + AUTH
 // ══════════════════════════════════════
 const SUPA_URL = 'https://fanbsvlzhuhsngsvwfkn.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbmJzdmx6aHVoc25nc3Z3ZmtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDg0NjQsImV4cCI6MjA5MTYyNDQ2NH0.6RRz3y56PtFZLpn3LSwBL986NIc1MmlxjuG44JHryb4';
-const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+let SB = null;
+let currentUser = null;
+
+function initSupabase() {
+  try {
+    SB = supabase.createClient(SUPA_URL, SUPA_KEY);
+    return true;
+  } catch(e) {
+    console.warn('Supabase init failed:', e);
+    return false;
+  }
+}
 
 // ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
 let userName = '';
-let sessionId = null; // Supabase row ID
 let answers = {};
+let appMode = 'solo'; // 'solo' | 'couple'
+let partnerCode = null; // kode unik user ini untuk couple
+let linkedPartnerCode = null; // kode pasangan yang di-link
 let currentTabIdx = 0;
 let currentSubIdx = 0;
 let currentQIdx = 0;
 let isDark = false;
-let saveTimer = null; // debounce timer
+let saveTimer = null;
+let isGuest = false;
 
 function loadLocalState() {
   try {
-    const s = localStorage.getItem('apreez_v3');
+    const s = localStorage.getItem('apreez_v4');
     if (s) {
       const d = JSON.parse(s);
-      answers  = d.answers  || {};
-      userName = d.userName || '';
-      isDark   = d.isDark   || false;
-      sessionId = d.sessionId || null;
+      answers           = d.answers           || {};
+      userName          = d.userName          || '';
+      isDark            = d.isDark            || false;
+      appMode           = d.appMode           || 'solo';
+      partnerCode       = d.partnerCode       || null;
+      linkedPartnerCode = d.linkedPartnerCode || null;
+      isGuest           = d.isGuest           || false;
     }
   } catch(e) {}
 }
 
 function saveLocalState() {
   try {
-    localStorage.setItem('apreez_v3', JSON.stringify({
-      answers, userName, isDark, sessionId
+    localStorage.setItem('apreez_v4', JSON.stringify({
+      answers, userName, isDark, appMode, partnerCode, linkedPartnerCode, isGuest
     }));
   } catch(e) {}
 }
 
-// Debounced save to Supabase — waits 1.5s after last keystroke
 function saveState() {
-  saveLocalState(); // always save locally immediately
+  saveLocalState();
+  if(isGuest) return; // guest: local only
   if(saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => saveToSupabase(), 1500);
+  saveTimer = setTimeout(() => syncToSupabase(), 1500);
 }
 
-async function saveToSupabase() {
-  if(!sessionId) return;
+async function syncToSupabase() {
+  if(!SB || !currentUser) return;
   try {
-    await supa.from('sessions').update({
+    await SB.from('apreez_sessions').upsert({
+      user_id: currentUser.id,
+      user_name: userName,
       answers,
+      app_mode: appMode,
+      partner_code: partnerCode,
+      linked_partner_code: linkedPartnerCode,
       updated_at: new Date().toISOString()
-    }).eq('id', sessionId);
+    }, { onConflict: 'user_id' });
   } catch(e) {
-    console.warn('Supabase save failed, data safe in localStorage', e);
+    console.warn('Sync failed, data safe locally:', e);
   }
 }
 
-async function createSession(name) {
+async function loadFromSupabase() {
+  if(!SB || !currentUser) return;
   try {
-    const { data, error } = await supa.from('sessions').insert({
-      user_name: name,
-      answers: {}
-    }).select().single();
+    const { data, error } = await SB
+      .from('apreez_sessions')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
     if(error) throw error;
-    return data.id;
+    if(data) {
+      answers           = data.answers           || {};
+      appMode           = data.app_mode          || 'solo';
+      partnerCode       = data.partner_code      || null;
+      linkedPartnerCode = data.linked_partner_code || null;
+      if(data.user_name && !userName) userName = data.user_name;
+      saveLocalState();
+    }
   } catch(e) {
-    console.warn('Could not create Supabase session', e);
+    console.warn('Load from Supabase failed, using local:', e);
+  }
+}
+
+async function loadPartnerAnswers() {
+  if(!SB || !linkedPartnerCode) return null;
+  try {
+    const { data } = await SB
+      .from('apreez_sessions')
+      .select('answers, user_name')
+      .eq('partner_code', linkedPartnerCode)
+      .maybeSingle();
+    return data || null;
+  } catch(e) {
     return null;
   }
 }
 
-async function loadFromSupabase(id) {
-  try {
-    const { data, error } = await supa.from('sessions').select('*').eq('id', id).single();
-    if(error) throw error;
-    if(data && data.answers) {
-      answers = data.answers;
-      saveLocalState();
-    }
-  } catch(e) {
-    console.warn('Could not load from Supabase, using localStorage', e);
-  }
+// Generate simple unique code
+function generateCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for(let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
 }
 
 loadLocalState();
+
+// ══════════════════════════════════════
+// AUTH UI
+// ══════════════════════════════════════
+let selectedMode = 'solo';
+
+function selectMode(mode) {
+  selectedMode = mode;
+  document.getElementById('mode-solo').classList.toggle('active', mode === 'solo');
+  document.getElementById('mode-couple').classList.toggle('active', mode === 'couple');
+  document.getElementById('couple-input-box').style.display = mode === 'couple' ? 'block' : 'none';
+}
+
+function switchAuthTab(tab) {
+  const isMasuk = tab === 'masuk';
+  document.getElementById('auth-masuk-form').style.display = isMasuk ? 'block' : 'none';
+  document.getElementById('auth-daftar-form').style.display = isMasuk ? 'none' : 'block';
+  document.getElementById('tab-masuk').classList.toggle('active', isMasuk);
+  document.getElementById('tab-daftar').classList.toggle('active', !isMasuk);
+  showAuthMsg('');
+}
+
+function showAuthMsg(msg, isError = true) {
+  const el = document.getElementById('auth-msg');
+  if(!msg) { el.style.display = 'none'; return; }
+  el.className = 'auth-msg ' + (isError ? 'error' : 'success');
+  el.style.display = 'block';
+  el.textContent = msg;
+}
+
+async function authLogin() {
+  const email    = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  if(!email || !password) { showAuthMsg('Email dan password harus diisi.'); return; }
+  const btn = document.getElementById('btn-masuk');
+  btn.disabled = true; btn.textContent = 'Sedang masuk...';
+  showAuthMsg('Sedang masuk...', false);
+  const { data, error } = await SB.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = 'Masuk →';
+  if(error) { showAuthMsg(error.message === 'Invalid login credentials' ? 'Email atau password salah.' : error.message); return; }
+  await onLoginSuccess(data.user);
+}
+
+async function authRegister() {
+  const name     = document.getElementById('reg-name').value.trim();
+  const email    = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  if(!name)             { showAuthMsg('Nama panggilan harus diisi.'); return; }
+  if(!email || !password) { showAuthMsg('Email dan password harus diisi.'); return; }
+  if(password.length < 6) { showAuthMsg('Password minimal 6 karakter.'); return; }
+  const btn = document.getElementById('btn-daftar');
+  btn.disabled = true; btn.textContent = 'Membuat akun...';
+  showAuthMsg('Membuat akun...', false);
+  const { data, error } = await SB.auth.signUp({ email, password, options: { data: { full_name: name } } });
+  btn.disabled = false; btn.textContent = 'Buat Akun →';
+  if(error) { showAuthMsg(error.message); return; }
+  if(data.user && !data.session) {
+    showAuthMsg('Cek email kamu untuk verifikasi akun, lalu login.', false);
+    return;
+  }
+  await onLoginSuccess(data.user, name);
+}
+
+async function authGoogleLogin() {
+  showAuthMsg('Membuka Google...', false);
+  const { error } = await SB.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+  if(error) showAuthMsg(error.message);
+}
+
+function continueAsGuest() {
+  isGuest = true;
+  appMode = selectedMode;
+  // Guest cannot do couple mode
+  if(appMode === 'couple') {
+    appMode = 'solo';
+    showAuthMsg('Mode couple membutuhkan akun. Lanjut sebagai tamu dengan mode solo.', false);
+    setTimeout(() => {
+      document.getElementById('auth-screen').style.display = 'none';
+      enterApp();
+    }, 2000);
+    return;
+  }
+  document.getElementById('auth-screen').style.display = 'none';
+  enterApp();
+}
+
+async function onLoginSuccess(user, nameOverride = null) {
+  if(currentUser?.id === user?.id) return;
+  currentUser = user;
+  isGuest = false;
+  document.getElementById('auth-screen').style.display = 'none';
+  if(window.location.hash.includes('access_token')) {
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  // Load cloud data
+  await loadFromSupabase();
+
+  // Set name from auth metadata if not already set
+  if(!userName) {
+    userName = nameOverride
+      || user.user_metadata?.full_name
+      || user.user_metadata?.name
+      || user.email.split('@')[0];
+  }
+
+  // Apply selected mode from auth screen (if fresh login)
+  if(!partnerCode) {
+    appMode = selectedMode;
+    partnerCode = generateCode();
+  }
+
+  // Handle couple partner code input
+  if(selectedMode === 'couple') {
+    const inputCode = document.getElementById('partner-code-input')?.value.trim().toUpperCase();
+    if(inputCode && inputCode.length === 6) {
+      linkedPartnerCode = inputCode;
+    }
+  }
+
+  saveLocalState();
+  await syncToSupabase();
+  enterApp();
+}
+
+function enterApp() {
+  renderDashboard();
+  goTo('s-dashboard');
+  updateModeBadge();
+}
+
+async function authLogout() {
+  if(SB && currentUser) await SB.auth.signOut();
+  currentUser = null;
+  userName = ''; answers = {}; appMode = 'solo';
+  partnerCode = null; linkedPartnerCode = null; isGuest = false;
+  localStorage.removeItem('apreez_v4');
+  location.reload();
+}
+
+// ══════════════════════════════════════
+// MODE SETTINGS (dari dashboard badge)
+// ══════════════════════════════════════
+function updateModeBadge() {
+  const label = document.getElementById('mode-badge-label');
+  if(!label) return;
+  if(isGuest) { label.textContent = 'Tamu · Solo'; return; }
+  if(appMode === 'couple' && linkedPartnerCode) {
+    label.textContent = `Couple · ${linkedPartnerCode}`;
+  } else if(appMode === 'couple') {
+    label.textContent = 'Couple · menunggu pasangan';
+  } else {
+    label.textContent = 'Solo';
+  }
+}
+
+function showModeSettings() {
+  // Build modal content dynamically
+  const isCouple = appMode === 'couple';
+  let html = `
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-tab-label">Pengaturan Mode</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" style="gap:12px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);margin-bottom:4px;">
+        Halo, <em style="color:var(--card);">${userName}</em>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">
+        ${isGuest ? 'Mode tamu · data hanya tersimpan di perangkat ini' : currentUser?.email || ''}
+      </div>
+
+      ${!isGuest ? `
+      <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">MODE REFLEKSI</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button onclick="switchMode('solo')" style="flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid ${appMode==='solo'?'var(--card)':'var(--border)'};background:${appMode==='solo'?'var(--bg3)':'var(--bg2)'};color:${appMode==='solo'?'var(--card)':'var(--text2)'};font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Sendiri</button>
+        <button onclick="switchMode('couple')" style="flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid ${appMode==='couple'?'var(--card)':'var(--border)'};background:${appMode==='couple'?'var(--bg3)':'var(--bg2)'};color:${appMode==='couple'?'var(--card)':'var(--text2)'};font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Bersama Pasangan</button>
+      </div>
+
+      ${appMode === 'couple' ? `
+      <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE KAMU</div>
+      <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;text-align:center;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:6px;color:var(--card);">${partnerCode}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;">Bagikan ke pasanganmu</div>
+        <button onclick="navigator.clipboard.writeText('${partnerCode}').then(()=>this.textContent='Tersalin ✓')" style="margin-top:8px;padding:6px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;font-size:11px;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;">Salin kode</button>
+      </div>
+
+      <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE PASANGAN</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input id="settings-partner-input" type="text" maxlength="6" placeholder="Masukkan kode pasangan" value="${linkedPartnerCode||''}" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;text-transform:uppercase;letter-spacing:2px;"/>
+        <button onclick="linkPartner()" style="padding:10px 14px;border-radius:var(--radius);border:none;background:var(--card);color:white;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Link</button>
+      </div>
+      ` : ''}
+      ` : ''}
+
+      ${!isGuest ? `
+      <button onclick="authLogout()" style="width:100%;padding:11px;background:transparent;color:var(--pink);border:1.5px solid var(--pink-dim);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;">Keluar dari akun</button>
+      ` : `
+      <button onclick="closeModal();document.getElementById('auth-screen').style.display='flex';" style="width:100%;padding:11px;background:var(--card);color:white;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Buat akun / Masuk</button>
+      `}
+    </div>`;
+
+  document.getElementById('modal-sheet').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+async function switchMode(mode) {
+  appMode = mode;
+  if(mode === 'couple' && !partnerCode) partnerCode = generateCode();
+  saveState();
+  updateModeBadge();
+  closeModal();
+  setTimeout(() => showModeSettings(), 100);
+}
+
+async function linkPartner() {
+  const code = document.getElementById('settings-partner-input')?.value.trim().toUpperCase();
+  if(!code || code.length !== 6) { return; }
+  if(code === partnerCode) { alert('Tidak bisa link ke kode kamu sendiri.'); return; }
+  linkedPartnerCode = code;
+  saveState();
+  updateModeBadge();
+  closeModal();
+}
 
 // Theme applied in DOMContentLoaded
 
@@ -2215,35 +2819,6 @@ function updateThemeIcons() {
   document.querySelectorAll('[id^="theme-btn"]').forEach(el => {
     el.textContent = icon;
   });
-}
-
-// ══════════════════════════════════════
-// LANDING
-// ══════════════════════════════════════
-async function startApp() {
-  const n = document.getElementById('name-input').value.trim();
-  if (!n) { document.getElementById('name-input').focus(); return; }
-
-  const btn = document.querySelector('.btn-start');
-  btn.textContent = 'Menyiapkan...';
-  btn.disabled = true;
-
-  userName = n;
-
-  // Create new Supabase session if none exists
-  if(!sessionId) {
-    sessionId = await createSession(n);
-  } else {
-    // Load existing data from Supabase
-    await loadFromSupabase(sessionId);
-  }
-
-  saveLocalState();
-  renderDashboard();
-  goTo('s-dashboard');
-
-  btn.textContent = 'Mulai Refleksi';
-  btn.disabled = false;
 }
 
 // ══════════════════════════════════════
@@ -3134,33 +3709,53 @@ function renderMosaicBadge(row, ti) {
   }
 }
 document.addEventListener('DOMContentLoaded', async () => {
-  // Theme
-  updateThemeIcons();
-
   // Apply saved theme
-  if(isDark) document.documentElement.setAttribute('data-theme','dark');
-
-  // Enter key on name input
-  const nameInput = document.getElementById('name-input');
-  if(nameInput) {
-    nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') startApp(); });
-    if(userName) nameInput.value = userName;
-  }
+  if(isDark) document.documentElement.setAttribute('data-theme', 'dark');
+  updateThemeIcons();
 
   // Datetime ticker
   updateDatetime();
   setInterval(updateDatetime, 1000);
 
-  // If returning user, load latest data from Supabase then show dashboard
-  if(userName && sessionId) {
-    await loadFromSupabase(sessionId);
-    renderDashboard();
-    goTo('s-dashboard');
-  } else if(userName) {
-    // Has name but no session — show dashboard with local data
-    renderDashboard();
-    goTo('s-dashboard');
+  // Init Supabase
+  initSupabase();
+
+  if(!SB) {
+    // Supabase unavailable — go guest
+    continueAsGuest();
+    return;
   }
+
+  // Listen for auth state (catches OAuth redirect)
+  SB.auth.onAuthStateChange(async (event, session) => {
+    if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user && !currentUser) {
+      await onLoginSuccess(session.user);
+    }
+  });
+
+  // Small delay for OAuth hash processing
+  await new Promise(r => setTimeout(r, 300));
+  const { data: { session } } = await SB.auth.getSession();
+
+  if(session?.user) {
+    await onLoginSuccess(session.user);
+    return;
+  }
+
+  // OAuth redirect in progress
+  if(window.location.hash.includes('access_token')) {
+    document.getElementById('auth-screen').style.display = 'flex';
+    return;
+  }
+
+  // Guest returning user — skip auth
+  if(isGuest && userName) {
+    enterApp();
+    return;
+  }
+
+  // Show auth screen
+  document.getElementById('auth-screen').style.display = 'flex';
 });
 </script>
 </body>
