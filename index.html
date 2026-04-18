@@ -730,8 +730,6 @@ body {
 
 /* ══════════════════════════════════════
    SCREEN 6: KATA NARA
-   FIX: Hapus display:flex !important
-   Sekarang display diatur via .screen.active
 ══════════════════════════════════════ */
 #s-nara {
   padding: 0;
@@ -741,7 +739,6 @@ body {
   min-height: unset;
   overflow: hidden;
 }
-/* Hanya tampil kalau active */
 #s-nara.active {
   display: flex;
 }
@@ -1245,7 +1242,6 @@ body {
 .auth-guest { display: block; text-align: center; margin-top: 16px; font-size: 11px; color: var(--text3); background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline; transition: color .2s; }
 .auth-guest:hover { color: var(--text2); }
 
-/* Auth: nama tamu input */
 .auth-guest-name {
   display: none;
   margin-top: 12px;
@@ -1264,7 +1260,6 @@ body {
 .mode-badge:hover { border-color: var(--card); color: var(--card); }
 .mode-badge svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-/* Answer screen */
 .answer-tab-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
 .answer-question { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 5vw, 28px); font-weight: 400; line-height: 1.35; color: var(--text); margin-bottom: 28px; flex: 0 0 auto; }
 .answer-textarea { flex: 1; background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 300; color: var(--text); outline: none; resize: none; transition: var(--transition); min-height: 160px; line-height: 1.8; }
@@ -1390,7 +1385,6 @@ body {
 
     <div class="auth-msg" id="auth-msg"></div>
 
-    <!-- FIX: Guest sekarang minta nama dulu -->
     <button class="auth-guest" onclick="showGuestNameInput()">
       Lanjut tanpa akun · data hanya tersimpan di perangkat ini
     </button>
@@ -1928,7 +1922,6 @@ function showAuthMsg(msg, isError = true) {
   el.textContent = msg;
 }
 
-// FIX: Guest sekarang minta nama dulu sebelum masuk
 function showGuestNameInput() {
   const box = document.getElementById('auth-guest-name');
   box.classList.add('visible');
@@ -2010,38 +2003,29 @@ async function onLoginSuccess(user, nameOverride = null) {
   if(window.location.hash.includes('access_token')) {
     history.replaceState(null, '', window.location.pathname);
   }
-
-  // Load cloud data
   await loadFromSupabase();
-
-  // Set name from auth metadata if not already set
   if(!userName) {
     userName = nameOverride
       || user.user_metadata?.full_name
       || user.user_metadata?.name
       || user.email.split('@')[0];
   }
-
   if(!partnerCode) {
     appMode = selectedMode;
     partnerCode = generateCode();
   }
-
   if(selectedMode === 'couple') {
     const inputCode = document.getElementById('partner-code-input')?.value.trim().toUpperCase();
     if(inputCode && inputCode.length === 6) {
       linkedPartnerCode = inputCode;
     }
   }
-
   saveLocalState();
   await syncToSupabase();
   enterApp();
 }
 
-// FIX: enterApp memastikan semua render dipanggil setelah state siap
 function enterApp() {
-  // Safety: pastikan userName tidak kosong
   if(!userName) userName = 'Tamu';
   renderDashboard();
   goTo('s-dashboard');
@@ -3028,6 +3012,23 @@ function showCelebration() {
 }
 
 // ══════════════════════════════════════
+// ✅ SAFETY FALLBACK
+// Jaga-jaga kalau init Supabase hang tanpa error
+// ══════════════════════════════════════
+setTimeout(() => {
+  const anyActive = document.querySelector('.screen.active');
+  const authVisible = document.getElementById('auth-screen')?.style.display === 'flex';
+  if (!anyActive && !authVisible) {
+    console.warn('[Apreez] Safety fallback triggered — nothing rendered after 5s');
+    if (isGuest && userName) {
+      enterApp();
+    } else {
+      document.getElementById('auth-screen').style.display = 'flex';
+    }
+  }
+}, 5000);
+
+// ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
 document.addEventListener('DOMContentLoaded', async () => {
@@ -3039,7 +3040,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSupabase();
 
   if(!SB) {
-    // Supabase unavailable — go guest
     if(!userName) userName = 'Tamu';
     isGuest = true;
     saveLocalState();
@@ -3047,35 +3047,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Listen for auth state (catches OAuth redirect)
-  SB.auth.onAuthStateChange(async (event, session) => {
-    if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user && !currentUser) {
+  try {
+    // Listen for auth state (catches OAuth redirect)
+    SB.auth.onAuthStateChange(async (event, session) => {
+      if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user && !currentUser) {
+        await onLoginSuccess(session.user);
+      }
+    });
+
+    // Small delay for OAuth hash processing
+    await new Promise(r => setTimeout(r, 300));
+
+    // Timeout guard — kalau getSession hang lebih dari 4 detik, skip
+    const sessionResult = await Promise.race([
+      SB.auth.getSession(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('getSession timeout')), 4000))
+    ]);
+
+    const { data: { session } } = sessionResult;
+
+    if(session?.user) {
       await onLoginSuccess(session.user);
+      return;
     }
-  });
 
-  // Small delay for OAuth hash processing
-  await new Promise(r => setTimeout(r, 300));
-  const { data: { session } } = await SB.auth.getSession();
+    if(window.location.hash.includes('access_token')) {
+      document.getElementById('auth-screen').style.display = 'flex';
+      return;
+    }
 
-  if(session?.user) {
-    await onLoginSuccess(session.user);
-    return;
-  }
+    // Guest returning user — skip auth
+    if(isGuest && userName) {
+      enterApp();
+      return;
+    }
 
-  if(window.location.hash.includes('access_token')) {
+    // Show auth screen
     document.getElementById('auth-screen').style.display = 'flex';
-    return;
-  }
 
-  // Guest returning user — skip auth
-  if(isGuest && userName) {
-    enterApp();
-    return;
+  } catch(e) {
+    console.warn('[Apreez] Init error, falling back:', e.message);
+    // Kalau timeout atau error apapun, tetap tampilkan sesuatu
+    if(isGuest && userName) {
+      enterApp();
+    } else {
+      document.getElementById('auth-screen').style.display = 'flex';
+    }
   }
-
-  // Show auth screen
-  document.getElementById('auth-screen').style.display = 'flex';
 });
 </script>
 </body>
