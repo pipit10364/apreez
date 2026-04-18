@@ -2658,6 +2658,17 @@ function generateCode() {
 
 loadLocalState();
 
+// Bersihkan state lama (v3) kalau masih ada
+if(localStorage.getItem('apreez_v3')) {
+  const old = JSON.parse(localStorage.getItem('apreez_v3') || '{}');
+  // Migrasi answers saja, buang sisanya yang mungkin corrupt
+  if(old.answers && Object.keys(old.answers).length > 0 && !answers) {
+    answers = old.answers;
+  }
+  localStorage.removeItem('apreez_v3');
+  saveLocalState();
+}
+
 // ══════════════════════════════════════
 // AUTH UI
 // ══════════════════════════════════════
@@ -2730,19 +2741,24 @@ async function authGoogleLogin() {
 }
 
 function continueAsGuest() {
+  // Minta nama dulu kalau belum ada
+  if(!userName) {
+    const name = prompt('Siapa namamu?');
+    if(!name || !name.trim()) return; // batal kalau tidak diisi
+    userName = name.trim();
+  }
+
   isGuest = true;
   appMode = selectedMode;
-  // Guest cannot do couple mode
+
+  // Guest tidak bisa couple mode
   if(appMode === 'couple') {
     appMode = 'solo';
-    showAuthMsg('Mode couple membutuhkan akun. Lanjut sebagai tamu dengan mode solo.', false);
-    setTimeout(() => {
-      document.getElementById('auth-screen').style.display = 'none';
-      enterApp();
-    }, 2000);
-    return;
+    alert('Mode couple membutuhkan akun. Lanjut sebagai tamu dengan mode solo.');
   }
+
   document.getElementById('auth-screen').style.display = 'none';
+  saveLocalState();
   enterApp();
 }
 
@@ -2786,6 +2802,7 @@ async function onLoginSuccess(user, nameOverride = null) {
 }
 
 function enterApp() {
+  // Pastikan selalu mulai dari dashboard, bukan screen lain
   renderDashboard();
   goTo('s-dashboard');
   updateModeBadge();
@@ -4163,10 +4180,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Guest returning user — skip auth
+  // Guest returning user — skip auth kalau userName sudah ada
   if(isGuest && userName) {
     enterApp();
     return;
+  }
+
+  // Guest tapi tidak ada userName — reset dan show auth
+  if(isGuest && !userName) {
+    isGuest = false;
+    saveLocalState();
   }
 
   // Show auth screen
