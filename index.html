@@ -67,7 +67,6 @@
   --header-bg:    #091525;
   --profil-card:  transparent;
   --profil-text:  #F2CC8F;
-  /* Dark mode card styles — outlined */
   --card-bg-0:    rgba(82,183,136,0.08);
   --card-bg-1:    rgba(224,122,95,0.08);
   --card-bg-2:    rgba(242,204,143,0.08);
@@ -135,86 +134,6 @@ body {
 }
 .theme-btn:hover { border-color: var(--card); }
 
-.landing-hero {
-  text-align: center;
-  max-width: 440px;
-  animation: fadeUp .7s var(--ease) both;
-}
-
-.landing-eyebrow {
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--pink);
-  margin-bottom: 16px;
-}
-
-.landing-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(38px, 9vw, 60px);
-  font-weight: 300;
-  line-height: 1.08;
-  letter-spacing: -.5px;
-  margin-bottom: 20px;
-  color: var(--text);
-}
-.landing-title em { font-style: italic; color: var(--card); }
-
-.landing-desc {
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--text2);
-  line-height: 1.85;
-  margin-bottom: 36px;
-}
-
-.landing-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-}
-
-.landing-input {
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 18px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  color: var(--text);
-  outline: none;
-  transition: var(--transition);
-  text-align: center;
-}
-.landing-input:focus { border-color: var(--card); }
-.landing-input::placeholder { color: var(--text3); }
-
-.btn-start {
-  background: var(--card);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  padding: 14px 32px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.btn-start:hover { background: var(--card-hover); transform: translateY(-1px); }
-
-.landing-note {
-  margin-top: 16px;
-  font-size: 11px;
-  color: var(--text3);
-  letter-spacing: .3px;
-}
-
 /* ══════════════════════════════════════
    SCREEN 2: DASHBOARD
 ══════════════════════════════════════ */
@@ -272,7 +191,6 @@ body {
 }
 .btn-sm:hover { border-color: var(--card); color: var(--card); }
 
-/* Dashboard body — tab grid LEFT, mosaic RIGHT on desktop */
 .dash-body {
   flex: 1;
   display: grid;
@@ -284,7 +202,6 @@ body {
   height: calc(100vh - 90px);
 }
 
-/* Left panel — tab grid */
 .dash-left {
   padding: 20px;
   border-right: 1px solid var(--border);
@@ -294,7 +211,6 @@ body {
   overflow-y: auto;
 }
 
-/* Mosaic */
 .mosaic-wrap {
   background: var(--bg2);
   border-radius: var(--radius-lg);
@@ -363,7 +279,6 @@ body {
 .mosaic-block.drip { background: var(--mosaic-drip); border-color: transparent; margin-left: 4px; }
 .mosaic-block:hover { transform: scale(1.35); z-index: 5; position: relative; }
 
-/* Bottom actions */
 .dash-actions-row {
   display: flex;
   gap: 8px;
@@ -417,7 +332,6 @@ body {
 }
 .btn-pdf:hover { background: var(--text2); }
 
-/* Right panel — mosaic progress */
 .dash-right {
   padding: 20px;
   overflow-y: auto;
@@ -426,7 +340,6 @@ body {
   gap: 10px;
 }
 
-/* Tab grid on left panel */
 .tab-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -451,7 +364,6 @@ body {
 .tab-card.alt2 .tab-name { color: var(--text); }
 .tab-card.alt2 .tab-pct { color: var(--text2); }
 
-/* Dark mode — outlined cards with 3 distinct colors */
 [data-theme="dark"] .tab-card {
   background: rgba(82,183,136,0.1);
   border: 1.5px solid #52B788;
@@ -483,7 +395,6 @@ body {
 [data-theme="dark"] .tab-card.profil-card .tab-name { color: #F2CC8F; }
 [data-theme="dark"] .tab-card.profil-card .tab-pct  { color: #F2CC8F; opacity: .65; }
 
-/* Tab icon — line art via SVG */
 .tab-icon {
   width: 22px;
   height: 22px;
@@ -599,7 +510,6 @@ body {
   color: var(--text);
 }
 
-/* Profil special */
 .profil-fields {
   padding: 0 20px 24px;
   display: flex;
@@ -662,7 +572,6 @@ body {
 .photo-area:hover { border-color: var(--card); background: var(--bg2); }
 .photo-area-text { font-size: 12px; color: var(--text3); }
 
-/* Subtab list */
 .subtab-list {
   padding: 0 20px 24px;
   display: flex;
@@ -770,7 +679,7 @@ body {
 .q-item.answered .q-check { opacity: 1; }
 
 /* ══════════════════════════════════════
-   SCREEN 5: QUESTION ANSWER (cap cup cup!)
+   SCREEN 5: ANSWER
 ══════════════════════════════════════ */
 #s-answer {
   justify-content: flex-start;
@@ -819,117 +728,22 @@ body {
   animation: fadeUp .35s var(--ease) both;
 }
 
-.answer-tab-label {
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--pink);
-  margin-bottom: 8px;
-}
-
-.answer-question {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(20px, 5vw, 28px);
-  font-weight: 400;
-  line-height: 1.35;
-  color: var(--text);
-  margin-bottom: 28px;
-  flex: 0 0 auto;
-}
-
-.answer-textarea {
-  flex: 1;
-  background: var(--bg2);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--text);
-  outline: none;
-  resize: none;
-  transition: var(--transition);
-  min-height: 160px;
-  line-height: 1.8;
-}
-.answer-textarea:focus { border-color: var(--card); background: var(--bg3); }
-.answer-textarea::placeholder { color: var(--text3); font-style: italic; }
-
-.answer-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  flex-shrink: 0;
-}
-
-.btn-skip {
-  flex: 0 0 auto;
-  padding: 13px 20px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: transparent;
-  color: var(--text3);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.btn-skip:hover { border-color: var(--text3); color: var(--text2); }
-
-.btn-save {
-  flex: 1;
-  padding: 13px;
-  border-radius: var(--radius);
-  border: none;
-  background: var(--card);
-  color: white;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.btn-save:hover { background: var(--card-hover); }
-
-.answer-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-.answer-nav-btn {
-  font-size: 11px;
-  color: var(--text3);
-  cursor: pointer;
-  padding: 6px 0;
-  letter-spacing: .5px;
-  background: none;
-  border: none;
-  transition: color .2s;
-}
-.answer-nav-btn:hover { color: var(--text2); }
-.answer-nav-pos {
-  font-size: 11px;
-  color: var(--text3);
-  letter-spacing: 1px;
-}
-
 /* ══════════════════════════════════════
    SCREEN 6: KATA NARA
+   FIX: Hapus display:flex !important
+   Sekarang display diatur via .screen.active
 ══════════════════════════════════════ */
 #s-nara {
   padding: 0;
-  display: flex !important;
   flex-direction: column;
   height: 100vh;
   max-height: 100vh;
   min-height: unset;
   overflow: hidden;
+}
+/* Hanya tampil kalau active */
+#s-nara.active {
+  display: flex;
 }
 
 .nara-header-sub {
@@ -939,7 +753,6 @@ body {
   margin-top: 1px;
 }
 
-/* Chat area */
 .nara-chat-area {
   flex: 1;
   overflow-y: auto;
@@ -951,7 +764,6 @@ body {
 .nara-chat-area::-webkit-scrollbar { width: 3px; }
 .nara-chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-/* Nara intro bubble */
 .nara-intro-bubble {
   background: var(--bg2);
   border: 1px solid var(--border);
@@ -987,7 +799,6 @@ body {
   font-weight: 500;
 }
 
-/* Chat bubbles */
 .chat-bubble-wrap {
   display: flex;
   flex-direction: column;
@@ -1024,7 +835,6 @@ body {
   padding: 0 4px;
 }
 
-/* Typing indicator */
 .nara-typing {
   display: flex;
   gap: 4px;
@@ -1049,7 +859,6 @@ body {
   30% { transform: translateY(-4px); opacity: 1; }
 }
 
-/* Chat input */
 .nara-input-row {
   display: flex;
   gap: 8px;
@@ -1097,7 +906,7 @@ body {
 .nara-send-btn svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ══════════════════════════════════════
-   MODAL OVERLAY — cap cup cup!
+   MODAL OVERLAY
 ══════════════════════════════════════ */
 .modal-overlay {
   position: fixed;
@@ -1270,7 +1079,6 @@ body {
   white-space: nowrap;
 }
 
-/* Block pop animation when answered */
 @keyframes blockFill {
   0%   { transform: scale(1); }
   40%  { transform: scale(1.6); }
@@ -1281,7 +1089,6 @@ body {
   animation: blockFill .4s var(--ease) both;
 }
 
-/* Wedding button */
 .btn-wedding {
   width: 44px;
   height: 44px;
@@ -1299,7 +1106,6 @@ body {
 .btn-wedding svg { width: 18px; height: 18px; }
 .btn-wedding:hover { background: var(--pink); color: white; }
 
-/* Mosaic badge — appears at end of completed row */
 .mosaic-badge {
   width: 16px; height: 16px;
   border-radius: 4px;
@@ -1343,66 +1149,15 @@ body {
   text-align: center;
   animation: fadeUp .8s var(--ease) both;
 }
-.celebrate-art {
-  margin-bottom: 32px;
-  color: var(--card);
-}
-.celebrate-art svg {
-  width: 120px;
-  height: 120px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.celebrate-eyebrow {
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--pink);
-  margin-bottom: 12px;
-}
-.celebrate-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(36px, 10vw, 56px);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--card);
-  line-height: 1.1;
-  margin-bottom: 8px;
-}
-.celebrate-date {
-  font-size: 11px;
-  color: var(--text3);
-  letter-spacing: 2px;
-  margin-bottom: 24px;
-}
-.celebrate-text {
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--text2);
-  line-height: 1.85;
-  margin-bottom: 36px;
-  max-width: 360px;
-}
-.celebrate-actions {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  margin-bottom: 16px;
-}
+.celebrate-art { margin-bottom: 32px; color: var(--card); }
+.celebrate-art svg { width: 120px; height: 120px; stroke: currentColor; fill: none; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.celebrate-eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--pink); margin-bottom: 12px; }
+.celebrate-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 10vw, 56px); font-weight: 300; font-style: italic; color: var(--card); line-height: 1.1; margin-bottom: 8px; }
+.celebrate-date { font-size: 11px; color: var(--text3); letter-spacing: 2px; margin-bottom: 24px; }
+.celebrate-text { font-size: 14px; font-weight: 300; color: var(--text2); line-height: 1.85; margin-bottom: 36px; max-width: 360px; }
+.celebrate-actions { display: flex; gap: 10px; width: 100%; margin-bottom: 16px; }
 .celebrate-btn { flex: 1; }
-.celebrate-back {
-  font-size: 11px;
-  color: var(--text3);
-  background: none;
-  border: none;
-  cursor: pointer;
-  letter-spacing: .5px;
-  padding: 8px;
-  transition: color .2s;
-}
+.celebrate-back { font-size: 11px; color: var(--text3); background: none; border: none; cursor: pointer; letter-spacing: .5px; padding: 8px; transition: color .2s; }
 .celebrate-back:hover { color: var(--text2); }
 
 /* ══════════════════════════════════════
@@ -1416,29 +1171,11 @@ body {
   text-align: center;
   border: 1px solid var(--border);
 }
-.wedding-intro-icon {
-  margin-bottom: 10px;
-  color: var(--pink);
-}
-.wedding-intro-icon svg {
-  width: 32px; height: 32px;
-  stroke: currentColor; fill: none;
-  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
-}
-.wedding-intro-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  font-weight: 400;
-  font-style: italic;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-.wedding-intro-desc {
-  font-size: 12px;
-  color: var(--text2);
-  line-height: 1.7;
-  font-weight: 300;
-}
+.wedding-intro-icon { margin-bottom: 10px; color: var(--pink); }
+.wedding-intro-icon svg { width: 32px; height: 32px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.wedding-intro-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; font-style: italic; color: var(--text); margin-bottom: 6px; }
+.wedding-intro-desc { font-size: 12px; color: var(--text2); line-height: 1.7; font-weight: 300; }
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -1474,242 +1211,75 @@ body {
   animation: fadeUp .6s var(--ease) both;
 }
 
-.auth-logo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
-  font-weight: 400;
-  color: var(--text);
-  text-align: center;
-  margin-bottom: 4px;
-}
+.auth-logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: var(--text); text-align: center; margin-bottom: 4px; }
 .auth-logo em { color: var(--card); font-style: italic; }
+.auth-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text3); text-align: center; margin-bottom: 32px; }
 
-.auth-eyebrow {
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--text3);
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-/* Mode selector */
-.auth-mode {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.auth-mode-btn {
-  flex: 1;
-  padding: 12px 8px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg2);
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text2);
-  transition: var(--transition);
-  text-align: center;
-  line-height: 1.4;
-}
-.auth-mode-btn.active {
-  border-color: var(--card);
-  background: var(--bg3);
-  color: var(--card);
-}
-.auth-mode-btn span {
-  display: block;
-  font-size: 10px;
-  font-weight: 300;
-  color: var(--text3);
-  margin-top: 2px;
-}
+.auth-mode { display: flex; gap: 8px; margin-bottom: 20px; }
+.auth-mode-btn { flex: 1; padding: 12px 8px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--bg2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--text2); transition: var(--transition); text-align: center; line-height: 1.4; }
+.auth-mode-btn.active { border-color: var(--card); background: var(--bg3); color: var(--card); }
+.auth-mode-btn span { display: block; font-size: 10px; font-weight: 300; color: var(--text3); margin-top: 2px; }
 .auth-mode-btn.active span { color: var(--card); opacity: .7; }
 
-/* Tabs masuk/daftar */
-.auth-tabs {
-  display: flex;
-  gap: 0;
-  margin-bottom: 20px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-.auth-tab {
-  flex: 1;
-  padding: 10px;
-  background: transparent;
-  color: var(--text2);
-  border: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.auth-tab.active {
-  background: var(--card);
-  color: white;
-}
+.auth-tabs { display: flex; gap: 0; margin-bottom: 20px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.auth-tab { flex: 1; padding: 10px; background: transparent; color: var(--text2); border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: var(--transition); }
+.auth-tab.active { background: var(--card); color: white; }
 
-.auth-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.auth-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text2);
-  letter-spacing: .3px;
-}
-.auth-input {
-  background: var(--bg2);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--text);
-  outline: none;
-  transition: var(--transition);
-  width: 100%;
-}
+.auth-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.auth-label { font-size: 11px; font-weight: 500; color: var(--text2); letter-spacing: .3px; }
+.auth-input { background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text); outline: none; transition: var(--transition); width: 100%; }
 .auth-input:focus { border-color: var(--card); background: var(--bg3); }
 .auth-input::placeholder { color: var(--text3); }
 
-.auth-btn-primary {
-  width: 100%;
-  padding: 13px;
-  border-radius: var(--radius);
-  border: none;
-  background: var(--card);
-  color: white;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: var(--transition);
-  margin-bottom: 8px;
-}
+.auth-btn-primary { width: 100%; padding: 13px; border-radius: var(--radius); border: none; background: var(--card); color: white; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: var(--transition); margin-bottom: 8px; }
 .auth-btn-primary:hover { background: var(--card-hover); }
 .auth-btn-primary:disabled { opacity: .6; cursor: not-allowed; }
 
-.auth-btn-google {
-  width: 100%;
-  padding: 12px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--bg2);
-  color: var(--text2);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
+.auth-btn-google { width: 100%; padding: 12px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--bg2); color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
 .auth-btn-google:hover { border-color: var(--card); color: var(--text); }
 
-.auth-msg {
-  display: none;
-  margin-top: 10px;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  line-height: 1.6;
-}
-.auth-msg.error {
-  background: var(--pink-dim);
-  color: var(--pink);
-  border: 1px solid var(--pink);
-}
-.auth-msg.success {
-  background: var(--bg2);
-  color: var(--card);
-  border: 1px solid var(--card);
-}
+.auth-msg { display: none; margin-top: 10px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 12px; line-height: 1.6; }
+.auth-msg.error { background: var(--pink-dim); color: var(--pink); border: 1px solid var(--pink); }
+.auth-msg.success { background: var(--bg2); color: var(--card); border: 1px solid var(--card); }
 
-.auth-guest {
-  display: block;
-  text-align: center;
-  margin-top: 16px;
-  font-size: 11px;
-  color: var(--text3);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  text-decoration: underline;
-  transition: color .2s;
-}
+.auth-guest { display: block; text-align: center; margin-top: 16px; font-size: 11px; color: var(--text3); background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline; transition: color .2s; }
 .auth-guest:hover { color: var(--text2); }
 
-/* Couple partner code */
-.couple-code-box {
-  background: var(--bg2);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 10px;
+/* Auth: nama tamu input */
+.auth-guest-name {
   display: none;
+  margin-top: 12px;
+  flex-direction: column;
+  gap: 8px;
 }
-.couple-code-label {
-  font-size: 11px;
-  color: var(--text3);
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-.couple-code-val {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 26px;
-  font-weight: 400;
-  color: var(--card);
-  letter-spacing: 4px;
-  text-align: center;
-  margin-bottom: 8px;
-}
-.couple-code-copy {
-  width: 100%;
-  padding: 8px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: transparent;
-  font-size: 11px;
-  color: var(--text3);
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: var(--transition);
-}
+.auth-guest-name.visible { display: flex; }
+
+.couple-code-box { background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; display: none; }
+.couple-code-label { font-size: 11px; color: var(--text3); letter-spacing: 1px; margin-bottom: 8px; }
+.couple-code-val { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--card); letter-spacing: 4px; text-align: center; margin-bottom: 8px; }
+.couple-code-copy { width: 100%; padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: transparent; font-size: 11px; color: var(--text3); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: var(--transition); }
 .couple-code-copy:hover { border-color: var(--card); color: var(--card); }
 
-/* Mode badge di dashboard */
-.mode-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--text3);
-  padding: 3px 8px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--bg2);
-  cursor: pointer;
-  transition: var(--transition);
-  margin-top: 4px;
-}
+.mode-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg2); cursor: pointer; transition: var(--transition); margin-top: 4px; }
 .mode-badge:hover { border-color: var(--card); color: var(--card); }
 .mode-badge svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* Answer screen */
+.answer-tab-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
+.answer-question { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 5vw, 28px); font-weight: 400; line-height: 1.35; color: var(--text); margin-bottom: 28px; flex: 0 0 auto; }
+.answer-textarea { flex: 1; background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 300; color: var(--text); outline: none; resize: none; transition: var(--transition); min-height: 160px; line-height: 1.8; }
+.answer-textarea:focus { border-color: var(--card); background: var(--bg3); }
+.answer-textarea::placeholder { color: var(--text3); font-style: italic; }
+.answer-actions { display: flex; gap: 10px; margin-top: 20px; flex-shrink: 0; }
+.btn-skip { flex: 0 0 auto; padding: 13px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: transparent; color: var(--text3); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: var(--transition); }
+.btn-skip:hover { border-color: var(--text3); color: var(--text2); }
+.btn-save { flex: 1; padding: 13px; border-radius: var(--radius); border: none; background: var(--card); color: white; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: var(--transition); }
+.btn-save:hover { background: var(--card-hover); }
+.answer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.answer-nav-btn { font-size: 11px; color: var(--text3); cursor: pointer; padding: 6px 0; letter-spacing: .5px; background: none; border: none; transition: color .2s; }
+.answer-nav-btn:hover { color: var(--text2); }
+.answer-nav-pos { font-size: 11px; color: var(--text3); letter-spacing: 1px; }
+
 @media (max-width: 640px) {
   .dash-body {
     grid-template-columns: 1fr;
@@ -1717,33 +1287,17 @@ body {
     overflow: visible;
     height: auto;
   }
-  /* On mobile: right (mosaic) comes first visually */
   .dash-left { order: 2; border-right: none; border-top: 1px solid var(--border); padding: 12px; }
   .dash-right { order: 1; border-bottom: 1px solid var(--border); padding: 14px; }
   .dash-actions-row { order: 3; grid-column: 1; }
-
-  /* 8 columns icon-only on mobile */
   .tab-grid { grid-template-columns: repeat(8, 1fr); gap: 6px; }
-  .tab-card {
-    min-height: 44px;
-    padding: 8px 4px;
-    align-items: center;
-    justify-content: center;
-  }
+  .tab-card { min-height: 44px; padding: 8px 4px; align-items: center; justify-content: center; }
   .tab-card .tab-name { display: none; }
   .tab-card .tab-pct { display: none; }
   .tab-card .tab-icon { margin-bottom: 0; font-size: 18px; }
-
-  /* Profil takes full row on mobile */
-  .tab-card.profil-card {
-    grid-column: 1 / -1;
-    min-height: 40px;
-    padding: 10px 14px;
-  }
+  .tab-card.profil-card { grid-column: 1 / -1; min-height: 40px; padding: 10px 14px; }
   .tab-card.profil-card .tab-name { display: block; }
   .tab-card.profil-card .tab-pct { display: block; }
-
-  /* Smaller mosaic blocks on mobile */
   .mosaic-block { width: 8px; height: 8px; border-radius: 3px; }
   .mosaic-row { gap: 2px; }
   .mosaic-grid { gap: 2px; }
@@ -1764,7 +1318,6 @@ body {
     <div class="auth-logo">Ap<em>reez</em></div>
     <div class="auth-eyebrow">Refleksi Pra-Nikah · Part of Inarte</div>
 
-    <!-- Mode: Solo / Couple -->
     <div class="auth-mode">
       <button class="auth-mode-btn active" id="mode-solo" onclick="selectMode('solo')">
         Sendiri
@@ -1776,7 +1329,6 @@ body {
       </button>
     </div>
 
-    <!-- Couple: input kode pasangan -->
     <div class="couple-code-box" id="couple-input-box">
       <div class="couple-code-label">PUNYA KODE PASANGAN?</div>
       <div class="auth-field" style="margin-bottom:0;">
@@ -1785,13 +1337,11 @@ body {
       <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Atau buat akun dulu, kode akan muncul setelah masuk</div>
     </div>
 
-    <!-- Tabs: Masuk / Daftar -->
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-masuk" onclick="switchAuthTab('masuk')">Masuk</button>
       <button class="auth-tab" id="tab-daftar" onclick="switchAuthTab('daftar')">Daftar</button>
     </div>
 
-    <!-- Form: Masuk -->
     <div id="auth-masuk-form">
       <div class="auth-field">
         <label class="auth-label">Email</label>
@@ -1813,7 +1363,6 @@ body {
       </button>
     </div>
 
-    <!-- Form: Daftar -->
     <div id="auth-daftar-form" style="display:none;">
       <div class="auth-field">
         <label class="auth-label">Nama panggilan</label>
@@ -1841,13 +1390,18 @@ body {
 
     <div class="auth-msg" id="auth-msg"></div>
 
-    <button class="auth-guest" onclick="continueAsGuest()">
-      Lanjut tanpa akun · data hanya tersimpan di perangkat ini &amp; tidak bisa couple mode
+    <!-- FIX: Guest sekarang minta nama dulu -->
+    <button class="auth-guest" onclick="showGuestNameInput()">
+      Lanjut tanpa akun · data hanya tersimpan di perangkat ini
     </button>
+    <div class="auth-guest-name" id="auth-guest-name">
+      <input class="auth-input" id="guest-name-input" type="text" placeholder="Nama panggilanmu" maxlength="40" onkeydown="if(event.key==='Enter')continueAsGuest()"/>
+      <button class="auth-btn-primary" onclick="continueAsGuest()" style="margin-bottom:0;">Lanjut sebagai Tamu →</button>
+    </div>
   </div>
 </div>
 
-<!-- ══════════ SCREEN 1: LANDING (kept for structure, hidden by default) ══════════ -->
+<!-- ══════════ SCREEN 1: LANDING ══════════ -->
 <div id="s-landing" class="screen">
   <div class="landing-logo">Ap<em>reez</em></div>
 </div>
@@ -1873,12 +1427,9 @@ body {
   </div>
 
   <div class="dash-body">
-    <!-- Left: Tab grid -->
     <div class="dash-left">
       <div class="tab-grid" id="tab-grid"></div>
     </div>
-
-    <!-- Right: Mosaic progress -->
     <div class="dash-right">
       <div class="mosaic-wrap">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
@@ -1893,8 +1444,6 @@ body {
         <div class="mosaic-grid" id="mosaic-grid"></div>
       </div>
     </div>
-
-    <!-- Bottom actions -->
     <div class="dash-actions-row">
       <button class="btn-nara" onclick="openNara()">✦ Kata Nara</button>
       <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
@@ -1939,7 +1488,7 @@ body {
   <div id="wedding-body-wrap"></div>
 </div>
 
-<!-- ══════════ SCREEN 3: TAB (subtabs) ══════════ -->
+<!-- ══════════ SCREEN 3: TAB ══════════ -->
 <div id="s-tab" class="screen">
   <div class="sub-header">
     <button class="btn-back" onclick="goTo('s-dashboard')">‹</button>
@@ -1990,10 +1539,7 @@ body {
     </div>
     <button class="btn-sm" onclick="toggleTheme()" id="theme-btn6">☀</button>
   </div>
-
-  <!-- Chat messages area -->
   <div class="nara-chat-area" id="nara-chat-area">
-    <!-- Intro bubble — always visible -->
     <div class="nara-intro-bubble">
       <div class="nara-intro-name">Nara</div>
       <div class="nara-intro-text" id="nara-intro-text">
@@ -2003,8 +1549,6 @@ body {
       <div class="nara-threshold-note" id="nara-threshold-note"></div>
     </div>
   </div>
-
-  <!-- Input row -->
   <div class="nara-input-row">
     <textarea
       class="nara-input"
@@ -2020,7 +1564,7 @@ body {
   </div>
 </div>
 
-<!-- ══════════ MODAL OVERLAY — cap cup cup! ══════════ -->
+<!-- ══════════ MODAL OVERLAY ══════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="handleModalOverlayClick(event)">
   <div class="modal-sheet" id="modal-sheet">
     <div class="modal-handle"></div>
@@ -2048,45 +1592,31 @@ body {
 
 <script>
 // ══════════════════════════════════════
-// DATA — 17 tabs, all questions
+// ICONS
 // ══════════════════════════════════════
 const ICONS = {
-  // person outline
   profil: `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
-  // kite / layang-layang — hobi & kebebasan, stroke only
   hobi: `<svg viewBox="0 0 24 24"><path d="M12 2l8 9-8 9-8-9z"/><line x1="12" y1="2" x2="12" y2="20"/><line x1="4" y1="11" x2="20" y2="11"/><path d="M12 20 Q14 22 16 23"/></svg>`,
-  // crescent moon — mimpi & malam
   mimpi: `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
-  // compass — visi & arah hidup
   visi: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>`,
-  // open hands / doa — agama, lebih netral lintas agama
   agama: `<svg viewBox="0 0 24 24"><path d="M18 11V7a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"/><path d="M14 10V5a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5"/><path d="M10 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M6 12v-2a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4c0 4 3 6 8 8 5-2 8-4 8-8v-2"/></svg>`,
-  // house — keluarga & asal
   keluarga: `<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>`,
-  // coins / financial
   keuangan: `<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
-  // two people — pengasuhan
   pengasuhan: `<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
-  // book — pendidikan
   pendidikan: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
-  // checklist — pembagian tugas
   tugas: `<svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
-  // pulse / heartbeat — kesehatan
   kesehatan: `<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
-  // water drop — luka & healing, lebih lembut dari shield
   trauma: `<svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 9.5 5 14a7 7 0 0 0 14 0C19 9.5 12 2 12 2z"/><path d="M9 15.5a3.5 3.5 0 0 0 5.5 1"/></svg>`,
-  // heart outline — love language, stroke only bukan filled
   lovelang: `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
-  // lightning — konflik & energi
   konflik: `<svg viewBox="0 0 24 24"><polyline points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>`,
-  // globe — relasi sosial
   relasi: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
-  // speech bubble — ekspektasi & harapan yang diucapkan
   ekspektasi: `<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
-  // trending up — respon & adaptasi
   respon: `<svg viewBox="0 0 24 24"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg>`,
 };
 
+// ══════════════════════════════════════
+// TABS DATA
+// ══════════════════════════════════════
 const TABS = [
   {
     id:'profil', name:'Profil', icon:'profil', isProfil:true,
@@ -2109,424 +1639,150 @@ const TABS = [
     id:'hobi', name:'Hobi', icon:'hobi',
     desc:'Hal-hal yang membuatmu bahagia, dan bagaimana kamu mengelolanya dalam hubungan.',
     subtabs:[
-      {name:'Waktu Luang & Hobi', questions:[
-        'Apa yang biasanya kamu lakukan di waktu luang?',
-        'Ada hobi yang ingin kamu teruskan setelah menikah?',
-        'Apakah hobimu membutuhkan waktu atau biaya yang signifikan?',
-        'Apakah kamu siap merelakan waktu untuk hobimu demi anak dan pasanganmu?',
-      ]},
-      {name:'Hobi & Pasangan', questions:[
-        'Jika hobimu memakan banyak waktu, bagaimana kamu mengkomunikasikannya dengan pasangan?',
-        'Apabila pasanganmu tidak menyukai hobimu, apa yang akan kamu lakukan?',
-        'Bagaimana kamu menyeimbangkan me time dengan kebersamaan bersama keluarga?',
-        'Bagaimana kamu memfasilitasi me time untuk pasanganmu tanpa mengorbankan kebersamaan?',
-        'Apakah kamu nyaman memberi ruang pasanganmu untuk menghabiskan waktu dengan teman-temannya tanpa kamu?',
-      ]},
-      {name:'Selera, Gaya Hidup & Energi', questions:[
-        'Makanan favorit dan makanan yang tidak bisa kamu makan (alergi, pantangan, dll)',
-        'Apakah kamu tipe yang suka masak atau lebih suka makan di luar?',
-        'Tontonan, musik, atau buku yang kamu suka',
-        'Apakah kamu suka atau punya hewan peliharaan? Atau justru tidak nyaman dengan hewan tertentu?',
-        'Setelah hari yang melelahkan, kamu lebih butuh waktu sendiri atau justru butuh bercerita sama orang terdekat?',
-      ]},
+      {name:'Waktu Luang & Hobi', questions:['Apa yang biasanya kamu lakukan di waktu luang?','Ada hobi yang ingin kamu teruskan setelah menikah?','Apakah hobimu membutuhkan waktu atau biaya yang signifikan?','Apakah kamu siap merelakan waktu untuk hobimu demi anak dan pasanganmu?']},
+      {name:'Hobi & Pasangan', questions:['Jika hobimu memakan banyak waktu, bagaimana kamu mengkomunikasikannya dengan pasangan?','Apabila pasanganmu tidak menyukai hobimu, apa yang akan kamu lakukan?','Bagaimana kamu menyeimbangkan me time dengan kebersamaan bersama keluarga?','Bagaimana kamu memfasilitasi me time untuk pasanganmu tanpa mengorbankan kebersamaan?','Apakah kamu nyaman memberi ruang pasanganmu untuk menghabiskan waktu dengan teman-temannya tanpa kamu?']},
+      {name:'Selera, Gaya Hidup & Energi', questions:['Makanan favorit dan makanan yang tidak bisa kamu makan (alergi, pantangan, dll)','Apakah kamu tipe yang suka masak atau lebih suka makan di luar?','Tontonan, musik, atau buku yang kamu suka','Apakah kamu suka atau punya hewan peliharaan? Atau justru tidak nyaman dengan hewan tertentu?','Setelah hari yang melelahkan, kamu lebih butuh waktu sendiri atau justru butuh bercerita sama orang terdekat?']},
     ]
   },
   {
     id:'mimpi', name:'Mimpi', icon:'mimpi',
     desc:'Ke mana arah hidupmu, dan bagaimana kamu ingin bertumbuh bersama pasangan.',
     subtabs:[
-      {name:'Mimpi Pribadi', questions:[
-        'Apa hal yang paling ingin kamu wujudkan dalam hidupmu?',
-        'Apakah ada pencapaian yang ingin kamu raih dalam karir atau bidang yang kamu tekuni?',
-        'Adakah tempat yang ingin kamu kunjungi atau tinggali suatu hari nanti?',
-        'Apakah kamu pernah mengorbankan mimpimu untuk orang lain? Bagaimana perasaanmu tentang itu sekarang?',
-      ]},
-      {name:'Mimpi Bersama', questions:[
-        'Apa yang paling ingin kamu bangun bersama pasanganmu setelah menikah?',
-        'Dalam 5 tahun pertama pernikahan, kamu ingin hidupmu seperti apa?',
-        'Apakah kamu punya target yang ingin dicapai bersama — rumah, bisnis, ibadah, dll?',
-      ]},
-      {name:'Mendukung & Bertumbuh', questions:[
-        'Apakah kamu rela berhenti sejenak untuk mendukung pasanganmu meraih mimpinya, lalu kemudian kamu meraih mimpimu di kemudian hari?',
-        'Apa pendapatmu jika mimpimu harus berevolusi dengan keadaanmu?',
-        'Apakah kamu siap mempelajari hal-hal baru seiring perkembangan zaman?',
-        'Ceritakan mimpimu yang belum pernah kamu ceritakan ke siapapun.',
-      ]},
+      {name:'Mimpi Pribadi', questions:['Apa hal yang paling ingin kamu wujudkan dalam hidupmu?','Apakah ada pencapaian yang ingin kamu raih dalam karir atau bidang yang kamu tekuni?','Adakah tempat yang ingin kamu kunjungi atau tinggali suatu hari nanti?','Apakah kamu pernah mengorbankan mimpimu untuk orang lain? Bagaimana perasaanmu tentang itu sekarang?']},
+      {name:'Mimpi Bersama', questions:['Apa yang paling ingin kamu bangun bersama pasanganmu setelah menikah?','Dalam 5 tahun pertama pernikahan, kamu ingin hidupmu seperti apa?','Apakah kamu punya target yang ingin dicapai bersama — rumah, bisnis, ibadah, dll?']},
+      {name:'Mendukung & Bertumbuh', questions:['Apakah kamu rela berhenti sejenak untuk mendukung pasanganmu meraih mimpinya, lalu kemudian kamu meraih mimpimu di kemudian hari?','Apa pendapatmu jika mimpimu harus berevolusi dengan keadaanmu?','Apakah kamu siap mempelajari hal-hal baru seiring perkembangan zaman?','Ceritakan mimpimu yang belum pernah kamu ceritakan ke siapapun.']},
     ]
   },
   {
     id:'visi', name:'Visi & Misi', icon:'visi',
     desc:'Nilai dan arah hidup yang menjadi kompas — bagaimana kamu memandang pernikahan dan kehidupan.',
     subtabs:[
-      {name:'Pernikahan & Kebahagiaan', questions:[
-        'Menurutmu, pernikahan yang sehat itu seperti apa?',
-        'Apa yang paling penting bagimu dalam sebuah pernikahan?',
-        'Bagaimana kamu mendefinisikan kebahagiaan dalam rumah tangga?',
-      ]},
-      {name:'Peran & Keluarga Ideal', questions:[
-        'Bagaimana kamu membayangkan peranmu sebagai suami atau istri?',
-        'Seperti apa keluarga ideal menurutmu?',
-        'Apakah kamu ingin punya anak? Berapa, dan kapan?',
-      ]},
-      {name:'Nilai & Prinsip Hidup', questions:[
-        'Apa nilai atau prinsip hidup yang paling kamu pegang teguh?',
-        'Dari mana nilai-nilai itu kamu dapat?',
-        'Adakah hal yang menurutmu tidak bisa dikompromikan dalam sebuah hubungan?',
-      ]},
+      {name:'Pernikahan & Kebahagiaan', questions:['Menurutmu, pernikahan yang sehat itu seperti apa?','Apa yang paling penting bagimu dalam sebuah pernikahan?','Bagaimana kamu mendefinisikan kebahagiaan dalam rumah tangga?']},
+      {name:'Peran & Keluarga Ideal', questions:['Bagaimana kamu membayangkan peranmu sebagai suami atau istri?','Seperti apa keluarga ideal menurutmu?','Apakah kamu ingin punya anak? Berapa, dan kapan?']},
+      {name:'Nilai & Prinsip Hidup', questions:['Apa nilai atau prinsip hidup yang paling kamu pegang teguh?','Dari mana nilai-nilai itu kamu dapat?','Adakah hal yang menurutmu tidak bisa dikompromikan dalam sebuah hubungan?']},
     ]
   },
   {
     id:'agama', name:'Agama', icon:'agama',
     desc:'Bagaimana agama berperan dalam keseharian dan keputusan hidupmu.',
     subtabs:[
-      {name:'Praktik & Kedalaman Ibadah', questions:[
-        'Bagaimana kamu menjalankan kewajiban ibadahmu dalam keseharian?',
-        'Apakah kamu punya rutinitas ibadah di luar kewajiban yang kamu jaga?',
-        'Seberapa besar agama memengaruhi keputusan-keputusan besar dalam hidupmu?',
-        'Bagaimana sikapmu jika pasanganmu memiliki tingkat kedalaman ibadah yang berbeda darimu? Apakah kamu siap untuk belajar lebih lagi?',
-      ]},
-      {name:'Agama dalam Rumah Tangga', questions:[
-        'Bagaimana kamu ingin agama berperan dalam rumah tanggamu nanti?',
-        'Apakah kamu ingin membangun rutinitas ibadah bersama dalam keluarga?',
-        'Bagaimana kamu ingin mengenalkan agama kepada anakmu?',
-      ]},
-      {name:'Pendidikan Agama Anak', questions:[
-        'Apakah kamu ingin anak-anakmu mendapat pendidikan agama formal?',
-        'Bagaimana pandanganmu tentang urutan prioritas pendidikan anak — apakah fondasi moral dan agama perlu dibangun lebih dulu sebelum pendidikan umum?',
-        'Jika keluarga besar memiliki pandangan agama yang berbeda dalam mendidik anak, bagaimana kamu menyikapinya?',
-      ]},
+      {name:'Praktik & Kedalaman Ibadah', questions:['Bagaimana kamu menjalankan kewajiban ibadahmu dalam keseharian?','Apakah kamu punya rutinitas ibadah di luar kewajiban yang kamu jaga?','Seberapa besar agama memengaruhi keputusan-keputusan besar dalam hidupmu?','Bagaimana sikapmu jika pasanganmu memiliki tingkat kedalaman ibadah yang berbeda darimu? Apakah kamu siap untuk belajar lebih lagi?']},
+      {name:'Agama dalam Rumah Tangga', questions:['Bagaimana kamu ingin agama berperan dalam rumah tanggamu nanti?','Apakah kamu ingin membangun rutinitas ibadah bersama dalam keluarga?','Bagaimana kamu ingin mengenalkan agama kepada anakmu?']},
+      {name:'Pendidikan Agama Anak', questions:['Apakah kamu ingin anak-anakmu mendapat pendidikan agama formal?','Bagaimana pandanganmu tentang urutan prioritas pendidikan anak — apakah fondasi moral dan agama perlu dibangun lebih dulu sebelum pendidikan umum?','Jika keluarga besar memiliki pandangan agama yang berbeda dalam mendidik anak, bagaimana kamu menyikapinya?']},
     ]
   },
   {
     id:'keluarga', name:'Latar Belakang', icon:'keluarga',
     desc:'Dari mana kamu dibentuk — karena di mana seseorang tumbuh akan memengaruhi siapa dia.',
     subtabs:[
-      {name:'Gambaran Keluarga', questions:[
-        'Ceritakan tentang keluargamu — kamu tumbuh bersama siapa?',
-        'Bagaimana suasana rumah tempat kamu dibesarkan?',
-        'Apakah kamu dekat dengan orang tuamu? Bagaimana hubungan itu membentukmu?',
-        'Adakah tradisi atau rutinitas keluarga yang ingin kamu lanjutkan setelah menikah?',
-      ]},
-      {name:'Pola yang Terbawa', questions:[
-        'Hal positif apa dari keluargamu yang ingin kamu bawa ke rumah tanggamu sendiri?',
-        'Adakah pola dalam keluargamu yang tidak ingin kamu ulangi?',
-        'Bagaimana keluargamu menyelesaikan konflik? Apakah itu memengaruhi caramu menghadapi masalah?',
-        'Pernahkah kamu menyadari bahwa kamu memperlakukan orang lain dengan cara yang dulu paling kamu benci dari lingkunganmu?',
-      ]},
-      {name:'Keluarga & Pernikahan', questions:[
-        'Seberapa besar peran keluarga besarmu dalam kehidupanmu sehari-hari?',
-        'Apakah ada ekspektasi dari keluargamu terhadap pernikahanmu?',
-        'Apabila terjadi konflik antara keluarga dan pasanganmu, bagaimana kamu menjadi penengah?',
-        'Apakah kamu dan pasangan akan tinggal bersama keluarga atau mandiri? Bagaimana keputusan itu diambil?',
-      ]},
+      {name:'Gambaran Keluarga', questions:['Ceritakan tentang keluargamu — kamu tumbuh bersama siapa?','Bagaimana suasana rumah tempat kamu dibesarkan?','Apakah kamu dekat dengan orang tuamu? Bagaimana hubungan itu membentukmu?','Adakah tradisi atau rutinitas keluarga yang ingin kamu lanjutkan setelah menikah?']},
+      {name:'Pola yang Terbawa', questions:['Hal positif apa dari keluargamu yang ingin kamu bawa ke rumah tanggamu sendiri?','Adakah pola dalam keluargamu yang tidak ingin kamu ulangi?','Bagaimana keluargamu menyelesaikan konflik? Apakah itu memengaruhi caramu menghadapi masalah?','Pernahkah kamu menyadari bahwa kamu memperlakukan orang lain dengan cara yang dulu paling kamu benci dari lingkunganmu?']},
+      {name:'Keluarga & Pernikahan', questions:['Seberapa besar peran keluarga besarmu dalam kehidupanmu sehari-hari?','Apakah ada ekspektasi dari keluargamu terhadap pernikahanmu?','Apabila terjadi konflik antara keluarga dan pasanganmu, bagaimana kamu menjadi penengah?','Apakah kamu dan pasangan akan tinggal bersama keluarga atau mandiri? Bagaimana keputusan itu diambil?']},
     ]
   },
   {
     id:'keuangan', name:'Keuangan', icon:'keuangan',
     desc:'Bagaimana kamu berhubungan dengan uang — karena itu cerminan nilai dan tanggung jawabmu.',
     subtabs:[
-      {name:'Karakter & Kebiasaan Finansial', questions:[
-        'Apakah kamu tipe orang yang lebih suka menabung atau menghabiskan uang?',
-        'Bagaimana kamu mengelola pengeluaranmu sehari-hari? Apakah kamu punya sistem tersendiri?',
-        'Apakah kamu punya kebiasaan mencatat keuangan?',
-        'Bagaimana sikapmu terhadap hutang? Apakah kamu saat ini memiliki hutang yang perlu diketahui pasanganmu?',
-      ]},
-      {name:'Tanggungan & Kondisi Finansial', questions:[
-        'Apakah kamu saat ini memiliki tanggungan finansial terhadap keluargamu?',
-        'Apakah kamu bagian dari sandwich generation? Bagaimana kamu merencanakannya ke depan?',
-        'Apakah kamu memiliki aset atau tabungan yang ingin kamu informasikan?',
-        'Bagaimana pandanganmu tentang kemandirian finansial istri — apakah kamu mendukung istri untuk tetap memiliki kemampuan dan akses finansialnya sendiri?',
-      ]},
-      {name:'Pengaturan Keuangan Rumah Tangga', questions:[
-        'Bagaimana menurutmu pengaturan keuangan yang ideal dalam rumah tangga?',
-        'Apakah kamu setuju dengan sistem keuangan gabungan, terpisah, atau kombinasi keduanya?',
-        'Bagaimana pendapatmu soal nafkah — siapa yang bertanggung jawab, dan bagaimana jika kondisinya berubah?',
-        'Bagaimana pandanganmu tentang pasanganmu yang bekerja? Dan bagaimana jika penghasilan pasanganmu lebih besar darimu?',
-      ]},
-      {name:'Masa Depan Finansial', questions:[
-        'Apakah kamu punya rencana investasi atau tabungan jangka panjang?',
-        'Bagaimana kamu mempersiapkan dana darurat untuk keluargamu?',
-        'Apakah kamu sudah mempersiapkan dana pensiunmu?',
-        'Apakah kamu punya bayangan bagaimana tetap memiliki penghasilan aktif di masa senja?',
-        'Apakah kamu sudah memikirkan rencana finansial untuk kebutuhan perawatan di hari tua — baik untukmu sendiri maupun untuk orang tuamu?',
-      ]},
+      {name:'Karakter & Kebiasaan Finansial', questions:['Apakah kamu tipe orang yang lebih suka menabung atau menghabiskan uang?','Bagaimana kamu mengelola pengeluaranmu sehari-hari? Apakah kamu punya sistem tersendiri?','Apakah kamu punya kebiasaan mencatat keuangan?','Bagaimana sikapmu terhadap hutang? Apakah kamu saat ini memiliki hutang yang perlu diketahui pasanganmu?']},
+      {name:'Tanggungan & Kondisi Finansial', questions:['Apakah kamu saat ini memiliki tanggungan finansial terhadap keluargamu?','Apakah kamu bagian dari sandwich generation? Bagaimana kamu merencanakannya ke depan?','Apakah kamu memiliki aset atau tabungan yang ingin kamu informasikan?','Bagaimana pandanganmu tentang kemandirian finansial istri — apakah kamu mendukung istri untuk tetap memiliki kemampuan dan akses finansialnya sendiri?']},
+      {name:'Pengaturan Keuangan Rumah Tangga', questions:['Bagaimana menurutmu pengaturan keuangan yang ideal dalam rumah tangga?','Apakah kamu setuju dengan sistem keuangan gabungan, terpisah, atau kombinasi keduanya?','Bagaimana pendapatmu soal nafkah — siapa yang bertanggung jawab, dan bagaimana jika kondisinya berubah?','Bagaimana pandanganmu tentang pasanganmu yang bekerja? Dan bagaimana jika penghasilan pasanganmu lebih besar darimu?']},
+      {name:'Masa Depan Finansial', questions:['Apakah kamu punya rencana investasi atau tabungan jangka panjang?','Bagaimana kamu mempersiapkan dana darurat untuk keluargamu?','Apakah kamu sudah mempersiapkan dana pensiunmu?','Apakah kamu punya bayangan bagaimana tetap memiliki penghasilan aktif di masa senja?','Apakah kamu sudah memikirkan rencana finansial untuk kebutuhan perawatan di hari tua — baik untukmu sendiri maupun untuk orang tuamu?']},
     ]
   },
   {
     id:'pengasuhan', name:'Pengasuhan', icon:'pengasuhan',
     desc:'Bagaimana kamu membayangkan menjadi orang tua — nilai, pola asuh, dan kesiapanmu.',
     subtabs:[
-      {name:'Keputusan Dasar', questions:[
-        'Seberapa siap kamu secara mental, fisik, dan finansial untuk memiliki anak?',
-        'Bagaimana jarak usia antar anak yang kamu bayangkan?',
-        'Bagaimana sikapmu jika kehamilan tidak sesuai rencana — lebih cepat, lebih lambat, atau tidak terduga?',
-        'Bagaimana jika kalian menghadapi kesulitan memiliki anak secara biologis? Apakah kamu terbuka untuk adopsi atau opsi lainnya?',
-      ]},
-      {name:'Pola Asuh & Bonding', questions:[
-        'Bagaimana gambaran pola asuh yang ingin kamu terapkan?',
-        'Ketika anakmu melakukan sesuatu yang salah, apa respons pertama yang akan muncul dari dirimu — dan dari mana respons itu berasal?',
-        'Bagaimana caramu mendisiplinkan anak tanpa melukai harga dirinya?',
-        'Bagaimana caramu membangun kedekatan dengan anak tanpa kehilangan otoritasmu sebagai orang tua?',
-        'Apakah kamu siap untuk meminta maaf kepada anakmu ketika kamu melakukan kesalahan?',
-      ]},
-      {name:'Pembagian Peran & Support System', questions:[
-        'Jika kamu dan pasangan sama-sama bekerja penuh, bagaimana kamu memastikan tetap bisa membangun bonding yang bermakna dengan anakmu?',
-        'Jika kamu dan pasanganmu lelah dan tidak ada support system lain, bagaimana kamu akan membagi peran?',
-        'Apakah kamu terbuka untuk menitipkan anak ke daycare, menyewa nanny, atau ART jika diperlukan?',
-        'Apakah kamu terbuka dengan keputusan salah satu dari kalian untuk resign demi pengasuhan anak?',
-        'Apakah kamu siap mendampingi dan mencari bantuan profesional jika anakmu memerlukan perhatian atau penanganan khusus?',
-      ]},
-      {name:'Nilai & Warisan', questions:[
-        'Nilai atau karakter apa yang paling ingin kamu tanamkan pada anakmu?',
-        'Bagaimana kamu ingin anakmu mengenang masa kecilnya?',
-        'Bagaimana kamu memastikan setiap anak merasa dicintai secara setara tanpa favoritisme?',
-        'Apakah kamu memiliki jadwal khusus yang benar-benar akan kamu habiskan bersama keluarga kecilmu?',
-      ]},
+      {name:'Keputusan Dasar', questions:['Seberapa siap kamu secara mental, fisik, dan finansial untuk memiliki anak?','Bagaimana jarak usia antar anak yang kamu bayangkan?','Bagaimana sikapmu jika kehamilan tidak sesuai rencana — lebih cepat, lebih lambat, atau tidak terduga?','Bagaimana jika kalian menghadapi kesulitan memiliki anak secara biologis? Apakah kamu terbuka untuk adopsi atau opsi lainnya?']},
+      {name:'Pola Asuh & Bonding', questions:['Bagaimana gambaran pola asuh yang ingin kamu terapkan?','Ketika anakmu melakukan sesuatu yang salah, apa respons pertama yang akan muncul dari dirimu — dan dari mana respons itu berasal?','Bagaimana caramu mendisiplinkan anak tanpa melukai harga dirinya?','Bagaimana caramu membangun kedekatan dengan anak tanpa kehilangan otoritasmu sebagai orang tua?','Apakah kamu siap untuk meminta maaf kepada anakmu ketika kamu melakukan kesalahan?']},
+      {name:'Pembagian Peran & Support System', questions:['Jika kamu dan pasangan sama-sama bekerja penuh, bagaimana kamu memastikan tetap bisa membangun bonding yang bermakna dengan anakmu?','Jika kamu dan pasanganmu lelah dan tidak ada support system lain, bagaimana kamu akan membagi peran?','Apakah kamu terbuka untuk menitipkan anak ke daycare, menyewa nanny, atau ART jika diperlukan?','Apakah kamu terbuka dengan keputusan salah satu dari kalian untuk resign demi pengasuhan anak?','Apakah kamu siap mendampingi dan mencari bantuan profesional jika anakmu memerlukan perhatian atau penanganan khusus?']},
+      {name:'Nilai & Warisan', questions:['Nilai atau karakter apa yang paling ingin kamu tanamkan pada anakmu?','Bagaimana kamu ingin anakmu mengenang masa kecilnya?','Bagaimana kamu memastikan setiap anak merasa dicintai secara setara tanpa favoritisme?','Apakah kamu memiliki jadwal khusus yang benar-benar akan kamu habiskan bersama keluarga kecilmu?']},
     ]
   },
   {
     id:'pendidikan', name:'Pendidikan Anak', icon:'pendidikan',
     desc:'Bagaimana kamu membayangkan pendidikan dan tumbuh kembang anakmu.',
     subtabs:[
-      {name:'Filosofi Pendidikan', questions:[
-        'Secara praktis, bagaimana kamu akan memastikan pendidikan moral dan karakter berjalan beriringan dengan pendidikan akademik anakmu?',
-        'Seberapa penting prestasi akademik menurutmu dibanding karakter anak?',
-        'Bagaimana sikapmu jika pilihan pendidikan anakmu berbeda dari yang kamu harapkan?',
-        'Jika kondisi finansial tidak sesuai target, apakah kamu bersedia meminimalisir pengeluaran lain demi memprioritaskan pendidikan anak?',
-      ]},
-      {name:'Pilihan Sekolah & Dana', questions:[
-        'Bagaimana kamu membayangkan pendidikan anak — sekolah negeri, swasta, berbasis agama, internasional, homeschool, atau kombinasi?',
-        'Apakah kamu siap untuk meriset pilihan sekolah secara matang sebelum mengambil keputusan?',
-        'Apakah kamu berkenan jika anak memilih sekolah yang jauh dari rumah?',
-        'Apakah kamu sudah memikirkan persiapan dana pendidikan anak?',
-      ]},
-      {name:'Minat & Ekstrakurikuler', questions:[
-        'Bagaimana caramu mengenali dan mendukung minat anakmu?',
-        'Kapan menurutmu waktu yang tepat untuk mulai mengenalkan ekstrakurikuler?',
-        'Bagaimana sikapmu jika minat anakmu berbeda jauh dari ekspektasimu?',
-        'Apakah kamu siap mendukung minat anak secara konsisten — baik waktu maupun biaya?',
-      ]},
-      {name:'Tumbuh Kembang & Dunia Sosial', questions:[
-        'Bagaimana kamu akan mendampingi anak dalam memahami hubungan sosialnya seiring bertambahnya usia?',
-        'Apakah kamu siap memberikan pendidikan seks yang sesuai usia kepada anakmu? Bagaimana caramu menyampaikannya?',
-        'Apakah kamu setuju dengan pemisahan kamar berdasarkan gender saat anak mulai tumbuh besar?',
-        'Bagaimana kamu mempersiapkan anak untuk menghadapi dunia digital dan pergaulan yang semakin kompleks?',
-        'Bagaimana caramu menjadi tempat yang aman bagi anak untuk bercerita — termasuk hal-hal yang mungkin membuatmu tidak nyaman mendengarnya?',
-      ]},
+      {name:'Filosofi Pendidikan', questions:['Secara praktis, bagaimana kamu akan memastikan pendidikan moral dan karakter berjalan beriringan dengan pendidikan akademik anakmu?','Seberapa penting prestasi akademik menurutmu dibanding karakter anak?','Bagaimana sikapmu jika pilihan pendidikan anakmu berbeda dari yang kamu harapkan?','Jika kondisi finansial tidak sesuai target, apakah kamu bersedia meminimalisir pengeluaran lain demi memprioritaskan pendidikan anak?']},
+      {name:'Pilihan Sekolah & Dana', questions:['Bagaimana kamu membayangkan pendidikan anak — sekolah negeri, swasta, berbasis agama, internasional, homeschool, atau kombinasi?','Apakah kamu siap untuk meriset pilihan sekolah secara matang sebelum mengambil keputusan?','Apakah kamu berkenan jika anak memilih sekolah yang jauh dari rumah?','Apakah kamu sudah memikirkan persiapan dana pendidikan anak?']},
+      {name:'Minat & Ekstrakurikuler', questions:['Bagaimana caramu mengenali dan mendukung minat anakmu?','Kapan menurutmu waktu yang tepat untuk mulai mengenalkan ekstrakurikuler?','Bagaimana sikapmu jika minat anakmu berbeda jauh dari ekspektasimu?','Apakah kamu siap mendukung minat anak secara konsisten — baik waktu maupun biaya?']},
+      {name:'Tumbuh Kembang & Dunia Sosial', questions:['Bagaimana kamu akan mendampingi anak dalam memahami hubungan sosialnya seiring bertambahnya usia?','Apakah kamu siap memberikan pendidikan seks yang sesuai usia kepada anakmu? Bagaimana caramu menyampaikannya?','Apakah kamu setuju dengan pemisahan kamar berdasarkan gender saat anak mulai tumbuh besar?','Bagaimana kamu mempersiapkan anak untuk menghadapi dunia digital dan pergaulan yang semakin kompleks?','Bagaimana caramu menjadi tempat yang aman bagi anak untuk bercerita — termasuk hal-hal yang mungkin membuatmu tidak nyaman mendengarnya?']},
     ]
   },
   {
     id:'tugas', name:'Pembagian Tugas', icon:'tugas',
     desc:'Ekspektasi tentang siapa ngapain di rumah — karena konflik kecil sering berakar dari hal yang tidak pernah dibicarakan.',
     subtabs:[
-      {name:'Pandangan & Ekspektasi', questions:[
-        'Bagaimana pandanganmu tentang pembagian tugas rumah tangga antara suami dan istri?',
-        'Apakah kamu percaya tugas rumah tangga adalah tanggung jawab bersama, atau ada pembagian peran yang jelas?',
-        'Bagaimana keluargamu dulu membagi tugas rumah tangga? Apakah itu memengaruhi pandanganmu sekarang?',
-        'Pekerjaan rumah apa yang kamu tidak keberatan lakukan secara rutin?',
-      ]},
-      {name:'Negosiasi & Fleksibilitas', questions:[
-        'Adakah pekerjaan rumah yang kamu harap bisa dibagi atau didelegasikan?',
-        'Bagaimana sikapmu jika pasanganmu tidak melakukan bagiannya?',
-        'Apakah kamu terbuka untuk menggunakan bantuan luar seperti asisten rumah tangga jika diperlukan?',
-        'Bagaimana pembagian tugas menurutmu harus menyesuaikan jika salah satu dari kalian sakit, bekerja lebih keras, atau punya bayi baru?',
-      ]},
+      {name:'Pandangan & Ekspektasi', questions:['Bagaimana pandanganmu tentang pembagian tugas rumah tangga antara suami dan istri?','Apakah kamu percaya tugas rumah tangga adalah tanggung jawab bersama, atau ada pembagian peran yang jelas?','Bagaimana keluargamu dulu membagi tugas rumah tangga? Apakah itu memengaruhi pandanganmu sekarang?','Pekerjaan rumah apa yang kamu tidak keberatan lakukan secara rutin?']},
+      {name:'Negosiasi & Fleksibilitas', questions:['Adakah pekerjaan rumah yang kamu harap bisa dibagi atau didelegasikan?','Bagaimana sikapmu jika pasanganmu tidak melakukan bagiannya?','Apakah kamu terbuka untuk menggunakan bantuan luar seperti asisten rumah tangga jika diperlukan?','Bagaimana pembagian tugas menurutmu harus menyesuaikan jika salah satu dari kalian sakit, bekerja lebih keras, atau punya bayi baru?']},
     ]
   },
   {
     id:'kesehatan', name:'Kesehatan', icon:'kesehatan',
     desc:'Dalam pernikahan, kesehatan satu orang adalah urusan berdua.',
     subtabs:[
-      {name:'Kesehatan Fisik', questions:[
-        'Apakah kamu memiliki kondisi kesehatan fisik yang perlu diketahui pasanganmu — seperti penyakit kronis, alergi serius, atau kondisi genetik?',
-        'Apakah kamu tahu mengapa tubuhmu memiliki kondisi tersebut — apakah karena faktor genetik atau kebiasaan hidup?',
-        'Bagaimana kebiasaan hidupmu sehari-hari dalam menjaga kesehatan — pola makan, olahraga, tidur?',
-        'Apakah kamu merokok? Jika iya, apakah kamu terbuka untuk mendiskusikan hal ini dengan pasanganmu?',
-        'Apakah kamu mengonsumsi alkohol? Seberapa sering, dan bagaimana sikapmu jika pasanganmu memiliki pandangan berbeda tentang ini?',
-        'Apakah kamu rutin melakukan pemeriksaan kesehatan?',
-        'Apakah kamu terbuka untuk melakukan medical check-up bersama sebelum menikah?',
-      ]},
-      {name:'Kesehatan Mental', questions:[
-        'Apakah kamu pernah atau sedang menghadapi kondisi kesehatan mental yang perlu diketahui pasanganmu?',
-        'Bagaimana caramu mengenali ketika kamu sedang tidak baik-baik saja secara emosional?',
-        'Apakah kamu terbuka untuk mencari bantuan profesional seperti psikolog atau konselor jika diperlukan?',
-        'Apakah kamu percaya kesehatan mental sama pentingnya dengan kesehatan fisik?',
-      ]},
-      {name:'Komitmen & Pendampingan', questions:[
-        'Jika suatu saat pasanganmu mengetahui kondisi kesehatanmu yang belum terdeteksi sebelumnya, apakah kamu berkomitmen untuk mencari pertolongan?',
-        'Jika pasanganmu menghadapi kondisi kesehatan yang serius, seberapa jauh kamu siap untuk mendampingi?',
-        'Bagaimana kamu akan menjaga kesehatan dirimu agar tetap bisa hadir sepenuhnya untuk keluargamu?',
-        'Bagaimana kamu membayangkan kehidupanmu di hari tua — tinggal mandiri, bersama anak, atau di fasilitas perawatan lansia?',
-      ]},
+      {name:'Kesehatan Fisik', questions:['Apakah kamu memiliki kondisi kesehatan fisik yang perlu diketahui pasanganmu — seperti penyakit kronis, alergi serius, atau kondisi genetik?','Apakah kamu tahu mengapa tubuhmu memiliki kondisi tersebut — apakah karena faktor genetik atau kebiasaan hidup?','Bagaimana kebiasaan hidupmu sehari-hari dalam menjaga kesehatan — pola makan, olahraga, tidur?','Apakah kamu merokok? Jika iya, apakah kamu terbuka untuk mendiskusikan hal ini dengan pasanganmu?','Apakah kamu mengonsumsi alkohol? Seberapa sering, dan bagaimana sikapmu jika pasanganmu memiliki pandangan berbeda tentang ini?','Apakah kamu rutin melakukan pemeriksaan kesehatan?','Apakah kamu terbuka untuk melakukan medical check-up bersama sebelum menikah?']},
+      {name:'Kesehatan Mental', questions:['Apakah kamu pernah atau sedang menghadapi kondisi kesehatan mental yang perlu diketahui pasanganmu?','Bagaimana caramu mengenali ketika kamu sedang tidak baik-baik saja secara emosional?','Apakah kamu terbuka untuk mencari bantuan profesional seperti psikolog atau konselor jika diperlukan?','Apakah kamu percaya kesehatan mental sama pentingnya dengan kesehatan fisik?']},
+      {name:'Komitmen & Pendampingan', questions:['Jika suatu saat pasanganmu mengetahui kondisi kesehatanmu yang belum terdeteksi sebelumnya, apakah kamu berkomitmen untuk mencari pertolongan?','Jika pasanganmu menghadapi kondisi kesehatan yang serius, seberapa jauh kamu siap untuk mendampingi?','Bagaimana kamu akan menjaga kesehatan dirimu agar tetap bisa hadir sepenuhnya untuk keluargamu?','Bagaimana kamu membayangkan kehidupanmu di hari tua — tinggal mandiri, bersama anak, atau di fasilitas perawatan lansia?']},
     ]
   },
   {
     id:'trauma', name:'Trauma', icon:'trauma', safeSpace:true,
     desc:'Luka yang tidak dikenali akan muncul dalam cara-cara yang tidak terduga dalam pernikahan.',
     subtabs:[
-      {name:'Mengenal Lukamu', questions:[
-        'Apakah ada momen dalam hidupmu yang terasa sangat menyakitkan dan sulit untuk dilupakan?',
-        'Apakah ada topik, situasi, atau perilaku tertentu yang langsung membuatmu tidak nyaman atau menarik diri, tanpa kamu tahu persis alasannya?',
-        'Pernahkah kamu merasa sangat marah, sedih, atau takut secara berlebihan dalam situasi yang sebetulnya tidak terlalu besar?',
-        'Apakah ada bagian tubuhmu yang sering terasa tegang — seperti bahu, rahang, atau perut — meskipun kamu tidak sedang melakukan sesuatu yang berat?',
-        'Saat suasana sedang tenang, apakah kamu justru merasa gelisah seolah sedang menunggu sesuatu yang buruk terjadi?',
-        'Apakah ada ingatan masa lalu yang tiba-tiba muncul tanpa kamu undang, seolah-olah kejadian itu baru saja terjadi?',
-      ]},
-      {name:'Pola & Dampak', questions:[
-        'Apakah kamu merasa sulit mempercayai niat baik orang lain, bahkan orang yang belum pernah menyakitimu?',
-        'Apakah kamu jauh lebih keras menghakimi dirimu sendiri dibanding menghakimi orang lain yang melakukan kesalahan yang sama?',
-        'Apakah kamu merasa nilai dirimu sangat bergantung pada seberapa berguna atau produktif kamu bagi orang lain?',
-        'Jika kamu melihat ke belakang, apakah masalah dalam hubunganmu cenderung memiliki pola yang sama?',
-        'Setelah meluapkan emosi atau bersikap tajam kepada seseorang, apakah kamu merasa lega sesaat lalu kemudian hampa atau menyesal?',
-      ]},
-      {name:'Healing & Harapan', questions:[
-        'Apakah kamu sedang atau pernah menjalani proses pemulihan — baik secara mandiri, spiritual, maupun dengan bantuan profesional?',
-        'Apakah kamu percaya bahwa luka masa lalu bisa disembuhkan? Bagaimana perjalananmu dengan itu?',
-        'Apakah kamu terbuka untuk menjalani proses healing bersama pasanganmu jika diperlukan?',
-        'Apakah kamu siap untuk memulai proses healing — bukan hanya untuk dirimu sendiri, tapi untuk orang-orang yang kamu cintai?',
-        'Apa yang kamu butuhkan dari pasanganmu ketika lukamu sedang muncul ke permukaan?',
-      ]},
-      {name:'Trauma & Parenting', questions:[
-        'Apakah kamu khawatir bahwa luka masa lalumu bisa memengaruhi cara kamu mengasuh anak?',
-        'Apa yang sudah atau akan kamu lakukan untuk memastikan lukamu tidak diwariskan kepada anakmu?',
-        'Apakah kamu siap untuk juga menjadi ruang yang aman bagi luka pasanganmu?',
-      ]},
+      {name:'Mengenal Lukamu', questions:['Apakah ada momen dalam hidupmu yang terasa sangat menyakitkan dan sulit untuk dilupakan?','Apakah ada topik, situasi, atau perilaku tertentu yang langsung membuatmu tidak nyaman atau menarik diri, tanpa kamu tahu persis alasannya?','Pernahkah kamu merasa sangat marah, sedih, atau takut secara berlebihan dalam situasi yang sebetulnya tidak terlalu besar?','Apakah ada bagian tubuhmu yang sering terasa tegang — seperti bahu, rahang, atau perut — meskipun kamu tidak sedang melakukan sesuatu yang berat?','Saat suasana sedang tenang, apakah kamu justru merasa gelisah seolah sedang menunggu sesuatu yang buruk terjadi?','Apakah ada ingatan masa lalu yang tiba-tiba muncul tanpa kamu undang, seolah-olah kejadian itu baru saja terjadi?']},
+      {name:'Pola & Dampak', questions:['Apakah kamu merasa sulit mempercayai niat baik orang lain, bahkan orang yang belum pernah menyakitimu?','Apakah kamu jauh lebih keras menghakimi dirimu sendiri dibanding menghakimi orang lain yang melakukan kesalahan yang sama?','Apakah kamu merasa nilai dirimu sangat bergantung pada seberapa berguna atau produktif kamu bagi orang lain?','Jika kamu melihat ke belakang, apakah masalah dalam hubunganmu cenderung memiliki pola yang sama?','Setelah meluapkan emosi atau bersikap tajam kepada seseorang, apakah kamu merasa lega sesaat lalu kemudian hampa atau menyesal?']},
+      {name:'Healing & Harapan', questions:['Apakah kamu sedang atau pernah menjalani proses pemulihan — baik secara mandiri, spiritual, maupun dengan bantuan profesional?','Apakah kamu percaya bahwa luka masa lalu bisa disembuhkan? Bagaimana perjalananmu dengan itu?','Apakah kamu terbuka untuk menjalani proses healing bersama pasanganmu jika diperlukan?','Apakah kamu siap untuk memulai proses healing — bukan hanya untuk dirimu sendiri, tapi untuk orang-orang yang kamu cintai?','Apa yang kamu butuhkan dari pasanganmu ketika lukamu sedang muncul ke permukaan?']},
+      {name:'Trauma & Parenting', questions:['Apakah kamu khawatir bahwa luka masa lalumu bisa memengaruhi cara kamu mengasuh anak?','Apa yang sudah atau akan kamu lakukan untuk memastikan lukamu tidak diwariskan kepada anakmu?','Apakah kamu siap untuk juga menjadi ruang yang aman bagi luka pasanganmu?']},
     ]
   },
   {
     id:'lovelang', name:'Love Language', icon:'lovelang',
     desc:'Bagaimana kamu memberi dan menerima cinta — karena banyak pasangan yang saling sayang tapi saling merasa tidak dicintai.',
     subtabs:[
-      {name:'Menerima & Memberi Cinta', questions:[
-        'Apa yang paling membuatmu merasa dicintai — kata-kata penyemangat, waktu berkualitas, sentuhan fisik, hadiah kecil, atau bantuan nyata dalam keseharian?',
-        'Bagaimana biasanya kamu mengekspresikan rasa sayangmu kepada orang yang kamu cintai?',
-        'Pernahkah kamu merasa sudah memberikan banyak tapi pasanganmu tetap merasa kurang? Atau sebaliknya?',
-        'Apakah kamu tahu love language pasanganmu? Bagaimana kamu berusaha memenuhinya?',
-      ]},
-      {name:'Keintiman Emosional', questions:[
-        'Seberapa nyaman kamu berbagi perasaan dan kekhawatiranmu dengan orang terdekat?',
-        'Apakah kamu tipe yang terbuka secara emosional, atau kamu perlu waktu dan kepercayaan yang dalam sebelum bisa membuka diri?',
-        'Bagaimana caramu menunjukkan bahwa kamu hadir — bukan hanya secara fisik, tapi juga secara emosional?',
-        'Apa yang kamu butuhkan dari pasanganmu ketika kamu sedang merasa jauh atau disconnected?',
-      ]},
-      {name:'Menjaga Kehangatan', questions:[
-        'Bagaimana menurutmu cara menjaga kehangatan dan kedekatan dalam hubungan yang sudah berjalan lama?',
-        'Apakah kamu percaya bahwa rasa cinta dalam pernikahan perlu terus dirawat secara aktif? Bagaimana caramu melakukannya?',
-        'Apa hal kecil yang menurutmu bisa membuat pasangan merasa dihargai dalam keseharian?',
-      ]},
+      {name:'Menerima & Memberi Cinta', questions:['Apa yang paling membuatmu merasa dicintai — kata-kata penyemangat, waktu berkualitas, sentuhan fisik, hadiah kecil, atau bantuan nyata dalam keseharian?','Bagaimana biasanya kamu mengekspresikan rasa sayangmu kepada orang yang kamu cintai?','Pernahkah kamu merasa sudah memberikan banyak tapi pasanganmu tetap merasa kurang? Atau sebaliknya?','Apakah kamu tahu love language pasanganmu? Bagaimana kamu berusaha memenuhinya?']},
+      {name:'Keintiman Emosional', questions:['Seberapa nyaman kamu berbagi perasaan dan kekhawatiranmu dengan orang terdekat?','Apakah kamu tipe yang terbuka secara emosional, atau kamu perlu waktu dan kepercayaan yang dalam sebelum bisa membuka diri?','Bagaimana caramu menunjukkan bahwa kamu hadir — bukan hanya secara fisik, tapi juga secara emosional?','Apa yang kamu butuhkan dari pasanganmu ketika kamu sedang merasa jauh atau disconnected?']},
+      {name:'Menjaga Kehangatan', questions:['Bagaimana menurutmu cara menjaga kehangatan dan kedekatan dalam hubungan yang sudah berjalan lama?','Apakah kamu percaya bahwa rasa cinta dalam pernikahan perlu terus dirawat secara aktif? Bagaimana caramu melakukannya?','Apa hal kecil yang menurutmu bisa membuat pasangan merasa dihargai dalam keseharian?']},
     ]
   },
   {
     id:'konflik', name:'Konflik', icon:'konflik',
     desc:'Yang membedakan pernikahan yang bertahan bukan absennya konflik, tapi bagaimana konflik itu dihadapi.',
     subtabs:[
-      {name:'Gaya Komunikasi', questions:[
-        'Ketika ada sesuatu yang mengganjal, apakah kamu lebih memilih langsung bicara, menunggu waktu yang tepat, atau cenderung memendam?',
-        'Apakah kamu tipe yang langsung mengungkapkan perasaan, atau kamu perlu waktu untuk memprosesnya dulu sebelum bicara?',
-        'Apakah kamu lebih nyaman berkomunikasi secara langsung, lewat pesan, atau cara lain?',
-        'Bagaimana caramu memastikan bahwa apa yang kamu sampaikan benar-benar dipahami oleh pasanganmu?',
-      ]},
-      {name:'Saat Konflik Terjadi', questions:[
-        'Apa yang biasanya kamu lakukan ketika kamu merasa marah atau kecewa terhadap pasanganmu?',
-        'Apakah kamu tipe yang perlu waktu sendiri dulu sebelum bisa berdiskusi, atau kamu lebih suka menyelesaikannya segera?',
-        'Bagaimana caramu memastikan bahwa konflik diselesaikan, bukan hanya diredam atau diabaikan?',
-        'Pernahkah kamu mengatakan sesuatu saat marah yang kemudian kamu sesali? Bagaimana kamu menyikapinya?',
-        'Apakah kamu bisa membedakan antara menyerang masalah dan menyerang orangnya?',
-      ]},
-      {name:'Mendengar & Memaafkan', questions:[
-        'Apakah kamu merasa sudah menjadi pendengar yang baik? Apa artinya mendengarkan bagimu?',
-        'Ketika pasanganmu sedang bercerita tentang masalahnya, apa yang biasanya kamu lakukan — mencoba memberi solusi, atau cukup hadir dan mendengar?',
-        'Apakah kamu mudah meminta maaf ketika kamu salah? Bagaimana caramu melakukannya?',
-        'Apakah kamu mudah memaafkan? Bagaimana kamu memproses rasa sakit sebelum bisa memaafkan?',
-      ]},
-      {name:'Batasan & Komitmen', questions:[
-        'Adakah hal yang menurutmu tidak boleh terjadi dalam sebuah pertengkaran — kata-kata atau perilaku yang kamu anggap sebagai batas yang tidak boleh dilanggar?',
-        'Apakah kamu berkomitmen untuk tidak melibatkan orang luar dalam konflik rumah tanggamu?',
-        'Apakah kamu terbuka untuk mencari bantuan mediator atau konselor jika konflik terasa tidak bisa diselesaikan berdua?',
-        'Apakah kamu percaya bahwa sebuah konflik bisa menjadi jembatan untuk saling memahami lebih dalam?',
-      ]},
+      {name:'Gaya Komunikasi', questions:['Ketika ada sesuatu yang mengganjal, apakah kamu lebih memilih langsung bicara, menunggu waktu yang tepat, atau cenderung memendam?','Apakah kamu tipe yang langsung mengungkapkan perasaan, atau kamu perlu waktu untuk memprosesnya dulu sebelum bicara?','Apakah kamu lebih nyaman berkomunikasi secara langsung, lewat pesan, atau cara lain?','Bagaimana caramu memastikan bahwa apa yang kamu sampaikan benar-benar dipahami oleh pasanganmu?']},
+      {name:'Saat Konflik Terjadi', questions:['Apa yang biasanya kamu lakukan ketika kamu merasa marah atau kecewa terhadap pasanganmu?','Apakah kamu tipe yang perlu waktu sendiri dulu sebelum bisa berdiskusi, atau kamu lebih suka menyelesaikannya segera?','Bagaimana caramu memastikan bahwa konflik diselesaikan, bukan hanya diredam atau diabaikan?','Pernahkah kamu mengatakan sesuatu saat marah yang kemudian kamu sesali? Bagaimana kamu menyikapinya?','Apakah kamu bisa membedakan antara menyerang masalah dan menyerang orangnya?']},
+      {name:'Mendengar & Memaafkan', questions:['Apakah kamu merasa sudah menjadi pendengar yang baik? Apa artinya mendengarkan bagimu?','Ketika pasanganmu sedang bercerita tentang masalahnya, apa yang biasanya kamu lakukan — mencoba memberi solusi, atau cukup hadir dan mendengar?','Apakah kamu mudah meminta maaf ketika kamu salah? Bagaimana caramu melakukannya?','Apakah kamu mudah memaafkan? Bagaimana kamu memproses rasa sakit sebelum bisa memaafkan?']},
+      {name:'Batasan & Komitmen', questions:['Adakah hal yang menurutmu tidak boleh terjadi dalam sebuah pertengkaran — kata-kata atau perilaku yang kamu anggap sebagai batas yang tidak boleh dilanggar?','Apakah kamu berkomitmen untuk tidak melibatkan orang luar dalam konflik rumah tanggamu?','Apakah kamu terbuka untuk mencari bantuan mediator atau konselor jika konflik terasa tidak bisa diselesaikan berdua?','Apakah kamu percaya bahwa sebuah konflik bisa menjadi jembatan untuk saling memahami lebih dalam?']},
     ]
   },
   {
     id:'relasi', name:'Relasi Sosial', icon:'relasi',
     desc:'Cara seseorang memperlakukan orang lain di luar rumah adalah cerminan karakternya.',
     subtabs:[
-      {name:'Pertemanan', questions:[
-        'Seberapa penting pertemanan bagimu dalam kehidupanmu sehari-hari?',
-        'Apakah kamu tipe yang punya sedikit teman dekat atau banyak teman dalam lingkaran yang lebih luas?',
-        'Bagaimana caramu menjaga pertemanan yang sudah lama ketika kesibukan dan prioritas hidup berubah setelah menikah?',
-        'Apakah kamu nyaman jika pasanganmu menghabiskan waktu dengan teman-temannya tanpa kamu?',
-        'Bagaimana sikapmu terhadap pertemanan pasanganmu dengan lawan jenis?',
-      ]},
-      {name:'Keluarga Besar & Batasan', questions:[
-        'Seberapa sering kamu berinteraksi dengan keluarga besarmu? Apakah itu terasa seperti keharusan atau kesenangan?',
-        'Bagaimana caramu menyeimbangkan loyalitas terhadap keluarga asalmu dengan komitmen terhadap keluarga barumu?',
-        'Seberapa banyak hal tentang rumah tanggamu yang kamu rasa nyaman untuk dibagikan kepada teman atau keluarga?',
-        'Apakah kamu berkomitmen untuk menjaga privasi rumah tanggamu dari lingkungan luar?',
-      ]},
-      {name:'Ketika Relasi Jadi Rumit', questions:[
-        'Bagaimana caramu menyikapi teman atau anggota keluarga yang bersikap tidak menyenangkan terhadap pasanganmu?',
-        'Pernahkah kamu kehilangan pertemanan yang penting? Apa yang kamu pelajari dari itu?',
-        'Bagaimana caramu merespons ketika seseorang yang kamu percaya mengkhianatimu?',
-        'Bagaimana pandanganmu tentang keterbukaan akses device dan akun media sosial dalam pernikahan — apakah itu bentuk kepercayaan atau pelanggaran privasi?',
-      ]},
+      {name:'Pertemanan', questions:['Seberapa penting pertemanan bagimu dalam kehidupanmu sehari-hari?','Apakah kamu tipe yang punya sedikit teman dekat atau banyak teman dalam lingkaran yang lebih luas?','Bagaimana caramu menjaga pertemanan yang sudah lama ketika kesibukan dan prioritas hidup berubah setelah menikah?','Apakah kamu nyaman jika pasanganmu menghabiskan waktu dengan teman-temannya tanpa kamu?','Bagaimana sikapmu terhadap pertemanan pasanganmu dengan lawan jenis?']},
+      {name:'Keluarga Besar & Batasan', questions:['Seberapa sering kamu berinteraksi dengan keluarga besarmu? Apakah itu terasa seperti keharusan atau kesenangan?','Bagaimana caramu menyeimbangkan loyalitas terhadap keluarga asalmu dengan komitmen terhadap keluarga barumu?','Seberapa banyak hal tentang rumah tanggamu yang kamu rasa nyaman untuk dibagikan kepada teman atau keluarga?','Apakah kamu berkomitmen untuk menjaga privasi rumah tanggamu dari lingkungan luar?']},
+      {name:'Ketika Relasi Jadi Rumit', questions:['Bagaimana caramu menyikapi teman atau anggota keluarga yang bersikap tidak menyenangkan terhadap pasanganmu?','Pernahkah kamu kehilangan pertemanan yang penting? Apa yang kamu pelajari dari itu?','Bagaimana caramu merespons ketika seseorang yang kamu percaya mengkhianatimu?','Bagaimana pandanganmu tentang keterbukaan akses device dan akun media sosial dalam pernikahan — apakah itu bentuk kepercayaan atau pelanggaran privasi?']},
     ]
   },
   {
     id:'ekspektasi', name:'Ekspektasi', icon:'ekspektasi',
     desc:'Ekspektasi yang tidak diucapkan adalah sumber kekecewaan terbesar dalam rumah tangga.',
     subtabs:[
-      {name:'Bayangan tentang Pernikahan', questions:[
-        'Sebelum menikah, bagaimana kamu membayangkan kehidupan pernikahan itu?',
-        'Dari mana bayangan itu terbentuk — dari keluarga, teman, tontonan, atau hal lain?',
-        'Apakah ada ekspektasi tentang pernikahan yang kamu sadari belakangan ternyata tidak realistis?',
-        'Apa yang paling ingin kamu berikan dalam sebuah pernikahan?',
-      ]},
-      {name:'Ekspektasi terhadap Pasangan', questions:[
-        'Apa yang paling kamu harapkan dari pasanganmu dalam kehidupan sehari-hari?',
-        'Apakah kamu punya standar atau ekspektasi tertentu yang perlu diketahui pasanganmu sejak awal?',
-        'Bagaimana caramu menyampaikan ekspektasimu tanpa membuat pasanganmu merasa dihakimi atau tidak cukup?',
-        'Bagaimana sikapmu ketika kenyataan pernikahan tidak sesuai dengan yang kamu bayangkan?',
-      ]},
-      {name:'Ketika Segalanya Terasa Berat', questions:[
-        'Jika suatu saat salah satu dari kalian merasa bosan atau ingin menyerah, apa yang akan kamu lakukan sebelum mengambil keputusan besar?',
-        'Bagaimana sikapmu jika kepercayaan dalam pernikahanmu dikhianati? Apakah kamu percaya sebuah pernikahan bisa pulih dari pengkhianatan?',
-        'Apakah kamu berkomitmen untuk mencari bantuan profesional sebelum memutuskan untuk mengakhiri pernikahan?',
-        'Apakah kamu sudah memikirkan skenario jika salah satu dari kalian lebih dulu dipanggil? Apakah ada persiapan — finansial, legal, maupun emosional?',
-      ]},
-      {name:'Fondasi & Komitmen', questions:[
-        'Apa yang menurutmu menjadi fondasi terkuat sebuah pernikahan yang sehat dan bertahan lama?',
-        'Bagaimana pandanganmu tentang perjanjian pranikah — apakah itu bentuk ketidakpercayaan, atau justru kesepakatan yang melindungi kedua belah pihak?',
-        'Ketika semuanya terasa berat, apa yang akan membuatmu memilih untuk tetap bertahan dan memperjuangkan pernikahanmu?',
-      ]},
+      {name:'Bayangan tentang Pernikahan', questions:['Sebelum menikah, bagaimana kamu membayangkan kehidupan pernikahan itu?','Dari mana bayangan itu terbentuk — dari keluarga, teman, tontonan, atau hal lain?','Apakah ada ekspektasi tentang pernikahan yang kamu sadari belakangan ternyata tidak realistis?','Apa yang paling ingin kamu berikan dalam sebuah pernikahan?']},
+      {name:'Ekspektasi terhadap Pasangan', questions:['Apa yang paling kamu harapkan dari pasanganmu dalam kehidupan sehari-hari?','Apakah kamu punya standar atau ekspektasi tertentu yang perlu diketahui pasanganmu sejak awal?','Bagaimana caramu menyampaikan ekspektasimu tanpa membuat pasanganmu merasa dihakimi atau tidak cukup?','Bagaimana sikapmu ketika kenyataan pernikahan tidak sesuai dengan yang kamu bayangkan?']},
+      {name:'Ketika Segalanya Terasa Berat', questions:['Jika suatu saat salah satu dari kalian merasa bosan atau ingin menyerah, apa yang akan kamu lakukan sebelum mengambil keputusan besar?','Bagaimana sikapmu jika kepercayaan dalam pernikahanmu dikhianati? Apakah kamu percaya sebuah pernikahan bisa pulih dari pengkhianatan?','Apakah kamu berkomitmen untuk mencari bantuan profesional sebelum memutuskan untuk mengakhiri pernikahan?','Apakah kamu sudah memikirkan skenario jika salah satu dari kalian lebih dulu dipanggil? Apakah ada persiapan — finansial, legal, maupun emosional?']},
+      {name:'Fondasi & Komitmen', questions:['Apa yang menurutmu menjadi fondasi terkuat sebuah pernikahan yang sehat dan bertahan lama?','Bagaimana pandanganmu tentang perjanjian pranikah — apakah itu bentuk ketidakpercayaan, atau justru kesepakatan yang melindungi kedua belah pihak?','Ketika semuanya terasa berat, apa yang akan membuatmu memilih untuk tetap bertahan dan memperjuangkan pernikahanmu?']},
     ]
   },
   {
     id:'respon', name:'Respon', icon:'respon',
     desc:'Karakter seseorang yang sesungguhnya baru terlihat ketika tekanan datang.',
     subtabs:[
-      {name:'Ketika Kamu Terhimpit', questions:[
-        'Bagaimana caramu menghadapi situasi yang terasa sangat berat — finansial, emosional, atau fisik?',
-        'Apakah kamu tipe yang mencari bantuan ketika kesulitan, atau cenderung menanggung sendiri?',
-        'Ketika kamu sedang di titik terendah, apa yang paling kamu butuhkan dari orang terdekatmu?',
-        'Apakah kamu bisa dengan jujur mengakui kepada pasanganmu bahwa kamu sedang tidak baik-baik saja?',
-      ]},
-      {name:'Ketika Pasangan Terhimpit', questions:[
-        'Bagaimana caramu hadir untuk pasanganmu ketika dia sedang dalam kondisi terburuknya?',
-        'Pernahkah pasanganmu merasa tidak didukung olehmu di saat dia paling membutuhkan? Apa yang kamu pelajari dari momen itu?',
-        'Apakah kamu siap untuk menjadi penopang ketika pasanganmu sedang tidak kuat, tanpa membuatnya merasa lemah?',
-      ]},
-      {name:'Menghadapi Kekurangan Pasangan', questions:[
-        'Bagaimana sikapmu ketika kamu menyadari kekurangan pasanganmu yang tidak kamu ketahui sebelumnya?',
-        'Apakah kamu tipe yang bisa menerima pasangan apa adanya, atau kamu cenderung ingin mengubahnya?',
-        'Bagaimana caramu menyampaikan ketidaknyamanan terhadap kebiasaan pasanganmu tanpa membuatnya merasa diserang?',
-        'Apakah kamu percaya bahwa seseorang bisa berubah, dan seberapa jauh kamu bersedia menunggu dan mendampingi proses itu?',
-      ]},
-      {name:'Memulihkan Diri', questions:[
-        'Apakah kamu punya cara untuk memulihkan dirimu sendiri ketika kamu merasa habis secara energi maupun emosi?',
-        'Bagaimana caramu menjaga harapan ketika situasi rumah tangga sedang tidak ideal?',
-        'Apa yang akan kamu lakukan ketika kamu merasa sudah memberikan segalanya tapi tetap merasa tidak cukup?',
-      ]},
+      {name:'Ketika Kamu Terhimpit', questions:['Bagaimana caramu menghadapi situasi yang terasa sangat berat — finansial, emosional, atau fisik?','Apakah kamu tipe yang mencari bantuan ketika kesulitan, atau cenderung menanggung sendiri?','Ketika kamu sedang di titik terendah, apa yang paling kamu butuhkan dari orang terdekatmu?','Apakah kamu bisa dengan jujur mengakui kepada pasanganmu bahwa kamu sedang tidak baik-baik saja?']},
+      {name:'Ketika Pasangan Terhimpit', questions:['Bagaimana caramu hadir untuk pasanganmu ketika dia sedang dalam kondisi terburuknya?','Pernahkah pasanganmu merasa tidak didukung olehmu di saat dia paling membutuhkan? Apa yang kamu pelajari dari momen itu?','Apakah kamu siap untuk menjadi penopang ketika pasanganmu sedang tidak kuat, tanpa membuatnya merasa lemah?']},
+      {name:'Menghadapi Kekurangan Pasangan', questions:['Bagaimana sikapmu ketika kamu menyadari kekurangan pasanganmu yang tidak kamu ketahui sebelumnya?','Apakah kamu tipe yang bisa menerima pasangan apa adanya, atau kamu cenderung ingin mengubahnya?','Bagaimana caramu menyampaikan ketidaknyamanan terhadap kebiasaan pasanganmu tanpa membuatnya merasa diserang?','Apakah kamu percaya bahwa seseorang bisa berubah, dan seberapa jauh kamu bersedia menunggu dan mendampingi proses itu?']},
+      {name:'Memulihkan Diri', questions:['Apakah kamu punya cara untuk memulihkan dirimu sendiri ketika kamu merasa habis secara energi maupun emosi?','Bagaimana caramu menjaga harapan ketika situasi rumah tangga sedang tidak ideal?','Apa yang akan kamu lakukan ketika kamu merasa sudah memberikan segalanya tapi tetap merasa tidak cukup?']},
     ]
   },
 ];
@@ -2554,9 +1810,9 @@ function initSupabase() {
 // ══════════════════════════════════════
 let userName = '';
 let answers = {};
-let appMode = 'solo'; // 'solo' | 'couple'
-let partnerCode = null; // kode unik user ini untuk couple
-let linkedPartnerCode = null; // kode pasangan yang di-link
+let appMode = 'solo';
+let partnerCode = null;
+let linkedPartnerCode = null;
 let currentTabIdx = 0;
 let currentSubIdx = 0;
 let currentQIdx = 0;
@@ -2590,7 +1846,7 @@ function saveLocalState() {
 
 function saveState() {
   saveLocalState();
-  if(isGuest) return; // guest: local only
+  if(isGuest) return;
   if(saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(() => syncToSupabase(), 1500);
 }
@@ -2634,21 +1890,6 @@ async function loadFromSupabase() {
   }
 }
 
-async function loadPartnerAnswers() {
-  if(!SB || !linkedPartnerCode) return null;
-  try {
-    const { data } = await SB
-      .from('apreez_sessions')
-      .select('answers, user_name')
-      .eq('partner_code', linkedPartnerCode)
-      .maybeSingle();
-    return data || null;
-  } catch(e) {
-    return null;
-  }
-}
-
-// Generate simple unique code
 function generateCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
@@ -2657,17 +1898,6 @@ function generateCode() {
 }
 
 loadLocalState();
-
-// Bersihkan state lama (v3) kalau masih ada
-if(localStorage.getItem('apreez_v3')) {
-  const old = JSON.parse(localStorage.getItem('apreez_v3') || '{}');
-  // Migrasi answers saja, buang sisanya yang mungkin corrupt
-  if(old.answers && Object.keys(old.answers).length > 0 && !answers) {
-    answers = old.answers;
-  }
-  localStorage.removeItem('apreez_v3');
-  saveLocalState();
-}
 
 // ══════════════════════════════════════
 // AUTH UI
@@ -2696,6 +1926,38 @@ function showAuthMsg(msg, isError = true) {
   el.className = 'auth-msg ' + (isError ? 'error' : 'success');
   el.style.display = 'block';
   el.textContent = msg;
+}
+
+// FIX: Guest sekarang minta nama dulu sebelum masuk
+function showGuestNameInput() {
+  const box = document.getElementById('auth-guest-name');
+  box.classList.add('visible');
+  document.getElementById('guest-name-input').focus();
+}
+
+function continueAsGuest() {
+  const nameInput = document.getElementById('guest-name-input').value.trim();
+  if(!nameInput) {
+    showGuestNameInput();
+    showAuthMsg('Tulis nama panggilanmu dulu ya.');
+    return;
+  }
+  isGuest = true;
+  userName = nameInput;
+  appMode = selectedMode;
+  if(appMode === 'couple') {
+    appMode = 'solo';
+    showAuthMsg('Mode couple membutuhkan akun. Lanjut sebagai tamu dengan mode solo.', false);
+    setTimeout(() => {
+      document.getElementById('auth-screen').style.display = 'none';
+      saveLocalState();
+      enterApp();
+    }, 2000);
+    return;
+  }
+  saveLocalState();
+  document.getElementById('auth-screen').style.display = 'none';
+  enterApp();
 }
 
 async function authLogin() {
@@ -2740,28 +2002,6 @@ async function authGoogleLogin() {
   if(error) showAuthMsg(error.message);
 }
 
-function continueAsGuest() {
-  // Minta nama dulu kalau belum ada
-  if(!userName) {
-    const name = prompt('Siapa namamu?');
-    if(!name || !name.trim()) return; // batal kalau tidak diisi
-    userName = name.trim();
-  }
-
-  isGuest = true;
-  appMode = selectedMode;
-
-  // Guest tidak bisa couple mode
-  if(appMode === 'couple') {
-    appMode = 'solo';
-    alert('Mode couple membutuhkan akun. Lanjut sebagai tamu dengan mode solo.');
-  }
-
-  document.getElementById('auth-screen').style.display = 'none';
-  saveLocalState();
-  enterApp();
-}
-
 async function onLoginSuccess(user, nameOverride = null) {
   if(currentUser?.id === user?.id) return;
   currentUser = user;
@@ -2782,13 +2022,11 @@ async function onLoginSuccess(user, nameOverride = null) {
       || user.email.split('@')[0];
   }
 
-  // Apply selected mode from auth screen (if fresh login)
   if(!partnerCode) {
     appMode = selectedMode;
     partnerCode = generateCode();
   }
 
-  // Handle couple partner code input
   if(selectedMode === 'couple') {
     const inputCode = document.getElementById('partner-code-input')?.value.trim().toUpperCase();
     if(inputCode && inputCode.length === 6) {
@@ -2801,8 +2039,10 @@ async function onLoginSuccess(user, nameOverride = null) {
   enterApp();
 }
 
+// FIX: enterApp memastikan semua render dipanggil setelah state siap
 function enterApp() {
-  // Pastikan selalu mulai dari dashboard, bukan screen lain
+  // Safety: pastikan userName tidak kosong
+  if(!userName) userName = 'Tamu';
   renderDashboard();
   goTo('s-dashboard');
   updateModeBadge();
@@ -2818,7 +2058,7 @@ async function authLogout() {
 }
 
 // ══════════════════════════════════════
-// MODE SETTINGS (dari dashboard badge)
+// MODE SETTINGS
 // ══════════════════════════════════════
 function updateModeBadge() {
   const label = document.getElementById('mode-badge-label');
@@ -2834,7 +2074,6 @@ function updateModeBadge() {
 }
 
 function showModeSettings() {
-  // Build modal content dynamically
   const isCouple = appMode === 'couple';
   let html = `
     <div class="modal-handle"></div>
@@ -2849,14 +2088,12 @@ function showModeSettings() {
       <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">
         ${isGuest ? 'Mode tamu · data hanya tersimpan di perangkat ini' : currentUser?.email || ''}
       </div>
-
       ${!isGuest ? `
       <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">MODE REFLEKSI</div>
       <div style="display:flex;gap:8px;margin-bottom:16px;">
         <button onclick="switchMode('solo')" style="flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid ${appMode==='solo'?'var(--card)':'var(--border)'};background:${appMode==='solo'?'var(--bg3)':'var(--bg2)'};color:${appMode==='solo'?'var(--card)':'var(--text2)'};font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Sendiri</button>
         <button onclick="switchMode('couple')" style="flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid ${appMode==='couple'?'var(--card)':'var(--border)'};background:${appMode==='couple'?'var(--bg3)':'var(--bg2)'};color:${appMode==='couple'?'var(--card)':'var(--text2)'};font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Bersama Pasangan</button>
       </div>
-
       ${appMode === 'couple' ? `
       <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE KAMU</div>
       <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;text-align:center;">
@@ -2864,7 +2101,6 @@ function showModeSettings() {
         <div style="font-size:10px;color:var(--text3);margin-top:4px;">Bagikan ke pasanganmu</div>
         <button onclick="navigator.clipboard.writeText('${partnerCode}').then(()=>this.textContent='Tersalin ✓')" style="margin-top:8px;padding:6px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;font-size:11px;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;">Salin kode</button>
       </div>
-
       <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE PASANGAN</div>
       <div style="display:flex;gap:8px;margin-bottom:12px;">
         <input id="settings-partner-input" type="text" maxlength="6" placeholder="Masukkan kode pasangan" value="${linkedPartnerCode||''}" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;text-transform:uppercase;letter-spacing:2px;"/>
@@ -2872,7 +2108,6 @@ function showModeSettings() {
       </div>
       ` : ''}
       ` : ''}
-
       ${!isGuest ? `
       <button onclick="authLogout()" style="width:100%;padding:11px;background:transparent;color:var(--pink);border:1.5px solid var(--pink-dim);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;">Keluar dari akun</button>
       ` : `
@@ -2903,56 +2138,9 @@ async function linkPartner() {
   closeModal();
 }
 
-// Theme applied in DOMContentLoaded
-
 // ══════════════════════════════════════
-// HELPERS
+// THEME
 // ══════════════════════════════════════
-function getQId(tabIdx, subIdx, qIdx) {
-  return `${TABS[tabIdx].id}__${subIdx}__${qIdx}`;
-}
-function isAnswered(tabIdx, subIdx, qIdx) {
-  const v = answers[getQId(tabIdx, subIdx, qIdx)];
-  return v && v.trim().length > 0;
-}
-function getTotalQ() {
-  let t = 0;
-  TABS.forEach(tab => {
-    if (tab.isProfil) { tab.fields.filter(f=>f.type!=='photo').forEach(()=>t++); }
-    else { tab.subtabs.forEach(s => t += s.questions.length); }
-  });
-  return t;
-}
-function getFilledQ() {
-  return Object.values(answers).filter(v => v && v.trim()).length;
-}
-function getTabTotal(tabIdx) {
-  const tab = TABS[tabIdx];
-  if (tab.isProfil) return tab.fields.filter(f=>f.type!=='photo').length;
-  return tab.subtabs.reduce((s,st)=>s+st.questions.length, 0);
-}
-function getTabFilled(tabIdx) {
-  const tab = TABS[tabIdx];
-  let count = 0;
-  if (tab.isProfil) {
-    tab.fields.filter(f=>f.type!=='photo').forEach((f,i)=>{ if(answers[`profil__field__${i}`]?.trim()) count++; });
-  } else {
-    tab.subtabs.forEach((st,si)=>st.questions.forEach((_,qi)=>{ if(isAnswered(tabIdx,si,qi)) count++; }));
-  }
-  return count;
-}
-
-// ══════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════
-function goTo(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-  updateThemeIcons();
-  if(id === 's-wedding') renderWedding();
-}
-
 function toggleTheme() {
   isDark = !isDark;
   document.documentElement.setAttribute('data-theme', isDark?'dark':'light');
@@ -3004,17 +2192,26 @@ function getEmpathyPhrase(filled, total) {
 }
 
 // ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  updateThemeIcons();
+  if(id === 's-wedding') renderWedding();
+}
+
+// ══════════════════════════════════════
 // DASHBOARD
 // ══════════════════════════════════════
 function renderDashboard() {
   updateDatetime();
   const greet = document.getElementById('dash-greeting');
   if(greet) greet.innerHTML = `${getGreeting()}, <em>${userName}!</em>`;
-
-  renderMosaic();
   renderTabGrid();
+  renderMosaic();
   updateEmpathyPhrase();
-
   const fc = document.getElementById('mosaic-count');
   if(fc) fc.innerHTML = `${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`;
 }
@@ -3024,6 +2221,46 @@ function updateEmpathyPhrase() {
   if(el) el.textContent = getEmpathyPhrase(getFilledQ(), getTotalQ());
 }
 
+// ══════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════
+function getQId(tabIdx, subIdx, qIdx) {
+  return `${TABS[tabIdx].id}__${subIdx}__${qIdx}`;
+}
+function isAnswered(tabIdx, subIdx, qIdx) {
+  const v = answers[getQId(tabIdx, subIdx, qIdx)];
+  return v && v.trim().length > 0;
+}
+function getTotalQ() {
+  let t = 0;
+  TABS.forEach(tab => {
+    if (tab.isProfil) { tab.fields.filter(f=>f.type!=='photo').forEach(()=>t++); }
+    else { tab.subtabs.forEach(s => t += s.questions.length); }
+  });
+  return t;
+}
+function getFilledQ() {
+  return Object.values(answers).filter(v => v && v.trim()).length;
+}
+function getTabTotal(tabIdx) {
+  const tab = TABS[tabIdx];
+  if (tab.isProfil) return tab.fields.filter(f=>f.type!=='photo').length;
+  return tab.subtabs.reduce((s,st)=>s+st.questions.length, 0);
+}
+function getTabFilled(tabIdx) {
+  const tab = TABS[tabIdx];
+  let count = 0;
+  if (tab.isProfil) {
+    tab.fields.filter(f=>f.type!=='photo').forEach((f,i)=>{ if(answers[`profil__field__${i}`]?.trim()) count++; });
+  } else {
+    tab.subtabs.forEach((st,si)=>st.questions.forEach((_,qi)=>{ if(isAnswered(tabIdx,si,qi)) count++; }));
+  }
+  return count;
+}
+
+// ══════════════════════════════════════
+// MOSAIC
+// ══════════════════════════════════════
 function renderMosaic() {
   const grid = document.getElementById('mosaic-grid');
   if(!grid) return;
@@ -3047,8 +2284,6 @@ function renderMosaic() {
     questions.forEach((q) => {
       const block = document.createElement('div');
       block.className = 'mosaic-block';
-
-      // ONLY color blocks that are actually answered
       let filled = false;
       if(q.isField) {
         filled = !!answers[`profil__field__${q.fieldIdx}`]?.trim();
@@ -3056,10 +2291,7 @@ function renderMosaic() {
         filled = isAnswered(q.tabIdx, q.subIdx, q.qIdx);
       }
       if(filled) block.classList.add('filled');
-
       block.title = tab.name;
-
-      // Click goes directly to the specific question
       block.onclick = () => {
         if(q.isField) {
           openProfilFieldModal(q.fieldIdx);
@@ -3073,10 +2305,7 @@ function renderMosaic() {
       row.appendChild(block);
     });
 
-    // Drip visual — only EMPTY plain blocks, no color, just structural
-    // Shows tabs with fewer questions have "trailing space"
-    // No random coloring — just empty blocks fading out
-    const maxQ = 27; // max questions in any tab (Trauma)
+    const maxQ = 27;
     const dripNeeded = maxQ - questions.length;
     for(let d = 0; d < Math.min(dripNeeded, 5); d++) {
       const drip = document.createElement('div');
@@ -3086,30 +2315,39 @@ function renderMosaic() {
       row.appendChild(drip);
     }
 
-    // Badge if tab complete
     renderMosaicBadge(row, ti);
-
     grid.appendChild(row);
   });
 }
 
+function renderMosaicBadge(row, ti) {
+  const total = getTabTotal(ti);
+  const filled = getTabFilled(ti);
+  if(filled >= total && total > 0) {
+    const badge = document.createElement('div');
+    badge.className = 'mosaic-badge';
+    badge.title = `${TABS[ti].name} selesai!`;
+    badge.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>`;
+    row.appendChild(badge);
+  }
+}
+
+// ══════════════════════════════════════
+// TAB GRID
+// ══════════════════════════════════════
 function renderTabGrid() {
   const grid = document.getElementById('tab-grid');
   if(!grid) return;
   grid.innerHTML = '';
-
   const colorClasses = ['', 'alt1', 'alt2'];
-
   TABS.forEach((tab, ti) => {
     const card = document.createElement('div');
     const colorIdx = ti % 3;
     card.className = 'tab-card' + (tab.isProfil ? ' profil-card' : ` ${colorClasses[colorIdx]}`);
-
     const total = getTabTotal(ti);
     const filled = getTabFilled(ti);
     const pct = total > 0 ? Math.round(filled/total*100) : 0;
     const iconSvg = ICONS[tab.icon] || '';
-
     if(tab.isProfil) {
       card.innerHTML = `
         <span class="tab-name" style="display:flex;align-items:center;gap:8px;">
@@ -3123,7 +2361,6 @@ function renderTabGrid() {
         <div class="tab-name">${tab.name}</div>
         <div class="tab-pct">${pct}%</div>`;
     }
-
     card.onclick = () => openTab(ti);
     grid.appendChild(card);
   });
@@ -3135,31 +2372,25 @@ function renderTabGrid() {
 function openTab(ti) {
   currentTabIdx = ti;
   const tab = TABS[ti];
-
   document.getElementById('tab-title').textContent = tab.name;
   const total = getTabTotal(ti);
   const filled = getTabFilled(ti);
   document.getElementById('tab-count').textContent = `${filled} dari ${total} pertanyaan diisi`;
-
   const wrap = document.getElementById('tab-body-wrap');
-
   if(tab.isProfil) {
     renderProfilFields(wrap, tab);
   } else {
     renderSubtabs(wrap, tab, ti);
   }
-
   goTo('s-tab');
 }
 
 function renderProfilFields(wrap, tab) {
   wrap.innerHTML = `<div class="tab-desc-box">${tab.desc}</div><div class="profil-fields" id="profil-fields"></div>`;
   const fields = document.getElementById('profil-fields');
-
   tab.fields.forEach((f, i) => {
     const key = `profil__field__${i}`;
     const val = answers[key] || '';
-
     if(f.type === 'photo') {
       fields.innerHTML += `
         <div class="field-group">
@@ -3213,11 +2444,9 @@ function handlePhotoUpload(input) {
 
 function renderSubtabs(wrap, tab, ti) {
   let html = `<div class="tab-desc-box ${tab.safeSpace?'safe':''}">${tab.safeSpace ? 'Bagian ini adalah ruang yang aman. Tidak ada jawaban yang benar atau salah. Ceritakan hanya sebatas yang kamu nyaman untuk bagikan.' : tab.desc}</div><div class="subtab-list">`;
-
   tab.subtabs.forEach((st, si) => {
     const total = st.questions.length;
     const filled = st.questions.filter((_,qi)=>isAnswered(ti,si,qi)).length;
-    const pct = Math.round(filled/total*100);
     const badgeClass = filled===total?'done':filled===0?'empty':'';
     html += `
       <div class="subtab-card" onclick="openQList(${ti},${si})">
@@ -3228,7 +2457,6 @@ function renderSubtabs(wrap, tab, ti) {
         <span class="subtab-badge ${badgeClass}">${filled}/${total}</span>
       </div>`;
   });
-
   html += `</div>`;
   wrap.innerHTML = html;
 }
@@ -3241,66 +2469,39 @@ function openQList(ti, si) {
   currentSubIdx = si;
   const tab = TABS[ti];
   const st = tab.subtabs[si];
-
   document.getElementById('qlist-title').textContent = st.name;
   const filled = st.questions.filter((_,qi)=>isAnswered(ti,si,qi)).length;
   document.getElementById('qlist-count').textContent = `${filled} dari ${st.questions.length} dijawab`;
   document.getElementById('qlist-back').onclick = () => openTab(ti);
-
   const body = document.getElementById('qlist-body');
   body.innerHTML = '';
-
   st.questions.forEach((q, qi) => {
     const answered = isAnswered(ti, si, qi);
     const item = document.createElement('div');
     item.className = 'q-item' + (answered?' answered':'');
-    item.innerHTML = `
-      <div class="q-dot"></div>
-      <div class="q-text">${q}</div>
-      <div class="q-check">✓</div>`;
+    item.innerHTML = `<div class="q-dot"></div><div class="q-text">${q}</div><div class="q-check">✓</div>`;
     item.onclick = () => openQuestion(ti, si, qi);
     body.appendChild(item);
   });
-
   goTo('s-qlist');
 }
 
-function openSubtab(ti, si) {
-  currentTabIdx = ti;
-  currentSubIdx = si;
-}
+// ══════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════
+let modalMode = false;
+let modalQ = [];
 
-// ══════════════════════════════════════
-// MODAL — cap cup cup flow
-// ══════════════════════════════════════
-let modalMode = false; // true = from mosaic, false = from list
-let modalQ = []; // flat list of {tabIdx, subIdx, qIdx, question, tabName, stName} for current context
-
-// ══════════════════════════════════════
-// PROFIL FIELD MODAL
-// ══════════════════════════════════════
 function openProfilFieldModal(startFieldIdx) {
-  // Build flat list of non-photo fields for nav
-  const tab = TABS[0]; // profil always index 0
+  const tab = TABS[0];
   modalQ = [];
   tab.fields.forEach((f, i) => {
     if(f.type === 'photo') return;
-    modalQ.push({
-      isProfilField: true,
-      fieldIdx: i,
-      field: f,
-      question: f.label,
-      tabName: 'Profil',
-      stName: '',
-      tabIdx: 0
-    });
+    modalQ.push({ isProfilField: true, fieldIdx: i, field: f, question: f.label, tabName: 'Profil', stName: '', tabIdx: 0 });
   });
-
-  // Find start index — map fieldIdx to flat index
   let startIdx = 0;
   modalQ.forEach((q, i) => { if(q.fieldIdx === startFieldIdx) startIdx = i; });
   currentQIdx = startIdx;
-
   renderProfilModal();
   document.getElementById('modal-overlay').classList.add('open');
   setTimeout(() => document.getElementById('modal-ta')?.focus(), 350);
@@ -3309,56 +2510,23 @@ function openProfilFieldModal(startFieldIdx) {
 function renderProfilModal() {
   const q = modalQ[currentQIdx];
   if(!q) return;
-
   const key = `profil__field__${q.fieldIdx}`;
   const val = answers[key] || '';
   const total = modalQ.length;
   const pct = Math.round((currentQIdx + 1) / total * 100);
-
-  // Adjust placeholder and textarea vs input based on field type
-  const isTextarea = q.field.type === 'textarea';
   const isDate = q.field.type === 'date';
-
+  const isTextarea = q.field.type === 'textarea';
   document.getElementById('modal-tab-label').textContent = 'Profil';
   document.getElementById('modal-question').textContent = q.field.label;
   document.getElementById('modal-prog-fill').style.width = pct + '%';
   document.getElementById('modal-pos').textContent = `${currentQIdx + 1} / ${total}`;
-
-  // For date fields, show as text input in textarea (simple approach)
   const ta = document.getElementById('modal-ta');
   ta.value = val;
   ta.placeholder = isDate ? 'YYYY-MM-DD' : isTextarea ? 'Ceritakan...' : 'Tulis di sini...';
-
-  // Animate
   const body = document.getElementById('modal-body');
-  body.style.animation = 'none';
-  body.offsetHeight;
-  body.style.animation = '';
-
+  body.style.animation = 'none'; body.offsetHeight; body.style.animation = '';
   document.getElementById('modal-prev').disabled = currentQIdx === 0;
   document.getElementById('modal-next').disabled = currentQIdx === total - 1;
-}
-
-function saveProfilModal() {
-  const q = modalQ[currentQIdx];
-  if(!q?.isProfilField) return;
-  const key = `profil__field__${q.fieldIdx}`;
-  const val = document.getElementById('modal-ta').value;
-  answers[key] = val;
-  saveState();
-  updateMosaicBlock();
-  updateTabCard(0);
-
-  if(currentQIdx < modalQ.length - 1) {
-    currentQIdx++;
-    renderProfilModal();
-  } else {
-    closeModal();
-  }
-}
-
-function isProfilModalActive() {
-  return modalQ.length > 0 && modalQ[0]?.isProfilField;
 }
 
 function openModal(ti, si, qi) {
@@ -3366,21 +2534,16 @@ function openModal(ti, si, qi) {
   currentTabIdx = ti;
   currentSubIdx = si;
   currentQIdx = qi;
-
-  // Build flat question list for this entire tab (for prev/next navigation)
   modalQ = [];
   const tab = TABS[ti];
   tab.subtabs?.forEach((st, stIdx) => {
     st.questions.forEach((q, qIdx) => {
-      modalQ.push({ tabIdx: ti, subIdx: stIdx, qIdx, question: q, tabName: tab.name, stName: st.name, tabIcon: tab.icon, tabIconSvg: ICONS[tab.icon]||'' });
+      modalQ.push({ tabIdx: ti, subIdx: stIdx, qIdx, question: q, tabName: tab.name, stName: st.name });
     });
   });
-
-  // Find index of clicked question in flat list
   let startIdx = 0;
   modalQ.forEach((q, i) => { if(q.subIdx === si && q.qIdx === qi) startIdx = i; });
-  currentQIdx = startIdx; // reuse as flat index for modal
-
+  currentQIdx = startIdx;
   renderModal();
   document.getElementById('modal-overlay').classList.add('open');
   setTimeout(() => document.getElementById('modal-ta')?.focus(), 350);
@@ -3389,50 +2552,48 @@ function openModal(ti, si, qi) {
 function renderModal() {
   const q = modalQ[currentQIdx];
   if(!q) return;
-
   const key = getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = answers[key] || '';
   const total = modalQ.length;
   const pct = Math.round((currentQIdx + 1) / total * 100);
-
   document.getElementById('modal-tab-label').textContent = `${q.tabName} · ${q.stName}`;
   document.getElementById('modal-question').textContent = q.question;
   document.getElementById('modal-prog-fill').style.width = pct + '%';
   document.getElementById('modal-pos').textContent = `${currentQIdx + 1} / ${total}`;
   document.getElementById('modal-ta').value = val;
-
-  // Animate body
   const body = document.getElementById('modal-body');
-  body.style.animation = 'none';
-  body.offsetHeight;
-  body.style.animation = '';
-
-  // Update nav buttons
+  body.style.animation = 'none'; body.offsetHeight; body.style.animation = '';
   document.getElementById('modal-prev').disabled = currentQIdx === 0;
   document.getElementById('modal-next').disabled = currentQIdx === total - 1;
 }
 
 function modalSave() {
   const q = modalQ[currentQIdx];
-  if(q?.isProfilField) { saveProfilModal(); return; }
-
+  if(q?.isProfilField) {
+    const key = `profil__field__${q.fieldIdx}`;
+    const val = document.getElementById('modal-ta').value;
+    answers[key] = val;
+    saveState();
+    updateMosaicBlock();
+    updateTabCard(0);
+    if(currentQIdx < modalQ.length - 1) { currentQIdx++; renderProfilModal(); }
+    else closeModal();
+    return;
+  }
   const isWedding = q.isWedding || q.tabIdx === -1;
   const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = document.getElementById('modal-ta').value;
   answers[key] = val;
   saveState();
-
   if(!isWedding) {
     animateMosaicBlock(q.tabIdx, q.subIdx, q.qIdx, !!val.trim());
     updateMosaicCounts();
     updateTabCard(q.tabIdx);
     checkAndCelebrate();
   }
-
   if(currentQIdx < modalQ.length - 1) {
     currentQIdx++;
-    if(isWedding) renderWeddingModal();
-    else renderModal();
+    if(isWedding) renderWeddingModal(); else renderModal();
   } else {
     closeModal();
     if(isWedding) { renderWedding(); goTo('s-wedding'); }
@@ -3441,46 +2602,39 @@ function modalSave() {
 
 function modalPrev() {
   const q = modalQ[currentQIdx];
+  const val = document.getElementById('modal-ta').value;
   if(q?.isProfilField) {
-    const key = `profil__field__${q.fieldIdx}`;
-    const val = document.getElementById('modal-ta').value;
-    if(val.trim()) { answers[key] = val; saveState(); }
+    if(val.trim()) { answers[`profil__field__${q.fieldIdx}`] = val; saveState(); }
     if(currentQIdx > 0) { currentQIdx--; renderProfilModal(); }
     return;
   }
   const isWedding = q.isWedding || q.tabIdx === -1;
   const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
-  const val = document.getElementById('modal-ta').value;
   if(val.trim()) { answers[key] = val; saveState(); }
   if(currentQIdx > 0) {
     currentQIdx--;
-    if(isWedding) renderWeddingModal();
-    else renderModal();
+    if(isWedding) renderWeddingModal(); else renderModal();
   }
 }
 
 function modalNext() {
   const q = modalQ[currentQIdx];
+  const val = document.getElementById('modal-ta').value;
   if(q?.isProfilField) {
-    const key = `profil__field__${q.fieldIdx}`;
-    const val = document.getElementById('modal-ta').value;
-    if(val.trim()) { answers[key] = val; saveState(); }
+    if(val.trim()) { answers[`profil__field__${q.fieldIdx}`] = val; saveState(); }
     if(currentQIdx < modalQ.length - 1) { currentQIdx++; renderProfilModal(); }
     return;
   }
   const isWedding = q.isWedding || q.tabIdx === -1;
   const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
-  const val = document.getElementById('modal-ta').value;
   if(val.trim()) { answers[key] = val; saveState(); }
   if(currentQIdx < modalQ.length - 1) {
     currentQIdx++;
-    if(isWedding) renderWeddingModal();
-    else renderModal();
+    if(isWedding) renderWeddingModal(); else renderModal();
   }
 }
 
 function closeModal() {
-  // Save on close — use correct key based on context
   const q = modalQ[currentQIdx];
   if(q) {
     const val = document.getElementById('modal-ta')?.value || '';
@@ -3496,7 +2650,6 @@ function closeModal() {
     }
   }
   document.getElementById('modal-overlay').classList.remove('open');
-  // Refresh dashboard
   renderMosaic();
   renderTabGrid();
   updateMosaicCounts();
@@ -3507,12 +2660,9 @@ function handleModalOverlayClick(e) {
 }
 
 function animateMosaicBlock(ti, si, qi, filled) {
-  // Find the block in the mosaic grid and animate it
   const rows = document.querySelectorAll('.mosaic-row');
   if(!rows[ti]) return;
   const blocks = rows[ti].querySelectorAll('.mosaic-block');
-
-  // Calculate flat index within this tab's row
   let flatIdx = 0;
   const tab = TABS[ti];
   let found = false;
@@ -3522,7 +2672,6 @@ function animateMosaicBlock(ti, si, qi, filled) {
       if(!found) flatIdx++;
     });
   });
-
   const block = blocks[flatIdx];
   if(!block) return;
   if(filled) block.classList.add('filled');
@@ -3534,89 +2683,10 @@ function animateMosaicBlock(ti, si, qi, filled) {
 }
 
 // ══════════════════════════════════════
-// ANSWER SCREEN — full screen (from list)
+// QUESTION FLOW
 // ══════════════════════════════════════
 function openQuestion(ti, si, qi) {
-  // Always use modal for better UX
   openModal(ti, si, qi);
-}
-
-function renderAnswerScreen() {
-  const ti = currentTabIdx;
-  const si = currentSubIdx;
-  const qi = currentQIdx;
-  const tab = TABS[ti];
-  const st = tab.subtabs[si];
-  const q = st.questions[qi];
-  const total = st.questions.length;
-  const key = getQId(ti, si, qi);
-  const val = answers[key] || '';
-
-  // Progress
-  const filled = st.questions.filter((_,i)=>isAnswered(ti,si,i)).length;
-  const pct = Math.round((qi+1)/total*100);
-  document.getElementById('answer-prog-label').textContent = `${tab.name} · ${st.name} · ${qi+1}/${total}`;
-  document.getElementById('answer-prog-fill').style.width = pct+'%';
-
-  document.getElementById('answer-back').onclick = () => openQList(ti, si);
-
-  const body = document.getElementById('answer-body');
-  body.style.animation = 'none';
-  body.offsetHeight;
-  body.style.animation = '';
-
-  body.innerHTML = `
-    <div class="answer-tab-label">${tab.icon} ${tab.name} · ${st.name}</div>
-    <div class="answer-question">${q}</div>
-    <textarea class="answer-textarea" id="answer-ta" placeholder="Tulis jawabanmu dengan jujur..." rows="6">${val}</textarea>
-    <div class="answer-actions">
-      <button class="btn-skip" onclick="skipQuestion()">Lewati</button>
-      <button class="btn-save" onclick="saveAnswer()">Simpan →</button>
-    </div>
-    <div class="answer-nav">
-      <button class="answer-nav-btn" onclick="prevQuestion()" ${qi===0?'style="opacity:.3;pointer-events:none;"':''}>← Sebelumnya</button>
-      <span class="answer-nav-pos">${qi+1} / ${total}</span>
-      <button class="answer-nav-btn" onclick="nextQuestion()" ${qi===total-1?'style="opacity:.3;pointer-events:none;"':''}>Selanjutnya →</button>
-    </div>`;
-
-  setTimeout(()=>document.getElementById('answer-ta')?.focus(),100);
-}
-
-function saveAnswer() {
-  const val = document.getElementById('answer-ta')?.value || '';
-  const key = getQId(currentTabIdx, currentSubIdx, currentQIdx);
-  answers[key] = val;
-  saveState();
-  updateMosaicBlock();
-  updateTabCard(currentTabIdx);
-
-  const tab = TABS[currentTabIdx];
-  const st = tab.subtabs[currentSubIdx];
-  if(currentQIdx < st.questions.length - 1) {
-    currentQIdx++;
-    renderAnswerScreen();
-  } else {
-    openQList(currentTabIdx, currentSubIdx);
-  }
-}
-
-function skipQuestion() {
-  const tab = TABS[currentTabIdx];
-  const st = tab.subtabs[currentSubIdx];
-  if(currentQIdx < st.questions.length - 1) {
-    currentQIdx++;
-    renderAnswerScreen();
-  } else {
-    openQList(currentTabIdx, currentSubIdx);
-  }
-}
-
-function prevQuestion() {
-  if(currentQIdx > 0) { currentQIdx--; renderAnswerScreen(); }
-}
-function nextQuestion() {
-  const st = TABS[currentTabIdx].subtabs[currentSubIdx];
-  if(currentQIdx < st.questions.length - 1) { currentQIdx++; renderAnswerScreen(); }
 }
 
 // ══════════════════════════════════════
@@ -3649,13 +2719,12 @@ function updateTabCard(ti) {
 }
 
 // ══════════════════════════════════════
-// KATA NARA — conversational AI
+// KATA NARA
 // ══════════════════════════════════════
-let naraChatHistory = []; // {role, content}
+let naraChatHistory = [];
 let naraAnswerSummary = '';
 let naraIsTyping = false;
 
-// Hitung berapa tema yang sudah selesai penuh
 function getCompletedThemes() {
   let count = 0;
   TABS.forEach((tab, ti) => {
@@ -3663,16 +2732,6 @@ function getCompletedThemes() {
     const total = getTabTotal(ti);
     const filled = getTabFilled(ti);
     if(filled >= total && total > 0) count++;
-  });
-  return count;
-}
-
-function getPartlyAnsweredThemes() {
-  let count = 0;
-  TABS.forEach((tab, ti) => {
-    if(tab.isProfil) return;
-    const filled = getTabFilled(ti);
-    if(filled > 0) count++;
   });
   return count;
 }
@@ -3712,20 +2771,10 @@ SCOPE PERCAKAPANMU:
 - Kalau user tanya hal di luar konteks Apreez dan refleksi pra-nikah, arahkan kembali dengan lembut.
 - Jangan pura-pura tahu kalau data jawabannya belum ada.
 
-TIGA MODE RESPONSMU (baca konteks, jangan kaku):
-1. REFLEKSI — baca pola, kekuatan, dan blind spot dari jawaban
-2. SARAN IMPROVE — berdasarkan gap yang kamu lihat, kasih arah konkret
-3. EKSPLORASI — bantu user gali lebih dalam tentang sesuatu yang dia sudah jawab
-
-UNTUK MODE COUPLE:
-- Kalau ada data pasangan, bandingkan dengan bijak dan netral — tidak memihak siapapun
-- Fokus pada keselarasan dan gap yang perlu didiskusikan berdua
-
 PENTING:
 - Jangan mulai respons dengan "Tentu!", "Baik!", "Halo!" setiap kali
 - Jangan terlalu panjang kalau pertanyaannya simpel
 - Jangan rekomendasikan aplikasi atau layanan eksternal kecuali psikolog/konselor profesional
-- Kalau user butuh bantuan yang di luar kemampuanmu, sarankan konselor pra-nikah profesional
 
 DATA JAWABAN USER:
 ${naraAnswerSummary}`;
@@ -3733,20 +2782,15 @@ ${naraAnswerSummary}`;
 
 function initNaraScreen() {
   const completedThemes = getCompletedThemes();
-  const partlyThemes = getPartlyAnsweredThemes();
   const totalThemes = TABS.filter(t => !t.isProfil).length;
   const filled = getFilledQ();
-
-  // Update threshold note
   const noteEl = document.getElementById('nara-threshold-note');
-  const introEl = document.getElementById('nara-intro-text');
 
   if(filled === 0) {
     noteEl.innerHTML = `Belum ada jawaban yang bisa aku baca. Isi dulu beberapa pertanyaan, ya — aku butuh ceritamu untuk bisa menemanimu dengan baik.`;
     document.getElementById('nara-input').disabled = true;
     document.getElementById('nara-send-btn').disabled = true;
   } else if(completedThemes < 2) {
-    const needed = 2 - completedThemes;
     noteEl.innerHTML = `Kamu sudah mulai — bagus! Aku bisa memberi refleksi yang lebih bermakna kalau kamu sudah menyelesaikan <strong>minimal 2 tema penuh</strong>. Sekarang baru ${completedThemes} tema selesai. Tapi boleh tanya aku dulu kalau mau.`;
     document.getElementById('nara-input').disabled = false;
     document.getElementById('nara-send-btn').disabled = false;
@@ -3756,41 +2800,32 @@ function initNaraScreen() {
     document.getElementById('nara-send-btn').disabled = false;
   }
 
-  // Build answer summary for this session
   naraAnswerSummary = buildAnswerSummary();
 
-  // Reset chat history tapi keep context
-  if(naraChatHistory.length === 0) {
-    // Auto-open dengan refleksi awal kalau sudah cukup jawaban
-    if(completedThemes >= 2) {
-      setTimeout(() => autoNaraReflection(), 400);
-    }
+  if(naraChatHistory.length === 0 && completedThemes >= 2) {
+    setTimeout(() => autoNaraReflection(), 400);
   }
 }
 
 async function autoNaraReflection() {
   const prompt = `Berikan refleksi awal yang personal dan hangat berdasarkan jawaban refleksi pra-nikah yang sudah aku isi. Fokus pada pola yang kamu lihat dan satu atau dua hal yang menarik perhatianmu. Maksimal 4 paragraf pendek.`;
-  await sendToNara(prompt, false); // false = jangan tampilkan bubble user
+  await sendToNara(prompt, false);
 }
 
 function addChatBubble(role, text) {
   const area = document.getElementById('nara-chat-area');
-
   const wrap = document.createElement('div');
   wrap.className = `chat-bubble-wrap ${role}`;
-
   if(role === 'nara') {
     const sender = document.createElement('div');
     sender.className = 'chat-sender';
     sender.textContent = 'NARA';
     wrap.appendChild(sender);
   }
-
   const bubble = document.createElement('div');
   bubble.className = `chat-bubble ${role}`;
   bubble.textContent = text;
   wrap.appendChild(bubble);
-
   area.appendChild(wrap);
   area.scrollTop = area.scrollHeight;
   return bubble;
@@ -3813,45 +2848,26 @@ function removeTypingIndicator() {
 async function sendToNara(userMessage, showUserBubble = true) {
   if(naraIsTyping) return;
   naraIsTyping = true;
-
   if(showUserBubble) addChatBubble('user', userMessage);
-
-  // Add to history
   naraChatHistory.push({ role: 'user', content: userMessage });
-
   showTypingIndicator();
   document.getElementById('nara-send-btn').disabled = true;
-
   try {
     const res = await fetch('/api/nara', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system: getNaraSystemPrompt(),
-        messages: naraChatHistory,
-        max_tokens: 800
-      })
+      body: JSON.stringify({ system: getNaraSystemPrompt(), messages: naraChatHistory, max_tokens: 800 })
     });
-
     const data = await res.json();
     const reply = data.content?.[0]?.text || 'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
-
     removeTypingIndicator();
     addChatBubble('nara', reply);
-
-    // Add assistant reply to history
     naraChatHistory.push({ role: 'assistant', content: reply });
-
-    // Keep history manageable — max 20 turns
-    if(naraChatHistory.length > 40) {
-      naraChatHistory = naraChatHistory.slice(-30);
-    }
-
+    if(naraChatHistory.length > 40) naraChatHistory = naraChatHistory.slice(-30);
   } catch(e) {
     removeTypingIndicator();
     addChatBubble('nara', 'Koneksiku terputus sejenak. Coba kirim lagi ya.');
   }
-
   naraIsTyping = false;
   document.getElementById('nara-send-btn').disabled = false;
 }
@@ -3860,31 +2876,22 @@ async function sendNaraMessage() {
   const input = document.getElementById('nara-input');
   const msg = input.value.trim();
   if(!msg || naraIsTyping) return;
-
-  const filled = getFilledQ();
-  if(filled === 0) return;
-
+  if(getFilledQ() === 0) return;
   input.value = '';
   input.style.height = 'auto';
   await sendToNara(msg, true);
 }
 
 function handleNaraKey(e) {
-  if(e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendNaraMessage();
-  }
+  if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendNaraMessage(); }
 }
-
 function autoResizeNaraInput(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 100) + 'px';
 }
 
-// Called when navigating to Nara screen
 function openNara() {
   goTo('s-nara');
-  // Kecil delay supaya screen sudah visible sebelum DOM dimanipulasi
   setTimeout(() => initNaraScreen(), 50);
 }
 
@@ -3893,21 +2900,8 @@ function openNara() {
 // ══════════════════════════════════════
 function downloadPDF() {
   let html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <style>
-    body{font-family:Georgia,serif;color:#2C2C2C;padding:48px;max-width:680px;margin:0 auto;}
-    h1{font-size:36px;font-weight:300;color:#8FBC93;margin-bottom:4px;}
-    .sub{font-size:11px;letter-spacing:3px;color:#E9ACBB;text-transform:uppercase;margin-bottom:48px;}
-    h2{font-size:22px;font-weight:400;color:#4A7A56;margin-top:48px;margin-bottom:4px;border-bottom:1px solid #C8E8C8;padding-bottom:8px;}
-    h3{font-size:14px;font-weight:400;font-style:italic;color:#8FBC93;margin-top:20px;margin-bottom:10px;}
-    .qa{margin-bottom:18px;}
-    .q{font-size:11px;color:#6B5C4C;margin-bottom:6px;line-height:1.6;}
-    .a{font-size:13px;color:#2C2C2C;line-height:1.8;padding:12px 14px;background:#F5F5EE;border-left:2px solid #C8E8C8;}
-    .empty{color:#aaa;font-style:italic;}
-    .footer{margin-top:64px;text-align:center;font-size:10px;color:#aaa;letter-spacing:2px;text-transform:uppercase;}
-  </style></head><body>
-  <h1>Apreez</h1>
-  <div class="sub">Part of Inarte · Refleksi Pra-Nikah · ${userName}</div>`;
-
+  <style>body{font-family:Georgia,serif;color:#2C2C2C;padding:48px;max-width:680px;margin:0 auto;}h1{font-size:36px;font-weight:300;color:#8FBC93;margin-bottom:4px;}.sub{font-size:11px;letter-spacing:3px;color:#E9ACBB;text-transform:uppercase;margin-bottom:48px;}h2{font-size:22px;font-weight:400;color:#4A7A56;margin-top:48px;margin-bottom:4px;border-bottom:1px solid #C8E8C8;padding-bottom:8px;}h3{font-size:14px;font-weight:400;font-style:italic;color:#8FBC93;margin-top:20px;margin-bottom:10px;}.qa{margin-bottom:18px;}.q{font-size:11px;color:#6B5C4C;margin-bottom:6px;line-height:1.6;}.a{font-size:13px;color:#2C2C2C;line-height:1.8;padding:12px 14px;background:#F5F5EE;border-left:2px solid #C8E8C8;}.empty{color:#aaa;font-style:italic;}.footer{margin-top:64px;text-align:center;font-size:10px;color:#aaa;letter-spacing:2px;text-transform:uppercase;}</style></head><body>
+  <h1>Apreez</h1><div class="sub">Part of Inarte · Refleksi Pra-Nikah · ${userName}</div>`;
   TABS.forEach((tab, ti) => {
     html += `<h2>${tab.name}</h2>`;
     if(tab.isProfil) {
@@ -3925,101 +2919,45 @@ function downloadPDF() {
       });
     }
   });
-
   const date = new Date().toLocaleDateString('id-ID',{year:'numeric',month:'long',day:'numeric'});
   html += `<div class="footer">Apreez · Part of Inarte · ${date}</div></body></html>`;
-
   const blob = new Blob([html], {type:'text/html'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `Apreez_${userName}_${new Date().toISOString().split('T')[0]}.html`;
-  a.click();
+  a.href = url; a.download = `Apreez_${userName}_${new Date().toISOString().split('T')[0]}.html`; a.click();
   URL.revokeObjectURL(url);
 }
 
 // ══════════════════════════════════════
-// WEDDING TAB DATA
+// WEDDING
 // ══════════════════════════════════════
 const WEDDING_TAB = {
-  id: 'wedding',
-  name: 'Rencana Pernikahan',
+  id: 'wedding', name: 'Rencana Pernikahan',
   subtabs: [
-    {name: 'Visi & Prioritas', questions: [
-      'Seperti apa hari pernikahanmu dalam bayangan — besar atau intim, mewah atau sederhana?',
-      'Life after marriage jauh lebih panjang dari satu hari pernikahan. Apakah kamu akan membuat wedding lebih sederhana demi kehidupan setelahnya, atau kamu merasa ini once in a lifetime yang harus maksimal? Jelaskan alasanmu.',
-      'Ada momen spesifik yang paling ingin kamu rasakan di hari itu?',
-    ]},
-    {name: 'Konsep & Logistik', questions: [
-      'Mau diadakan akad dan pesta di hari yang sama atau berbeda?',
-      'Satu tempat atau dua tempat berbeda untuk akad dan resepsi?',
-      'Pesta mau diadakan pagi, siang, sore, atau malam?',
-      'Apakah ada adat atau tradisi keluarga yang ingin atau harus dimasukkan?',
-      'Sudah ada bayangan soal katering — prasmanan, set menu, atau yang lain?',
-    ]},
-    {name: 'Tim & Vendor', questions: [
-      'Sudah ada MUA yang ditaksir atau kriteria rias yang diinginkan?',
-      'Apakah kamu ingin menggunakan Wedding Organizer? Sudah ada yang diincar?',
-      'Apakah kamu ingin punya bridesmaid atau groomsman?',
-      'Dokumentasi seperti apa yang paling penting bagimu — foto, video, atau keduanya?',
-    ]},
-    {name: 'Tamu & Pengalaman', questions: [
-      'Berapa kisaran jumlah tamu yang kamu bayangkan?',
-      'Untuk tamu yang datang dari jauh, apakah kamu akan menyediakan akomodasi atau panduan khusus untuk mereka?',
-      'Bagaimana rencanamu untuk uang amplop dari tamu — apakah sudah ada gambaran akan digunakan untuk apa?',
-      'Setelah pesta selesai, mau langsung honeymoon atau ada rencana lain?',
-    ]},
-    {name: 'Budget, Legal & Keluarga', questions: [
-      'Berapa budget pernikahan yang menurutmu realistis?',
-      'Siapa yang menanggung biaya — kamu, pasangan, keluarga, atau bersama?',
-      'Bagaimana sikapmu kalau budget tidak sesuai impian?',
-      'Apakah kamu memahami dokumen apa saja yang diperlukan untuk pernikahan yang sah secara hukum dan agama?',
-      'Apakah kamu dan pasangan berencana mencatatkan pernikahan secara resmi di negara tempat tinggalmu?',
-      'Sudahkah kamu memastikan bahwa pernikahanmu akan sah secara hukum — bukan hanya secara adat atau agama saja?',
-      'Seberapa besar keluarga dilibatkan dalam keputusan wedding? Bagaimana kalau keinginan mereka berbeda dari yang kamu mau?',
-    ]},
+    {name:'Visi & Prioritas', questions:['Seperti apa hari pernikahanmu dalam bayangan — besar atau intim, mewah atau sederhana?','Life after marriage jauh lebih panjang dari satu hari pernikahan. Apakah kamu akan membuat wedding lebih sederhana demi kehidupan setelahnya, atau kamu merasa ini once in a lifetime yang harus maksimal? Jelaskan alasanmu.','Ada momen spesifik yang paling ingin kamu rasakan di hari itu?']},
+    {name:'Konsep & Logistik', questions:['Mau diadakan akad dan pesta di hari yang sama atau berbeda?','Satu tempat atau dua tempat berbeda untuk akad dan resepsi?','Pesta mau diadakan pagi, siang, sore, atau malam?','Apakah ada adat atau tradisi keluarga yang ingin atau harus dimasukkan?','Sudah ada bayangan soal katering — prasmanan, set menu, atau yang lain?']},
+    {name:'Tim & Vendor', questions:['Sudah ada MUA yang ditaksir atau kriteria rias yang diinginkan?','Apakah kamu ingin menggunakan Wedding Organizer? Sudah ada yang diincar?','Apakah kamu ingin punya bridesmaid atau groomsman?','Dokumentasi seperti apa yang paling penting bagimu — foto, video, atau keduanya?']},
+    {name:'Tamu & Pengalaman', questions:['Berapa kisaran jumlah tamu yang kamu bayangkan?','Untuk tamu yang datang dari jauh, apakah kamu akan menyediakan akomodasi atau panduan khusus untuk mereka?','Bagaimana rencanamu untuk uang amplop dari tamu — apakah sudah ada gambaran akan digunakan untuk apa?','Setelah pesta selesai, mau langsung honeymoon atau ada rencana lain?']},
+    {name:'Budget, Legal & Keluarga', questions:['Berapa budget pernikahan yang menurutmu realistis?','Siapa yang menanggung biaya — kamu, pasangan, keluarga, atau bersama?','Bagaimana sikapmu kalau budget tidak sesuai impian?','Apakah kamu memahami dokumen apa saja yang diperlukan untuk pernikahan yang sah secara hukum dan agama?','Apakah kamu dan pasangan berencana mencatatkan pernikahan secara resmi di negara tempat tinggalmu?','Sudahkah kamu memastikan bahwa pernikahanmu akan sah secara hukum — bukan hanya secara adat atau agama saja?','Seberapa besar keluarga dilibatkan dalam keputusan wedding? Bagaimana kalau keinginan mereka berbeda dari yang kamu mau?']},
   ]
 };
 
-function getWeddingQId(si, qi) {
-  return `wedding__${si}__${qi}`;
-}
+function getWeddingQId(si, qi) { return `wedding__${si}__${qi}`; }
 function isWeddingAnswered(si, qi) {
   const v = answers[getWeddingQId(si, qi)];
   return v && v.trim().length > 0;
 }
 
-// ══════════════════════════════════════
-// WEDDING SCREEN
-// ══════════════════════════════════════
 function renderWedding() {
   const wrap = document.getElementById('wedding-body-wrap');
   if(!wrap) return;
-
-  let html = `
-    <div class="wedding-intro">
-      <div class="wedding-intro-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="2.5"/></svg>
-      </div>
-      <div class="wedding-intro-title">Selamat, kamu sudah sampai di sini.</div>
-      <div class="wedding-intro-desc">Bagian ini bukan tentang pesta yang sempurna — tapi tentang memastikan kamu dan pasangan melangkah dengan persiapan yang nyata.</div>
-    </div>
-    <div class="subtab-list">`;
-
+  let html = `<div class="wedding-intro"><div class="wedding-intro-icon"><svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div class="wedding-intro-title">Selamat, kamu sudah sampai di sini.</div><div class="wedding-intro-desc">Bagian ini bukan tentang pesta yang sempurna — tapi tentang memastikan kamu dan pasangan melangkah dengan persiapan yang nyata.</div></div><div class="subtab-list">`;
   WEDDING_TAB.subtabs.forEach((st, si) => {
     const total = st.questions.length;
     const filled = st.questions.filter((_,qi) => isWeddingAnswered(si,qi)).length;
     const badgeClass = filled===total?'done':filled===0?'empty':'';
-    html += `
-      <div class="subtab-card" onclick="openWeddingQList(${si})">
-        <div class="subtab-left">
-          <div class="subtab-name">${st.name}</div>
-          <div class="subtab-meta">${total} pertanyaan</div>
-        </div>
-        <span class="subtab-badge ${badgeClass}">${filled}/${total}</span>
-      </div>`;
+    html += `<div class="subtab-card" onclick="openWeddingQList(${si})"><div class="subtab-left"><div class="subtab-name">${st.name}</div><div class="subtab-meta">${total} pertanyaan</div></div><span class="subtab-badge ${badgeClass}">${filled}/${total}</span></div>`;
   });
-
   html += `</div>`;
   wrap.innerHTML = html;
 }
@@ -4030,7 +2968,6 @@ function openWeddingQList(si) {
   const filled = st.questions.filter((_,qi)=>isWeddingAnswered(si,qi)).length;
   document.getElementById('qlist-count').textContent = `${filled} dari ${st.questions.length} dijawab`;
   document.getElementById('qlist-back').onclick = () => { renderWedding(); goTo('s-wedding'); };
-
   const body = document.getElementById('qlist-body');
   body.innerHTML = '';
   st.questions.forEach((q, qi) => {
@@ -4045,19 +2982,10 @@ function openWeddingQList(si) {
 }
 
 function openWeddingQuestion(si, qi) {
-  // Build flat list for this wedding subtab
   modalQ = [];
   WEDDING_TAB.subtabs[si].questions.forEach((q, qIdx) => {
-    modalQ.push({
-      tabIdx: -1, // special flag for wedding
-      subIdx: si, qIdx: qIdx,
-      question: q,
-      tabName: 'Rencana Pernikahan',
-      stName: WEDDING_TAB.subtabs[si].name,
-      isWedding: true
-    });
+    modalQ.push({ tabIdx: -1, subIdx: si, qIdx: qIdx, question: q, tabName: 'Rencana Pernikahan', stName: WEDDING_TAB.subtabs[si].name, isWedding: true });
   });
-  // Find start index
   currentQIdx = qi;
   renderWeddingModal();
   document.getElementById('modal-overlay').classList.add('open');
@@ -4081,80 +3009,41 @@ function renderWeddingModal() {
 }
 
 // ══════════════════════════════════════
-// CELEBRATORY SCREEN
+// CELEBRATE
 // ══════════════════════════════════════
 function checkAndCelebrate() {
   const total = getTotalQ();
   const filled = getFilledQ();
-  if(filled >= total && total > 0) {
-    showCelebration();
-  }
+  if(filled >= total && total > 0) showCelebration();
 }
 
 function showCelebration() {
   const el = document.getElementById('celebrate-name');
   if(el) el.textContent = userName;
   const dateEl = document.getElementById('celebrate-date');
-  if(dateEl) {
-    const now = new Date();
-    dateEl.textContent = now.toLocaleDateString('id-ID',{
-      weekday:'long', year:'numeric', month:'long', day:'numeric'
-    });
-  }
-  // Set line art — solo figure
+  if(dateEl) dateEl.textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const artEl = document.getElementById('celebrate-art');
-  if(artEl) {
-    artEl.innerHTML = `<svg viewBox="0 0 120 120">
-      <!-- Figure -->
-      <circle cx="60" cy="28" r="12" />
-      <path d="M40 55 Q40 42 60 42 Q80 42 80 55"/>
-      <path d="M40 55 L35 85 M80 55 L85 85"/>
-      <path d="M40 68 L80 68"/>
-      <!-- Arms up celebrating -->
-      <path d="M40 60 Q28 48 22 38 M80 60 Q92 48 98 38"/>
-      <!-- Stars/sparkles -->
-      <path d="M18 30 L18 26 M16 28 L20 28"/>
-      <path d="M100 26 L100 22 M98 24 L102 24"/>
-      <path d="M55 12 L55 8 M53 10 L57 10"/>
-      <path d="M72 16 L74 14 M72 14 L74 16"/>
-      <path d="M46 16 L44 14 M44 16 L46 14"/>
-      <!-- Ground/bloom -->
-      <path d="M35 88 Q60 95 85 88"/>
-      <path d="M45 88 Q50 100 60 102 Q70 100 75 88"/>
-    </svg>`;
-  }
+  if(artEl) artEl.innerHTML = `<svg viewBox="0 0 120 120"><circle cx="60" cy="28" r="12"/><path d="M40 55 Q40 42 60 42 Q80 42 80 55"/><path d="M40 55 L35 85 M80 55 L85 85"/><path d="M40 68 L80 68"/><path d="M40 60 Q28 48 22 38 M80 60 Q92 48 98 38"/><path d="M18 30 L18 26 M16 28 L20 28"/><path d="M100 26 L100 22 M98 24 L102 24"/><path d="M55 12 L55 8 M53 10 L57 10"/><path d="M72 16 L74 14 M72 14 L74 16"/><path d="M46 16 L44 14 M44 16 L46 14"/><path d="M35 88 Q60 95 85 88"/><path d="M45 88 Q50 100 60 102 Q70 100 75 88"/></svg>`;
   goTo('s-celebrate');
 }
 
 // ══════════════════════════════════════
-// BADGE in mosaic
+// INIT
 // ══════════════════════════════════════
-function renderMosaicBadge(row, ti) {
-  const total = getTabTotal(ti);
-  const filled = getTabFilled(ti);
-  if(filled >= total && total > 0) {
-    const badge = document.createElement('div');
-    badge.className = 'mosaic-badge';
-    badge.title = `${TABS[ti].name} selesai!`;
-    badge.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>`;
-    row.appendChild(badge);
-  }
-}
 document.addEventListener('DOMContentLoaded', async () => {
-  // Apply saved theme
   if(isDark) document.documentElement.setAttribute('data-theme', 'dark');
   updateThemeIcons();
-
-  // Datetime ticker
   updateDatetime();
   setInterval(updateDatetime, 1000);
 
-  // Init Supabase
   initSupabase();
 
   if(!SB) {
     // Supabase unavailable — go guest
-    continueAsGuest();
+    if(!userName) userName = 'Tamu';
+    isGuest = true;
+    saveLocalState();
+    enterApp();
     return;
   }
 
@@ -4174,22 +3063,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // OAuth redirect in progress
   if(window.location.hash.includes('access_token')) {
     document.getElementById('auth-screen').style.display = 'flex';
     return;
   }
 
-  // Guest returning user — skip auth kalau userName sudah ada
+  // Guest returning user — skip auth
   if(isGuest && userName) {
     enterApp();
     return;
-  }
-
-  // Guest tapi tidak ada userName — reset dan show auth
-  if(isGuest && !userName) {
-    isGuest = false;
-    saveLocalState();
   }
 
   // Show auth screen
