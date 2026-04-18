@@ -924,9 +924,12 @@ body {
 ══════════════════════════════════════ */
 #s-nara {
   padding: 0;
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   height: 100vh;
+  max-height: 100vh;
+  min-height: unset;
+  overflow: hidden;
 }
 
 .nara-header-sub {
@@ -3864,7 +3867,8 @@ function autoResizeNaraInput(el) {
 // Called when navigating to Nara screen
 function openNara() {
   goTo('s-nara');
-  initNaraScreen();
+  // Kecil delay supaya screen sudah visible sebelum DOM dimanipulasi
+  setTimeout(() => initNaraScreen(), 50);
 }
 
 // ══════════════════════════════════════
