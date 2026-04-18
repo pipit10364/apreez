@@ -922,65 +922,176 @@ body {
 /* ══════════════════════════════════════
    SCREEN 6: KATA NARA
 ══════════════════════════════════════ */
-#s-nara { padding: 0; }
-
-.nara-body {
-  padding: 24px 20px;
-  flex: 1;
+#s-nara {
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  height: 100vh;
 }
 
-.nara-intro {
-  text-align: center;
-  padding: 20px;
+.nara-header-sub {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 1px;
+  margin-top: 1px;
 }
-.nara-name {
+
+/* Chat area */
+.nara-chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nara-chat-area::-webkit-scrollbar { width: 3px; }
+.nara-chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Nara intro bubble */
+.nara-intro-bubble {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px;
+  padding: 16px 18px;
+  max-width: 88%;
+  align-self: flex-start;
+}
+.nara-intro-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 32px;
-  font-weight: 300;
+  font-size: 15px;
+  font-weight: 400;
   font-style: italic;
   color: var(--card);
   margin-bottom: 6px;
 }
-.nara-tagline {
-  font-size: 12px;
-  color: var(--text3);
-  letter-spacing: 1px;
-}
-
-.nara-loading {
-  background: var(--bg2);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  text-align: center;
-  border: 1px solid var(--border);
-}
-.nara-loading-text {
+.nara-intro-text {
   font-size: 13px;
   color: var(--text2);
-  font-style: italic;
-  animation: pulse 2s ease infinite;
-}
-
-.nara-response {
-  background: var(--bg2);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  border: 1px solid var(--border);
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.85;
+  line-height: 1.75;
   font-weight: 300;
-  display: none;
+}
+.nara-threshold-note {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  line-height: 1.6;
+}
+.nara-threshold-note strong {
+  color: var(--card);
+  font-weight: 500;
 }
 
-.nara-actions {
+/* Chat bubbles */
+.chat-bubble-wrap {
   display: flex;
-  gap: 10px;
-  margin-top: 8px;
+  flex-direction: column;
+  gap: 2px;
+  animation: fadeUp .3s var(--ease) both;
 }
+.chat-bubble-wrap.user { align-items: flex-end; }
+.chat-bubble-wrap.nara { align-items: flex-start; }
+
+.chat-bubble {
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  line-height: 1.75;
+  font-weight: 300;
+  max-width: 88%;
+}
+.chat-bubble.user {
+  background: var(--card);
+  color: white;
+  border-radius: var(--radius-lg) var(--radius-lg) 4px var(--radius-lg);
+}
+.chat-bubble.nara {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px;
+}
+.chat-sender {
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: .5px;
+  margin-bottom: 2px;
+  padding: 0 4px;
+}
+
+/* Typing indicator */
+.nara-typing {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px;
+  align-self: flex-start;
+  width: fit-content;
+}
+.nara-typing span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text3);
+  animation: typingDot 1.2s ease infinite;
+}
+.nara-typing span:nth-child(2) { animation-delay: .2s; }
+.nara-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes typingDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Chat input */
+.nara-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+  flex-shrink: 0;
+  align-items: flex-end;
+}
+.nara-input {
+  flex: 1;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text);
+  outline: none;
+  resize: none;
+  transition: var(--transition);
+  line-height: 1.6;
+  max-height: 100px;
+  overflow-y: auto;
+}
+.nara-input:focus { border-color: var(--card); background: var(--bg3); }
+.nara-input::placeholder { color: var(--text3); font-style: italic; }
+
+.nara-send-btn {
+  width: 40px; height: 40px;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--card);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.nara-send-btn:hover { background: var(--card-hover); }
+.nara-send-btn:disabled { opacity: .4; cursor: not-allowed; }
+.nara-send-btn svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ══════════════════════════════════════
    MODAL OVERLAY — cap cup cup!
@@ -1782,7 +1893,7 @@ body {
 
     <!-- Bottom actions -->
     <div class="dash-actions-row">
-      <button class="btn-nara" onclick="goTo('s-nara'); loadNara()">✦ Kata Nara</button>
+      <button class="btn-nara" onclick="openNara()">✦ Kata Nara</button>
       <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
       <button class="btn-wedding" onclick="goTo('s-wedding')" id="btn-wedding" title="Rencana Pernikahan">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1804,7 +1915,7 @@ body {
       <div class="celebrate-date" id="celebrate-date"></div>
       <p class="celebrate-text">Kamu sudah berani jujur pada dirimu sendiri. Itu bukan hal yang mudah — dan itu adalah hadiah terbesar yang bisa kamu berikan kepada pasanganmu.</p>
       <div class="celebrate-actions">
-        <button class="btn-nara celebrate-btn" onclick="goTo('s-nara'); loadNara()">✦ Kata Nara</button>
+        <button class="btn-nara celebrate-btn" onclick="openNara()">✦ Kata Nara</button>
         <button class="btn-pdf celebrate-btn" onclick="downloadPDF()">Download PDF</button>
       </div>
       <button class="celebrate-back" onclick="goTo('s-dashboard')">Kembali ke dashboard</button>
@@ -1871,24 +1982,38 @@ body {
   <div class="sub-header">
     <button class="btn-back" onclick="goTo('s-dashboard')">‹</button>
     <div class="sub-header-info">
-      <div class="sub-header-name">Kata Nara</div>
-      <div class="sub-header-count">Refleksi dari jawabanmu</div>
+      <div class="sub-header-name" style="font-family:'Cormorant Garamond',serif;font-style:italic;">Nara</div>
+      <div class="nara-header-sub" id="nara-header-sub">AI Companion · Part of Inarte</div>
     </div>
     <button class="btn-sm" onclick="toggleTheme()" id="theme-btn6">☀</button>
   </div>
-  <div class="nara-body">
-    <div class="nara-intro">
-      <div class="nara-name">Nara</div>
-      <div class="nara-tagline">Part of Inarte · AI Companion</div>
+
+  <!-- Chat messages area -->
+  <div class="nara-chat-area" id="nara-chat-area">
+    <!-- Intro bubble — always visible -->
+    <div class="nara-intro-bubble">
+      <div class="nara-intro-name">Nara</div>
+      <div class="nara-intro-text" id="nara-intro-text">
+        Hei! Aku Nara, teman refleksimu di Apreez.
+        Aku di sini untuk membaca jawabanmu, memberi perspektif, dan menemanimu memahami diri sendiri — sebelum kamu melangkah ke jenjang berikutnya.
+      </div>
+      <div class="nara-threshold-note" id="nara-threshold-note"></div>
     </div>
-    <div class="nara-loading" id="nara-loading">
-      <div class="nara-loading-text" id="nara-loading-text">Nara sedang membaca jawabanmu...</div>
-    </div>
-    <div class="nara-response" id="nara-response"></div>
-    <div class="nara-actions">
-      <button class="btn-nara" onclick="loadNara()" style="font-family:'DM Sans',sans-serif;font-size:11px;font-style:normal;letter-spacing:1px;">Minta refleksi baru</button>
-      <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
-    </div>
+  </div>
+
+  <!-- Input row -->
+  <div class="nara-input-row">
+    <textarea
+      class="nara-input"
+      id="nara-input"
+      placeholder="Tanya Nara sesuatu..."
+      rows="1"
+      onkeydown="handleNaraKey(event)"
+      oninput="autoResizeNaraInput(this)"
+    ></textarea>
+    <button class="nara-send-btn" id="nara-send-btn" onclick="sendNaraMessage()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+    </button>
   </div>
 </div>
 
@@ -2917,7 +3042,7 @@ function renderMosaic() {
       // Click goes directly to the specific question
       block.onclick = () => {
         if(q.isField) {
-          openTab(ti);
+          openProfilFieldModal(q.fieldIdx);
         } else {
           currentTabIdx = ti;
           currentSubIdx = q.subIdx;
@@ -3131,6 +3256,91 @@ function openSubtab(ti, si) {
 let modalMode = false; // true = from mosaic, false = from list
 let modalQ = []; // flat list of {tabIdx, subIdx, qIdx, question, tabName, stName} for current context
 
+// ══════════════════════════════════════
+// PROFIL FIELD MODAL
+// ══════════════════════════════════════
+function openProfilFieldModal(startFieldIdx) {
+  // Build flat list of non-photo fields for nav
+  const tab = TABS[0]; // profil always index 0
+  modalQ = [];
+  tab.fields.forEach((f, i) => {
+    if(f.type === 'photo') return;
+    modalQ.push({
+      isProfilField: true,
+      fieldIdx: i,
+      field: f,
+      question: f.label,
+      tabName: 'Profil',
+      stName: '',
+      tabIdx: 0
+    });
+  });
+
+  // Find start index — map fieldIdx to flat index
+  let startIdx = 0;
+  modalQ.forEach((q, i) => { if(q.fieldIdx === startFieldIdx) startIdx = i; });
+  currentQIdx = startIdx;
+
+  renderProfilModal();
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('modal-ta')?.focus(), 350);
+}
+
+function renderProfilModal() {
+  const q = modalQ[currentQIdx];
+  if(!q) return;
+
+  const key = `profil__field__${q.fieldIdx}`;
+  const val = answers[key] || '';
+  const total = modalQ.length;
+  const pct = Math.round((currentQIdx + 1) / total * 100);
+
+  // Adjust placeholder and textarea vs input based on field type
+  const isTextarea = q.field.type === 'textarea';
+  const isDate = q.field.type === 'date';
+
+  document.getElementById('modal-tab-label').textContent = 'Profil';
+  document.getElementById('modal-question').textContent = q.field.label;
+  document.getElementById('modal-prog-fill').style.width = pct + '%';
+  document.getElementById('modal-pos').textContent = `${currentQIdx + 1} / ${total}`;
+
+  // For date fields, show as text input in textarea (simple approach)
+  const ta = document.getElementById('modal-ta');
+  ta.value = val;
+  ta.placeholder = isDate ? 'YYYY-MM-DD' : isTextarea ? 'Ceritakan...' : 'Tulis di sini...';
+
+  // Animate
+  const body = document.getElementById('modal-body');
+  body.style.animation = 'none';
+  body.offsetHeight;
+  body.style.animation = '';
+
+  document.getElementById('modal-prev').disabled = currentQIdx === 0;
+  document.getElementById('modal-next').disabled = currentQIdx === total - 1;
+}
+
+function saveProfilModal() {
+  const q = modalQ[currentQIdx];
+  if(!q?.isProfilField) return;
+  const key = `profil__field__${q.fieldIdx}`;
+  const val = document.getElementById('modal-ta').value;
+  answers[key] = val;
+  saveState();
+  updateMosaicBlock();
+  updateTabCard(0);
+
+  if(currentQIdx < modalQ.length - 1) {
+    currentQIdx++;
+    renderProfilModal();
+  } else {
+    closeModal();
+  }
+}
+
+function isProfilModalActive() {
+  return modalQ.length > 0 && modalQ[0]?.isProfilField;
+}
+
 function openModal(ti, si, qi) {
   modalMode = true;
   currentTabIdx = ti;
@@ -3184,6 +3394,8 @@ function renderModal() {
 
 function modalSave() {
   const q = modalQ[currentQIdx];
+  if(q?.isProfilField) { saveProfilModal(); return; }
+
   const isWedding = q.isWedding || q.tabIdx === -1;
   const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = document.getElementById('modal-ta').value;
@@ -3194,7 +3406,6 @@ function modalSave() {
     animateMosaicBlock(q.tabIdx, q.subIdx, q.qIdx, !!val.trim());
     updateMosaicCounts();
     updateTabCard(q.tabIdx);
-    // Check if all done!
     checkAndCelebrate();
   }
 
@@ -3210,6 +3421,13 @@ function modalSave() {
 
 function modalPrev() {
   const q = modalQ[currentQIdx];
+  if(q?.isProfilField) {
+    const key = `profil__field__${q.fieldIdx}`;
+    const val = document.getElementById('modal-ta').value;
+    if(val.trim()) { answers[key] = val; saveState(); }
+    if(currentQIdx > 0) { currentQIdx--; renderProfilModal(); }
+    return;
+  }
   const isWedding = q.isWedding || q.tabIdx === -1;
   const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = document.getElementById('modal-ta').value;
@@ -3223,6 +3441,13 @@ function modalPrev() {
 
 function modalNext() {
   const q = modalQ[currentQIdx];
+  if(q?.isProfilField) {
+    const key = `profil__field__${q.fieldIdx}`;
+    const val = document.getElementById('modal-ta').value;
+    if(val.trim()) { answers[key] = val; saveState(); }
+    if(currentQIdx < modalQ.length - 1) { currentQIdx++; renderProfilModal(); }
+    return;
+  }
   const isWedding = q.isWedding || q.tabIdx === -1;
   const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
   const val = document.getElementById('modal-ta').value;
@@ -3235,14 +3460,18 @@ function modalNext() {
 }
 
 function closeModal() {
-  // Save on close too — use correct key based on context
+  // Save on close — use correct key based on context
   const q = modalQ[currentQIdx];
   if(q) {
     const val = document.getElementById('modal-ta')?.value || '';
     if(val.trim()) {
-      const isWedding = q.isWedding || q.tabIdx === -1;
-      const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
-      answers[key] = val;
+      if(q.isProfilField) {
+        answers[`profil__field__${q.fieldIdx}`] = val;
+      } else {
+        const isWedding = q.isWedding || q.tabIdx === -1;
+        const key = isWedding ? getWeddingQId(q.subIdx, q.qIdx) : getQId(q.tabIdx, q.subIdx, q.qIdx);
+        answers[key] = val;
+      }
       saveState();
     }
   }
@@ -3400,60 +3629,242 @@ function updateTabCard(ti) {
 }
 
 // ══════════════════════════════════════
-// KATA NARA (AI)
+// KATA NARA — conversational AI
 // ══════════════════════════════════════
-async function loadNara() {
-  const loading = document.getElementById('nara-loading');
-  const response = document.getElementById('nara-response');
-  if(!loading || !response) return;
+let naraChatHistory = []; // {role, content}
+let naraAnswerSummary = '';
+let naraIsTyping = false;
 
-  loading.style.display = 'block';
-  response.style.display = 'none';
-  document.getElementById('nara-loading-text').textContent = 'Nara sedang membaca jawabanmu...';
-
-  const filled = getFilledQ();
-  const total = getTotalQ();
-
-  if(filled < 5) {
-    loading.style.display = 'none';
-    response.style.display = 'block';
-    response.textContent = `Hei ${userName}, isi dulu beberapa pertanyaan ya — Nara butuh lebih banyak cerita darimu untuk bisa memberikan refleksi yang bermakna. 🌸`;
-    return;
-  }
-
-  // Build summary of answers
-  let answerSummary = `Nama: ${userName}\n\n`;
+// Hitung berapa tema yang sudah selesai penuh
+function getCompletedThemes() {
+  let count = 0;
   TABS.forEach((tab, ti) => {
     if(tab.isProfil) return;
+    const total = getTabTotal(ti);
+    const filled = getTabFilled(ti);
+    if(filled >= total && total > 0) count++;
+  });
+  return count;
+}
+
+function getPartlyAnsweredThemes() {
+  let count = 0;
+  TABS.forEach((tab, ti) => {
+    if(tab.isProfil) return;
+    const filled = getTabFilled(ti);
+    if(filled > 0) count++;
+  });
+  return count;
+}
+
+function buildAnswerSummary() {
+  let summary = `Nama: ${userName}\nMode: ${appMode === 'couple' ? 'Couple' : 'Solo'}\n\n`;
+  TABS.forEach((tab, ti) => {
+    if(tab.isProfil) return;
+    let tabHasAnswers = false;
+    let tabText = `=== ${tab.name.toUpperCase()} ===\n`;
     tab.subtabs?.forEach((st, si) => {
       st.questions.forEach((q, qi) => {
-        const v = answers[getQId(ti,si,qi)];
-        if(v?.trim()) answerSummary += `[${tab.name} - ${st.name}]\nQ: ${q}\nA: ${v}\n\n`;
+        const v = answers[getQId(ti, si, qi)];
+        if(v?.trim()) {
+          tabHasAnswers = true;
+          tabText += `[${st.name}]\nQ: ${q}\nA: ${v}\n\n`;
+        }
       });
     });
+    if(tabHasAnswers) summary += tabText;
   });
+  return summary;
+}
+
+function getNaraSystemPrompt() {
+  return `Kamu adalah Nara, AI companion yang hangat, jujur, dan penuh empati dari aplikasi Apreez — aplikasi refleksi pra-nikah.
+
+IDENTITASMU:
+- Hangat tapi tidak lebay. Empati tapi tidak menghakimi. Jujur tapi tidak kasar.
+- Bahasa Indonesia yang natural dan personal — bukan formal, bukan alay.
+- Panggil user dengan nama mereka sesekali, tidak di setiap kalimat.
+- Respons bervariasi panjangnya sesuai pertanyaan — tidak selalu panjang.
+
+SCOPE PERCAKAPANMU:
+- Kamu HANYA tahu apa yang ada di jawaban Apreez user. Tidak lebih.
+- Boleh bantu user improve diri — tapi selalu kaitkan ke data jawaban yang ada.
+- Kalau user tanya hal di luar konteks Apreez dan refleksi pra-nikah, arahkan kembali dengan lembut.
+- Jangan pura-pura tahu kalau data jawabannya belum ada.
+
+TIGA MODE RESPONSMU (baca konteks, jangan kaku):
+1. REFLEKSI — baca pola, kekuatan, dan blind spot dari jawaban
+2. SARAN IMPROVE — berdasarkan gap yang kamu lihat, kasih arah konkret
+3. EKSPLORASI — bantu user gali lebih dalam tentang sesuatu yang dia sudah jawab
+
+UNTUK MODE COUPLE:
+- Kalau ada data pasangan, bandingkan dengan bijak dan netral — tidak memihak siapapun
+- Fokus pada keselarasan dan gap yang perlu didiskusikan berdua
+
+PENTING:
+- Jangan mulai respons dengan "Tentu!", "Baik!", "Halo!" setiap kali
+- Jangan terlalu panjang kalau pertanyaannya simpel
+- Jangan rekomendasikan aplikasi atau layanan eksternal kecuali psikolog/konselor profesional
+- Kalau user butuh bantuan yang di luar kemampuanmu, sarankan konselor pra-nikah profesional
+
+DATA JAWABAN USER:
+${naraAnswerSummary}`;
+}
+
+function initNaraScreen() {
+  const completedThemes = getCompletedThemes();
+  const partlyThemes = getPartlyAnsweredThemes();
+  const totalThemes = TABS.filter(t => !t.isProfil).length;
+  const filled = getFilledQ();
+
+  // Update threshold note
+  const noteEl = document.getElementById('nara-threshold-note');
+  const introEl = document.getElementById('nara-intro-text');
+
+  if(filled === 0) {
+    noteEl.innerHTML = `Belum ada jawaban yang bisa aku baca. Isi dulu beberapa pertanyaan, ya — aku butuh ceritamu untuk bisa menemanimu dengan baik.`;
+    document.getElementById('nara-input').disabled = true;
+    document.getElementById('nara-send-btn').disabled = true;
+  } else if(completedThemes < 2) {
+    const needed = 2 - completedThemes;
+    noteEl.innerHTML = `Kamu sudah mulai — bagus! Aku bisa memberi refleksi yang lebih bermakna kalau kamu sudah menyelesaikan <strong>minimal 2 tema penuh</strong>. Sekarang baru ${completedThemes} tema selesai. Tapi boleh tanya aku dulu kalau mau.`;
+    document.getElementById('nara-input').disabled = false;
+    document.getElementById('nara-send-btn').disabled = false;
+  } else {
+    noteEl.innerHTML = `<strong>${completedThemes} dari ${totalThemes} tema</strong> sudah selesai. Aku sudah bisa memberi refleksi yang cukup bermakna. Tanya aku apa saja tentang perjalananmu.`;
+    document.getElementById('nara-input').disabled = false;
+    document.getElementById('nara-send-btn').disabled = false;
+  }
+
+  // Build answer summary for this session
+  naraAnswerSummary = buildAnswerSummary();
+
+  // Reset chat history tapi keep context
+  if(naraChatHistory.length === 0) {
+    // Auto-open dengan refleksi awal kalau sudah cukup jawaban
+    if(completedThemes >= 2) {
+      setTimeout(() => autoNaraReflection(), 400);
+    }
+  }
+}
+
+async function autoNaraReflection() {
+  const prompt = `Berikan refleksi awal yang personal dan hangat berdasarkan jawaban refleksi pra-nikah yang sudah aku isi. Fokus pada pola yang kamu lihat dan satu atau dua hal yang menarik perhatianmu. Maksimal 4 paragraf pendek.`;
+  await sendToNara(prompt, false); // false = jangan tampilkan bubble user
+}
+
+function addChatBubble(role, text) {
+  const area = document.getElementById('nara-chat-area');
+
+  const wrap = document.createElement('div');
+  wrap.className = `chat-bubble-wrap ${role}`;
+
+  if(role === 'nara') {
+    const sender = document.createElement('div');
+    sender.className = 'chat-sender';
+    sender.textContent = 'NARA';
+    wrap.appendChild(sender);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = `chat-bubble ${role}`;
+  bubble.textContent = text;
+  wrap.appendChild(bubble);
+
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
+  return bubble;
+}
+
+function showTypingIndicator() {
+  const area = document.getElementById('nara-chat-area');
+  const typing = document.createElement('div');
+  typing.className = 'nara-typing';
+  typing.id = 'nara-typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  area.appendChild(typing);
+  area.scrollTop = area.scrollHeight;
+}
+
+function removeTypingIndicator() {
+  document.getElementById('nara-typing')?.remove();
+}
+
+async function sendToNara(userMessage, showUserBubble = true) {
+  if(naraIsTyping) return;
+  naraIsTyping = true;
+
+  if(showUserBubble) addChatBubble('user', userMessage);
+
+  // Add to history
+  naraChatHistory.push({ role: 'user', content: userMessage });
+
+  showTypingIndicator();
+  document.getElementById('nara-send-btn').disabled = true;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/nara', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `Kamu adalah Nara, AI companion yang hangat dan penuh empati dari aplikasi Apreez. Kamu bertugas memberikan refleksi yang personal, hangat, dan mendalam berdasarkan jawaban refleksi pra-nikah seseorang. Gunakan bahasa Indonesia yang hangat, tidak menghakimi, dan penuh kasih. Fokus pada: pola yang kamu lihat dari jawaban mereka, kekuatan yang mereka miliki, dan hal-hal yang perlu mereka perhatikan sebelum menikah. Jangan terlalu panjang — maksimal 4-5 paragraf. Mulai dengan menyapa nama mereka.`,
-        messages: [{ role: 'user', content: `Berikan refleksi berdasarkan jawaban refleksi pra-nikah berikut:\n\n${answerSummary}` }]
+        system: getNaraSystemPrompt(),
+        messages: naraChatHistory,
+        max_tokens: 800
       })
     });
 
     const data = await res.json();
-    loading.style.display = 'none';
-    response.style.display = 'block';
-    response.textContent = data.content?.[0]?.text || 'Nara sedang istirahat sejenak. Coba lagi ya. 🌸';
+    const reply = data.content?.[0]?.text || 'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
+
+    removeTypingIndicator();
+    addChatBubble('nara', reply);
+
+    // Add assistant reply to history
+    naraChatHistory.push({ role: 'assistant', content: reply });
+
+    // Keep history manageable — max 20 turns
+    if(naraChatHistory.length > 40) {
+      naraChatHistory = naraChatHistory.slice(-30);
+    }
+
   } catch(e) {
-    loading.style.display = 'none';
-    response.style.display = 'block';
-    response.textContent = 'Nara sedang tidak bisa dihubungi saat ini. Pastikan koneksimu stabil dan coba lagi. 🌸';
+    removeTypingIndicator();
+    addChatBubble('nara', 'Koneksiku terputus sejenak. Coba kirim lagi ya.');
   }
+
+  naraIsTyping = false;
+  document.getElementById('nara-send-btn').disabled = false;
+}
+
+async function sendNaraMessage() {
+  const input = document.getElementById('nara-input');
+  const msg = input.value.trim();
+  if(!msg || naraIsTyping) return;
+
+  const filled = getFilledQ();
+  if(filled === 0) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  await sendToNara(msg, true);
+}
+
+function handleNaraKey(e) {
+  if(e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendNaraMessage();
+  }
+}
+
+function autoResizeNaraInput(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// Called when navigating to Nara screen
+function openNara() {
+  goTo('s-nara');
+  initNaraScreen();
 }
 
 // ══════════════════════════════════════
