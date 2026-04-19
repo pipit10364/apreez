@@ -691,10 +691,28 @@ function setSyncDot(state) {
 
 async function syncToSupabase() {
   if(!SB || !currentUser) return;
+  // Strip photo data before syncing (base64 is too large for Supabase JSONB)
+  const syncAnswers = {...answers};
+  delete syncAnswers['profil__photo'];
+  const payload = { user_id:currentUser.id, user_name:userName, answers:syncAnswers, app_mode:appMode, partner_code:partnerCode, linked_partner_code:linkedPartnerCode, updated_at:new Date().toISOString() };
   try {
-    await SB.from('apreez_sessions').upsert({ user_id:currentUser.id, user_name:userName, answers, app_mode:appMode, partner_code:partnerCode, linked_partner_code:linkedPartnerCode, updated_at:new Date().toISOString() }, { onConflict:'user_id' });
+    const {error} = await SB.from('apreez_sessions').upsert(payload, {onConflict:'user_id'});
+    if(error) throw error;
     setSyncDot('');
-  } catch(e) { console.warn('Sync failed:', e); setSyncDot('error'); }
+  } catch(e) {
+    // Fallback: try without optional columns (in case they don't exist yet)
+    try {
+      const {error2} = await SB.from('apreez_sessions').upsert({
+        user_id:currentUser.id, user_name:userName, answers:syncAnswers, app_mode:appMode
+      }, {onConflict:'user_id'});
+      if(error2) throw error2;
+      setSyncDot('');
+      console.warn('[Apreez] Synced without optional columns. Run SQL migration.');
+    } catch(e2) {
+      console.error('[Apreez] Sync failed:', e2);
+      setSyncDot('error');
+    }
+  }
 }
 
 async function loadFromSupabase() {
@@ -703,7 +721,9 @@ async function loadFromSupabase() {
     const { data, error } = await SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle();
     if(error) throw error;
     if(data) {
+      const localPhoto = answers['profil__photo']; // preserve local photo (not synced to cloud)
       answers = data.answers || {};
+      if(localPhoto) answers['profil__photo'] = localPhoto;
       appMode = data.app_mode || 'solo';
       partnerCode = data.partner_code || null;
       linkedPartnerCode = data.linked_partner_code || null;
@@ -971,7 +991,7 @@ function isAnswered(ti,si,qi) { const v=answers[getQId(ti,si,qi)]; return v&&v.t
 function getTotalQ() { let t=0; TABS.forEach(tab=>{ if(tab.isProfil) tab.fields.filter(f=>f.type!=='photo').forEach(()=>t++); else tab.subtabs.forEach(s=>t+=s.questions.length); }); return t; }
 function getFilledQ() { return Object.values(answers).filter(v=>v&&v.trim()).length; }
 function getTabTotal(ti) { const t=TABS[ti]; if(t.isProfil) return t.fields.filter(f=>f.type!=='photo').length; return t.subtabs.reduce((s,st)=>s+st.questions.length,0); }
-function getTabFilled(ti) { const t=TABS[ti]; let c=0; if(t.isProfil) { t.fields.filter(f=>f.type!=='photo').forEach((f,i)=>{ if(answers[`profil__field__${i}`]?.trim()) c++; }); } else { t.subtabs.forEach((st,si)=>st.questions.forEach((_,qi)=>{ if(isAnswered(ti,si,qi)) c++; })); } return c; }
+function getTabFilled(ti) { const t=TABS[ti]; let c=0; if(t.isProfil) { t.fields.forEach((f,i)=>{ if(f.type==='photo') return; if(answers[`profil__field__${i}`]?.trim()) c++; }); } else { t.subtabs.forEach((st,si)=>st.questions.forEach((_,qi)=>{ if(isAnswered(ti,si,qi)) c++; })); } return c; }
 
 // ══ MOSAIC ══
 function renderMosaic() {
@@ -981,17 +1001,20 @@ function renderMosaic() {
   TABS.forEach((tab,ti)=>{
     const row=document.createElement('div'); row.className='mosaic-row';
     let questions=[];
-    if(tab.isProfil) { questions=tab.fields.filter(f=>f.type!=='photo').map((_,i)=>({tabIdx:ti,isField:true,fieldIdx:i})); }
-    else { tab.subtabs?.forEach((st,si)=>st.questions.forEach((_,qi)=>questions.push({tabIdx:ti,subIdx:si,qIdx:qi}))); }
+    if(tab.isProfil) {
+      // Use original field index (not re-indexed) so keys match stored answers
+      tab.fields.forEach((f,origIdx)=>{ if(f.type==='photo') return; questions.push({tabIdx:ti,isField:true,fieldIdx:origIdx,field:f}); });
+    } else { tab.subtabs?.forEach((st,si)=>st.questions.forEach((_,qi)=>questions.push({tabIdx:ti,subIdx:si,qIdx:qi}))); }
     questions.forEach(q=>{
       const block=document.createElement('div'); block.className='mosaic-block';
       const filled = q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx,q.subIdx,q.qIdx);
       if(filled) block.classList.add('filled');
       block.title=tab.name;
       block.onclick=()=>{
-        if(q.isField) { openProfilFieldModal(q.fieldIdx); }
-        else {
-          // ← Mosaic mode: single question, no flow
+        if(q.isField) {
+          openedFromMosaic = true; // ← mosaic mode: close after save, don't advance
+          openProfilFieldModal(q.fieldIdx);
+        } else {
           openMosaicQuestion(q.tabIdx, q.subIdx, q.qIdx);
         }
       };
@@ -1156,6 +1179,8 @@ function modalSave() {
   if(q?.isProfilField) {
     const key=`profil__field__${q.fieldIdx}`, val=document.getElementById('modal-ta').value;
     answers[key]=val; saveState(); updateMosaicBlock(); updateTabCard(0);
+    // Mosaic mode: close after save, don't flow to next field
+    if(openedFromMosaic) { closeModal(); return; }
     if(currentQIdx<modalQ.length-1) { currentQIdx++; renderProfilModal(); } else closeModal();
     return;
   }
