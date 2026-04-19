@@ -691,27 +691,23 @@ function setSyncDot(state) {
 
 async function syncToSupabase() {
   if(!SB || !currentUser) return;
-  // Strip photo data before syncing (base64 is too large for Supabase JSONB)
   const syncAnswers = {...answers};
   delete syncAnswers['profil__photo'];
   const payload = { user_id:currentUser.id, user_name:userName, answers:syncAnswers, app_mode:appMode, partner_code:partnerCode, linked_partner_code:linkedPartnerCode, updated_at:new Date().toISOString() };
   try {
-    const {error} = await SB.from('apreez_sessions').upsert(payload, {onConflict:'user_id'});
-    if(error) throw error;
+    // Try update first
+    const {data:existing} = await SB.from('apreez_sessions').select('user_id').eq('user_id', currentUser.id).maybeSingle();
+    if(existing) {
+      const {error} = await SB.from('apreez_sessions').update(payload).eq('user_id', currentUser.id);
+      if(error) throw error;
+    } else {
+      const {error} = await SB.from('apreez_sessions').insert(payload);
+      if(error) throw error;
+    }
     setSyncDot('');
   } catch(e) {
-    // Fallback: try without optional columns (in case they don't exist yet)
-    try {
-      const {error2} = await SB.from('apreez_sessions').upsert({
-        user_id:currentUser.id, user_name:userName, answers:syncAnswers, app_mode:appMode
-      }, {onConflict:'user_id'});
-      if(error2) throw error2;
-      setSyncDot('');
-      console.warn('[Apreez] Synced without optional columns. Run SQL migration.');
-    } catch(e2) {
-      console.error('[Apreez] Sync failed:', e2);
-      setSyncDot('error');
-    }
+    console.error('[Apreez] Sync failed:', e);
+    setSyncDot('error');
   }
 }
 
