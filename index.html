@@ -1269,6 +1269,8 @@ PENTING:
 - Jangan mulai respons dengan "Tentu!", "Baik!", "Halo!" setiap kali
 - Jangan terlalu panjang kalau pertanyaannya simpel
 - Jangan rekomendasikan aplikasi atau layanan eksternal kecuali psikolog/konselor profesional
+- DILARANG menggunakan format markdown apapun: tidak ada **bold**, *italic*, _underscore_, # header, atau bullet -. Tulis dalam paragraf biasa saja.
+- Selesaikan selalu kalimat dan paragraf sebelum berhenti — jangan pernah memotong di tengah kalimat.
 
 DATA JAWABAN USER:
 ${naraAnswerSummary}`;
@@ -1293,10 +1295,25 @@ function initNaraScreen() {
 async function autoNaraReflection() {
   await sendToNara(`Berikan refleksi awal yang personal dan hangat berdasarkan jawaban refleksi pra-nikah yang sudah aku isi. Fokus pada pola yang kamu lihat dan satu atau dua hal yang menarik perhatianmu. Maksimal 4 paragraf pendek.`, false);
 }
+function stripMarkdown(text) {
+  return text
+    .replace(/\*\*\*(.+?)\*\*\*/g, '$1')  // ***bold italic***
+    .replace(/\*\*(.+?)\*\*/g, '$1')       // **bold**
+    .replace(/\*(.+?)\*/g, '$1')           // *italic*
+    .replace(/__(.+?)__/g, '$1')           // __bold__
+    .replace(/_(.+?)_/g, '$1')             // _italic_
+    .replace(/`(.+?)`/g, '$1')             // `code`
+    .replace(/^#{1,6}\s+/gm, '')           // # headers
+    .replace(/^\s*[-*+]\s+/gm, '• ')       // - bullet → •
+    .replace(/\n{3,}/g, '\n\n')            // collapse excess newlines
+    .trim();
+}
+
 function addChatBubble(role,text) {
   const area=document.getElementById('nara-chat-area'), wrap=document.createElement('div'); wrap.className=`chat-bubble-wrap ${role}`;
   if(role==='nara') { const s=document.createElement('div'); s.className='chat-sender'; s.textContent='NARA'; wrap.appendChild(s); }
-  const bubble=document.createElement('div'); bubble.className=`chat-bubble ${role}`; bubble.textContent=text;
+  const bubble=document.createElement('div'); bubble.className=`chat-bubble ${role}`;
+  bubble.textContent = role==='nara' ? stripMarkdown(text) : text;
   wrap.appendChild(bubble); area.appendChild(wrap); area.scrollTop=area.scrollHeight;
 }
 function showTypingIndicator() {
@@ -1310,7 +1327,7 @@ async function sendToNara(userMessage, showUserBubble=true) {
   naraChatHistory.push({role:'user',content:userMessage}); showTypingIndicator();
   document.getElementById('nara-send-btn').disabled=true;
   try {
-    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:800})});
+    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:1200})});
     const data=await res.json();
     const reply=data.content?.[0]?.text||'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
     removeTypingIndicator(); addChatBubble('nara', reply); naraChatHistory.push({role:'assistant',content:reply});
