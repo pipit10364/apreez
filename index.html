@@ -413,6 +413,29 @@ body {
 </head>
 <body>
 
+<!-- SPLASH SCREEN -->
+<div id="splash-screen" style="
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:fixed; inset:0; z-index:9999;
+  background:#FAFAF7;
+  transition: opacity 0.4s ease;
+">
+  <div style="font-family:'Cormorant Garamond',Georgia,serif; font-size:52px; font-weight:300; color:#2D6A4F; letter-spacing:2px; margin-bottom:8px;">Apreez</div>
+  <div style="font-family:'DM Sans',sans-serif; font-size:11px; letter-spacing:3px; color:#9CA3AF; text-transform:uppercase; margin-bottom:48px;">Part of Inarte</div>
+  <div style="display:flex; gap:6px;">
+    <div class="splash-dot" style="width:7px;height:7px;border-radius:50%;background:#2D6A4F;animation:splashPulse 1.2s ease-in-out infinite;"></div>
+    <div class="splash-dot" style="width:7px;height:7px;border-radius:50%;background:#E07A5F;animation:splashPulse 1.2s ease-in-out 0.2s infinite;"></div>
+    <div class="splash-dot" style="width:7px;height:7px;border-radius:50%;background:#F2CC8F;animation:splashPulse 1.2s ease-in-out 0.4s infinite;"></div>
+  </div>
+  <style>
+    @keyframes splashPulse {
+      0%,100%{opacity:0.3;transform:scale(0.8);}
+      50%{opacity:1;transform:scale(1.2);}
+    }
+  </style>
+</div>
+
+
 <!-- AUTH -->
 <div id="auth-screen">
   <button class="btn-sm" onclick="toggleTheme()" id="theme-btn" style="position:fixed;top:calc(20px + var(--safe-top));right:24px;z-index:9999;">☀</button>
@@ -1127,7 +1150,7 @@ function openQList(ti,si) {
 let modalMode=false, modalQ=[];
 
 function openProfilFieldModal(startFieldIdx) {
-  openedFromMosaic = false;
+  // openedFromMosaic is set by caller — don't reset here
   const tab=TABS[0]; modalQ=[];
   tab.fields.forEach((f,i)=>{ if(f.type==='photo') return; modalQ.push({isProfilField:true,fieldIdx:i,field:f,question:f.label,tabName:'Profil',stName:'',tabIdx:0}); });
   let startIdx=0; modalQ.forEach((q,i)=>{ if(q.fieldIdx===startFieldIdx) startIdx=i; });
@@ -1414,14 +1437,26 @@ setTimeout(()=>{
   if(!anyActive&&!authVisible) { if(isGuest&&userName) enterApp(); else document.getElementById('auth-screen').style.display='flex'; }
 }, 5000);
 
+// ══ SPLASH ══
+function showSplash() {
+  const el = document.getElementById('splash-screen');
+  if(el) el.style.display='flex';
+}
+function hideSplash() {
+  const el = document.getElementById('splash-screen');
+  if(!el) return;
+  el.style.opacity='0';
+  setTimeout(()=>{ el.style.display='none'; }, 400);
+}
+
 // ══ INIT ══
 document.addEventListener('DOMContentLoaded', async ()=>{
+  showSplash();
   if(isDark) document.documentElement.setAttribute('data-theme','dark');
   updateThemeIcons(); updateDatetime(); setInterval(updateDatetime, 1000);
   initSupabase();
-  if(!SB) { if(!userName) userName='Tamu'; isGuest=true; saveLocalState(); enterApp(); return; }
+  if(!SB) { if(!userName) userName='Tamu'; isGuest=true; saveLocalState(); hideSplash(); enterApp(); return; }
   try {
-    // ← Handle INITIAL_SESSION too (fixes multi-device sync)
     SB.auth.onAuthStateChange(async(event,session)=>{
       if(['SIGNED_IN','TOKEN_REFRESHED','INITIAL_SESSION'].includes(event) && session?.user && !currentUser) {
         await onLoginSuccess(session.user);
@@ -1433,12 +1468,14 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),4000))
     ]);
     const {data:{session}} = sessionResult;
+    hideSplash();
     if(session?.user) { await onLoginSuccess(session.user); return; }
     if(window.location.hash.includes('access_token')) { document.getElementById('auth-screen').style.display='flex'; return; }
     if(isGuest&&userName) { enterApp(); return; }
     document.getElementById('auth-screen').style.display='flex';
   } catch(e) {
     console.warn('[Apreez] Init fallback:', e.message);
+    hideSplash();
     if(isGuest&&userName) enterApp(); else document.getElementById('auth-screen').style.display='flex';
   }
 });
