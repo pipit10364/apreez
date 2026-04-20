@@ -652,7 +652,7 @@ const ICONS = {
 
 // ══ TABS DATA ══
 const TABS = [
-  { id:'profil', name:'Profil', icon:'profil', isProfil:true, desc:'Perkenalan dirimu.', fields:[{id:'foto',label:'Foto',type:'photo'},{id:'nama',label:'Nama lengkap',type:'text'},{id:'tgl_lahir',label:'Tanggal lahir',type:'date'},{id:'usia',label:'Usia',type:'text'},{id:'negara_asal',label:'Negara asal',type:'text'},{id:'kota_asal',label:'Kota asal',type:'text'},{id:'negara_domisili',label:'Negara domisili',type:'text'},{id:'kota_domisili',label:'Kota domisili sekarang',type:'text'},{id:'pendidikan',label:'Pendidikan terakhir',type:'text'},{id:'pekerjaan',label:'Pekerjaan / bidang yang ditekuni',type:'text'},{id:'tentang',label:'Ceritakan sedikit tentang dirimu',type:'textarea'}] },
+  { id:'profil', name:'Profil', icon:'profil', isProfil:true, desc:'Perkenalan dirimu.', fields:[{id:'nama',label:'Nama lengkap',type:'text'},{id:'tgl_lahir',label:'Tanggal lahir',type:'date'},{id:'usia',label:'Usia',type:'text'},{id:'negara_asal',label:'Negara asal',type:'text'},{id:'kota_asal',label:'Kota asal',type:'text'},{id:'negara_domisili',label:'Negara domisili',type:'text'},{id:'kota_domisili',label:'Kota domisili sekarang',type:'text'},{id:'pendidikan',label:'Pendidikan terakhir',type:'text'},{id:'pekerjaan',label:'Pekerjaan / bidang yang ditekuni',type:'text'},{id:'tentang',label:'Ceritakan sedikit tentang dirimu',type:'textarea'}] },
   { id:'hobi', name:'Hobi', icon:'hobi', desc:'Hal-hal yang membuatmu bahagia, dan bagaimana kamu mengelolanya dalam hubungan.', subtabs:[{name:'Waktu Luang & Hobi',questions:['Apa yang biasanya kamu lakukan di waktu luang?','Ada hobi yang ingin kamu teruskan setelah menikah?','Apakah hobimu membutuhkan waktu atau biaya yang signifikan?','Apakah kamu siap merelakan waktu untuk hobimu demi anak dan pasanganmu?']},{name:'Hobi & Pasangan',questions:['Jika hobimu memakan banyak waktu, bagaimana kamu mengkomunikasikannya dengan pasangan?','Apabila pasanganmu tidak menyukai hobimu, apa yang akan kamu lakukan?','Bagaimana kamu menyeimbangkan me time dengan kebersamaan bersama keluarga?','Bagaimana kamu memfasilitasi me time untuk pasanganmu tanpa mengorbankan kebersamaan?','Apakah kamu nyaman memberi ruang pasanganmu untuk menghabiskan waktu dengan teman-temannya tanpa kamu?']},{name:'Selera, Gaya Hidup & Energi',questions:['Makanan favorit dan makanan yang tidak bisa kamu makan (alergi, pantangan, dll)','Apakah kamu tipe yang suka masak atau lebih suka makan di luar?','Tontonan, musik, atau buku yang kamu suka','Apakah kamu suka atau punya hewan peliharaan? Atau justru tidak nyaman dengan hewan tertentu?','Setelah hari yang melelahkan, kamu lebih butuh waktu sendiri atau justru butuh bercerita sama orang terdekat?']}] },
   { id:'mimpi', name:'Mimpi', icon:'mimpi', desc:'Ke mana arah hidupmu, dan bagaimana kamu ingin bertumbuh bersama pasangan.', subtabs:[{name:'Mimpi Pribadi',questions:['Apa hal yang paling ingin kamu wujudkan dalam hidupmu?','Apakah ada pencapaian yang ingin kamu raih dalam karir atau bidang yang kamu tekuni?','Adakah tempat yang ingin kamu kunjungi atau tinggali suatu hari nanti?','Apakah kamu pernah mengorbankan mimpimu untuk orang lain? Bagaimana perasaanmu tentang itu sekarang?']},{name:'Mimpi Bersama',questions:['Apa yang paling ingin kamu bangun bersama pasanganmu setelah menikah?','Dalam 5 tahun pertama pernikahan, kamu ingin hidupmu seperti apa?','Apakah kamu punya target yang ingin dicapai bersama — rumah, bisnis, ibadah, dll?']},{name:'Mendukung & Bertumbuh',questions:['Apakah kamu rela berhenti sejenak untuk mendukung pasanganmu meraih mimpinya, lalu kemudian kamu meraih mimpimu di kemudian hari?','Apa pendapatmu jika mimpimu harus berevolusi dengan keadaanmu?','Apakah kamu siap mempelajari hal-hal baru seiring perkembangan zaman?','Ceritakan mimpimu yang belum pernah kamu ceritakan ke siapapun.']}] },
   { id:'visi', name:'Visi & Misi', icon:'visi', desc:'Nilai dan arah hidup yang menjadi kompas.', subtabs:[{name:'Pernikahan & Kebahagiaan',questions:['Menurutmu, pernikahan yang sehat itu seperti apa?','Apa yang paling penting bagimu dalam sebuah pernikahan?','Bagaimana kamu mendefinisikan kebahagiaan dalam rumah tangga?']},{name:'Peran & Keluarga Ideal',questions:['Bagaimana kamu membayangkan peranmu sebagai suami atau istri?','Seperti apa keluarga ideal menurutmu?','Apakah kamu ingin punya anak? Berapa, dan kapan?']},{name:'Nilai & Prinsip Hidup',questions:['Apa nilai atau prinsip hidup yang paling kamu pegang teguh?','Dari mana nilai-nilai itu kamu dapat?','Adakah hal yang menurutmu tidak bisa dikompromikan dalam sebuah hubungan?']}] },
@@ -678,7 +678,7 @@ let SB = null;
 let currentUser = null;
 
 function initSupabase() {
-  try { SB = supabase.createClient(SUPA_URL, SUPA_KEY); return true; }
+  try { SB = supabase.createClient(SUPA_URL, SUPA_KEY, {auth:{persistSession:true,storageKey:'apreez_auth',storage:window.localStorage}}); return true; }
   catch(e) { console.warn('Supabase init failed:', e); return false; }
 }
 
@@ -740,9 +740,7 @@ async function loadFromSupabase() {
     const { data, error } = await SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle();
     if(error) throw error;
     if(data) {
-      const localPhoto = answers['profil__photo']; // preserve local photo (not synced to cloud)
       answers = data.answers || {};
-      if(localPhoto) answers['profil__photo'] = localPhoto;
       appMode = data.app_mode || 'solo';
       partnerCode = data.partner_code || null;
       linkedPartnerCode = data.linked_partner_code || null;
@@ -1113,12 +1111,6 @@ function renderProfilFields(wrap,tab) {
   });
 }
 function saveField(key,val) { answers[key]=val; saveState(); updateMosaicBlock(); updateTabCard(0); }
-function handlePhotoUpload(input) {
-  const file=input.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{ answers['profil__photo']=e.target.result; saveState(); const l=document.getElementById('photo-label'); if(l) l.textContent='Foto terunggah'; };
-  reader.readAsDataURL(file);
-}
 function renderSubtabs(wrap,tab,ti) {
   let html=`<div class="tab-desc-box ${tab.safeSpace?'safe':''}">${tab.safeSpace?'Bagian ini adalah ruang yang aman. Tidak ada jawaban yang benar atau salah. Ceritakan hanya sebatas yang kamu nyaman untuk bagikan.':tab.desc}</div><div class="subtab-list">`;
   tab.subtabs.forEach((st,si)=>{
