@@ -381,6 +381,31 @@ body {
 /* ── MODE SETTINGS ── */
 .modal-settings-body { flex:1; padding:20px 24px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; }
 
+/* ── FEEDBACK FAB ── */
+.feedback-fab { position:fixed; bottom:calc(20px + var(--safe-bottom)); right:18px; z-index:500; width:34px; height:34px; border-radius:50%; background:var(--bg2); border:1.5px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text3); box-shadow:0 2px 12px rgba(0,0,0,.1); transition:var(--transition); opacity:.6; }
+.feedback-fab:hover { opacity:1; border-color:var(--card); color:var(--card); transform:scale(1.1); }
+.feedback-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); backdrop-filter:blur(4px); z-index:600; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s var(--ease-smooth); }
+.feedback-overlay.open { opacity:1; pointer-events:all; }
+.feedback-sheet { background:var(--bg); border-radius:24px 24px 0 0; width:100%; max-width:560px; display:flex; flex-direction:column; transform:translateY(100%); transition:transform .35s var(--ease); }
+.feedback-overlay.open .feedback-sheet { transform:translateY(0); }
+.feedback-handle { width:36px; height:4px; border-radius:2px; background:var(--border); margin:14px auto 0; }
+.feedback-header { padding:14px 20px 14px; border-bottom:1px solid var(--border); }
+.feedback-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; color:var(--text); }
+.feedback-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+.feedback-body { padding:16px 20px; display:flex; flex-direction:column; gap:12px; }
+.feedback-types { display:flex; gap:8px; }
+.feedback-type-btn { flex:1; padding:9px 4px; border-radius:var(--radius-sm); border:1.5px solid var(--border); background:var(--bg2); cursor:pointer; font-size:11px; font-family:'DM Sans',sans-serif; color:var(--text2); transition:var(--transition); text-align:center; line-height:1; }
+.feedback-type-btn.active { border-color:var(--card); background:var(--bg3); color:var(--card); font-weight:600; }
+.feedback-ta { background:var(--bg2); border:1.5px solid var(--border); border-radius:var(--radius); padding:12px 14px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300; color:var(--text); outline:none; resize:none; transition:var(--transition); min-height:96px; line-height:1.75; width:100%; }
+.feedback-ta:focus { border-color:var(--card); background:var(--bg3); }
+.feedback-ta::placeholder { color:var(--text3); font-style:italic; }
+.feedback-footer { padding:14px 20px; padding-bottom:calc(14px + var(--safe-bottom)); border-top:1px solid var(--border); display:flex; gap:10px; }
+.feedback-cancel { padding:12px 18px; border-radius:var(--radius); border:1.5px solid var(--border); background:transparent; color:var(--text3); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:var(--transition); }
+.feedback-cancel:hover { border-color:var(--text2); color:var(--text2); }
+.feedback-submit { flex:1; padding:12px; border-radius:var(--radius); border:none; background:var(--card); color:white; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:var(--transition); }
+.feedback-submit:hover { background:var(--card-hover); }
+.feedback-submit:disabled { opacity:.5; cursor:not-allowed; }
+
 /* ── ANIMATIONS ── */
 @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
@@ -624,6 +649,34 @@ body {
       </div>
       <span class="modal-pos" id="modal-pos"></span>
       <button class="modal-save" onclick="modalSave()">Simpan ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEEDBACK FAB -->
+<button class="feedback-fab" onclick="openFeedback()" title="Kirim feedback ke developer">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<!-- FEEDBACK OVERLAY -->
+<div class="feedback-overlay" id="feedback-overlay" onclick="if(event.target===this)closeFeedback()">
+  <div class="feedback-sheet">
+    <div class="feedback-handle"></div>
+    <div class="feedback-header">
+      <div class="feedback-title">Feedback untuk Developer</div>
+      <div class="feedback-sub">Temukan bug? Ada saran? Cerita aja.</div>
+    </div>
+    <div class="feedback-body">
+      <div class="feedback-types">
+        <button class="feedback-type-btn active" id="fb-bug" onclick="selectFbType('bug')">🐛 Bug</button>
+        <button class="feedback-type-btn" id="fb-saran" onclick="selectFbType('saran')">💡 Saran</button>
+        <button class="feedback-type-btn" id="fb-lain" onclick="selectFbType('lain')">💬 Lainnya</button>
+      </div>
+      <textarea class="feedback-ta" id="feedback-ta" placeholder="Ceritakan di sini..." rows="4"></textarea>
+    </div>
+    <div class="feedback-footer">
+      <button class="feedback-cancel" onclick="closeFeedback()">Batal</button>
+      <button class="feedback-submit" id="feedback-submit-btn" onclick="submitFeedback()">Kirim →</button>
     </div>
   </div>
 </div>
@@ -1355,6 +1408,45 @@ function handleNaraKey(e) { if(e.key==='Enter'&&!e.shiftKey) { e.preventDefault(
 function autoResizeNaraInput(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
 function openNara() { goTo('s-nara'); setTimeout(()=>initNaraScreen(), 50); }
 
+// ══ FEEDBACK ══
+let fbType = 'bug';
+function openFeedback() {
+  document.getElementById('feedback-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('feedback-ta').focus(), 350);
+}
+function closeFeedback() {
+  document.getElementById('feedback-overlay').classList.remove('open');
+  document.getElementById('feedback-ta').value = '';
+  const btn = document.getElementById('feedback-submit-btn');
+  btn.disabled = false; btn.textContent = 'Kirim →';
+  selectFbType('bug');
+}
+function selectFbType(type) {
+  fbType = type;
+  ['bug','saran','lain'].forEach(t => document.getElementById('fb-'+t)?.classList.toggle('active', t===type));
+}
+async function submitFeedback() {
+  const msg = document.getElementById('feedback-ta').value.trim();
+  if(!msg) { document.getElementById('feedback-ta').focus(); return; }
+  const btn = document.getElementById('feedback-submit-btn');
+  btn.disabled = true; btn.textContent = 'Mengirim...';
+  const payload = { type: fbType, message: msg, user_name: userName||'unknown', user_id: currentUser?.id||null, app_mode: appMode, is_guest: isGuest, created_at: new Date().toISOString() };
+  let sent = false;
+  if(SB) {
+    try {
+      const {error} = await SB.from('apreez_feedback').insert(payload);
+      if(!error) sent = true;
+    } catch(e) { console.warn('Feedback send failed, using mailto fallback:', e); }
+  }
+  if(!sent) {
+    const subject = encodeURIComponent(`[Apreez Feedback] ${fbType}`);
+    const body = encodeURIComponent(`Tipe: ${fbType}\nPesan: ${msg}\nUser: ${userName||'unknown'}\nWaktu: ${new Date().toLocaleString('id-ID')}`);
+    window.open(`mailto:yulianitripuspitaningrum@gmail.com?subject=${subject}&body=${body}`, '_blank');
+  }
+  btn.textContent = 'Terkirim ✓';
+  setTimeout(() => closeFeedback(), 1200);
+}
+
 // ══ DOWNLOAD PDF ══
 function downloadPDF() {
   let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Georgia,serif;color:#2C2C2C;padding:48px;max-width:680px;margin:0 auto;}h1{font-size:36px;font-weight:300;color:#8FBC93;margin-bottom:4px;}.sub{font-size:11px;letter-spacing:3px;color:#E9ACBB;text-transform:uppercase;margin-bottom:48px;}h2{font-size:22px;font-weight:400;color:#4A7A56;margin-top:48px;margin-bottom:4px;border-bottom:1px solid #C8E8C8;padding-bottom:8px;}h3{font-size:14px;font-weight:400;font-style:italic;color:#8FBC93;margin-top:20px;margin-bottom:10px;}.qa{margin-bottom:18px;}.q{font-size:11px;color:#6B5C4C;margin-bottom:6px;line-height:1.6;}.a{font-size:13px;color:#2C2C2C;line-height:1.8;padding:12px 14px;background:#F5F5EE;border-left:2px solid #C8E8C8;}.empty{color:#aaa;font-style:italic;}.footer{margin-top:64px;text-align:center;font-size:10px;color:#aaa;letter-spacing:2px;text-transform:uppercase;}</style></head><body><h1>Apreez</h1><div class="sub">Part of Inarte · Refleksi Pra-Nikah · ${userName}</div>`;
@@ -1455,12 +1547,9 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       }
     });
     await new Promise(r=>setTimeout(r,300));
-    const sessionResult = await Promise.race([
-      SB.auth.getSession(),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),4000))
-    ]);
-    const {data:{session}} = sessionResult;
+    const {data:{session}} = await SB.auth.getSession();
     hideSplash();
+    if(currentUser) return; // sudah di-handle oleh onAuthStateChange (INITIAL_SESSION)
     if(session?.user) { await onLoginSuccess(session.user); return; }
     if(window.location.hash.includes('access_token')) { document.getElementById('auth-screen').style.display='flex'; return; }
     if(isGuest&&userName) { enterApp(); return; }
@@ -1468,6 +1557,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   } catch(e) {
     console.warn('[Apreez] Init fallback:', e.message);
     hideSplash();
+    if(currentUser) { enterApp(); return; } // session loaded via onAuthStateChange
     if(isGuest&&userName) enterApp(); else document.getElementById('auth-screen').style.display='flex';
   }
 });
