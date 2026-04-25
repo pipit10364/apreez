@@ -526,6 +526,9 @@ body {
       </div>
       <div class="dash-header-right">
         <button class="btn-sm" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
+        <button class="btn-sm" onclick="openFeedback()" title="Kirim feedback">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
         <button class="btn-sm" onclick="toggleTheme()" id="theme-btn2">☀</button>
         <button class="btn-sm" onclick="authLogout()" title="Keluar">⇥</button>
       </div>
@@ -652,11 +655,6 @@ body {
     </div>
   </div>
 </div>
-
-<!-- FEEDBACK FAB -->
-<button class="feedback-fab" onclick="openFeedback()" title="Kirim feedback ke developer">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-</button>
 
 <!-- FEEDBACK OVERLAY -->
 <div class="feedback-overlay" id="feedback-overlay" onclick="if(event.target===this)closeFeedback()">
