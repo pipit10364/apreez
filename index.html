@@ -921,7 +921,7 @@ async function onLoginSuccess(user, nameOverride=null) {
   currentUser = user; isGuest = false;
   document.getElementById('auth-screen').style.display='none';
   if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
-  await loadFromSupabase(); // Always pull fresh data from cloud
+  await loadFromSupabase(); // pull data dulu sebelum render
   if(!userName) { userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0]; }
   if(!partnerCode) { appMode=selectedMode; partnerCode=generateCode(); }
   if(selectedMode==='couple') {
@@ -929,8 +929,8 @@ async function onLoginSuccess(user, nameOverride=null) {
     if(inputCode && inputCode.length===6) linkedPartnerCode = inputCode;
   }
   saveLocalState();
-  await syncToSupabase();
-  enterApp();
+  enterApp(); // masuk app dulu
+  syncToSupabase(); // sync di background, tidak perlu ditunggu
 }
 function enterApp() {
   if(!userName) userName='Tamu';
@@ -1581,29 +1581,30 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   updateThemeIcons(); updateDatetime(); setInterval(updateDatetime, 1000);
   initSupabase();
   if(!SB) { if(!userName) userName='Tamu'; isGuest=true; saveLocalState(); hideSplash(); enterApp(); return; }
+  function showAuthScreen() { hideSplash(); document.getElementById('auth-screen').style.display='flex'; }
   try {
     SB.auth.onAuthStateChange(async(event,session)=>{
       if(['SIGNED_IN','TOKEN_REFRESHED','INITIAL_SESSION'].includes(event) && session?.user && !currentUser) {
         await onLoginSuccess(session.user);
+        hideSplash();
+      } else if(event==='INITIAL_SESSION' && !session?.user && !currentUser) {
+        showAuthScreen();
       }
     });
-    await new Promise(r=>setTimeout(r,300));
     const sessionResult = await Promise.race([
       SB.auth.getSession(),
       new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),8000))
     ]);
     const {data:{session}} = sessionResult;
-    hideSplash();
-    if(currentUser) return; // sudah di-handle oleh onAuthStateChange (INITIAL_SESSION)
-    if(session?.user) { await onLoginSuccess(session.user); return; }
-    if(window.location.hash.includes('access_token')) { document.getElementById('auth-screen').style.display='flex'; return; }
-    if(isGuest&&userName) { enterApp(); return; }
-    document.getElementById('auth-screen').style.display='flex';
+    if(currentUser) { hideSplash(); return; }
+    if(session?.user) { await onLoginSuccess(session.user); hideSplash(); return; }
+    if(isGuest&&userName) { hideSplash(); enterApp(); return; }
+    showAuthScreen();
   } catch(e) {
     console.warn('[Apreez] Init fallback:', e.message);
-    hideSplash();
-    if(currentUser) { enterApp(); return; } // session loaded via onAuthStateChange
-    if(isGuest&&userName) enterApp(); else document.getElementById('auth-screen').style.display='flex';
+    if(currentUser) { hideSplash(); enterApp(); return; }
+    if(isGuest&&userName) { hideSplash(); enterApp(); return; }
+    hideSplash(); document.getElementById('auth-screen').style.display='flex';
   }
 });
 </script>
