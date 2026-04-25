@@ -941,9 +941,12 @@ function enterApp() {
   updateModeBadge();
 }
 async function authLogout() {
+  const ok = confirm('Keluar dari akun?\n\nJawabanmu tetap tersimpan dan bisa diakses lagi saat kamu masuk kembali.');
+  if(!ok) return;
   if(SB && currentUser) await SB.auth.signOut();
-  currentUser=null; userName=''; answers={}; appMode='solo'; partnerCode=null; linkedPartnerCode=null; isGuest=false;
-  localStorage.removeItem('apreez_v4');
+  // Hanya reset status auth — jawaban & data tetap ada di localStorage
+  currentUser = null; isGuest = false;
+  saveLocalState();
   location.reload();
 }
 
@@ -1307,14 +1310,16 @@ function updateTabCard(ti) { const cards=document.querySelectorAll('#tab-grid .t
 
 // ══ KATA NARA ══
 let naraChatHistory=[], naraAnswerSummary='', naraIsTyping=false;
+let partnerAnswers=null, partnerName='';
 function getCompletedThemes() { let c=0; TABS.forEach((tab,ti)=>{ if(tab.isProfil) return; if(getTabFilled(ti)>=getTabTotal(ti)&&getTabTotal(ti)>0) c++; }); return c; }
-function buildAnswerSummary() {
-  let s=`Nama: ${userName}\nMode: ${appMode==='couple'?'Couple':'Solo'}\n\n`;
+function buildAnswerSummary(targetAnswers=answers, targetName=userName) {
+  let s=`Nama: ${targetName}\nMode: ${appMode==='couple'?'Couple':'Solo'}\n\n`;
   TABS.forEach((tab,ti)=>{ if(tab.isProfil) return; let has=false, t=`=== ${tab.name.toUpperCase()} ===\n`;
-    tab.subtabs?.forEach((st,si)=>st.questions.forEach((q,qi)=>{ const v=answers[getQId(ti,si,qi)]; if(v?.trim()) { has=true; t+=`[${st.name}]\nQ: ${q}\nA: ${v}\n\n`; } }));
+    tab.subtabs?.forEach((st,si)=>st.questions.forEach((q,qi)=>{ const v=targetAnswers[getQId(ti,si,qi)]; if(v?.trim()) { has=true; t+=`[${st.name}]\nQ: ${q}\nA: ${v}\n\n`; } }));
     if(has) s+=t; }); return s;
 }
 function getNaraSystemPrompt() {
+  const isCouple = appMode==='couple' && partnerAnswers;
   return `Kamu adalah Nara, AI companion yang hangat, jujur, dan penuh empati dari aplikasi Apreez — aplikasi refleksi pra-nikah.
 
 IDENTITASMU:
@@ -1329,35 +1334,73 @@ SCOPE PERCAKAPANMU:
 - Kalau user tanya hal di luar konteks Apreez dan refleksi pra-nikah, arahkan kembali dengan lembut.
 - Jangan pura-pura tahu kalau data jawabannya belum ada.
 
-PENTING:
+${isCouple?`MODE COUPLE — MEMBANDINGKAN DUA JAWABAN:
+Kamu punya akses ke jawaban KEDUA pasangan sekaligus. Gunakan ini dengan bijak:
+- Saat diminta membandingkan: temukan keselarasan (hal yang sejalan) dan titik perhatian (perbedaan yang perlu didiskusikan)
+- Sampaikan perbedaan dengan empatik — bukan menghakimi siapa yang benar
+- Jangan memihak salah satu. Posisimu adalah fasilitator percakapan, bukan hakim
+- Ingatkan bahwa perbedaan bukan masalah, tapi bahan percakapan yang berharga
+- Kalau user hanya tanya soal dirinya sendiri, fokus ke jawabannya saja
+
+`:''}PENTING:
 - Jangan mulai respons dengan "Tentu!", "Baik!", "Halo!" setiap kali
 - Jangan terlalu panjang kalau pertanyaannya simpel
 - Jangan rekomendasikan aplikasi atau layanan eksternal kecuali psikolog/konselor profesional
 - DILARANG menggunakan format markdown apapun: tidak ada **bold**, *italic*, _underscore_, # header, atau bullet -. Tulis dalam paragraf biasa saja.
 - Selesaikan selalu kalimat dan paragraf sebelum berhenti — jangan pernah memotong di tengah kalimat.
 
-DATA JAWABAN USER:
-${naraAnswerSummary}`;
+DATA JAWABAN ${userName.toUpperCase()}:
+${naraAnswerSummary}${isCouple?`
+
+DATA JAWABAN ${partnerName.toUpperCase()} (PASANGAN):
+${buildAnswerSummary(partnerAnswers, partnerName)}`:''}`;
 }
-function initNaraScreen() {
+async function loadPartnerAnswers() {
+  if(!SB || !linkedPartnerCode || appMode!=='couple') return false;
+  try {
+    const {data,error} = await SB.from('apreez_sessions').select('answers,user_name').eq('partner_code',linkedPartnerCode).maybeSingle();
+    if(error||!data) return false;
+    partnerAnswers = data.answers||{};
+    partnerName = data.user_name||'Pasangan';
+    return true;
+  } catch(e) { console.warn('[Apreez] Load partner failed:', e); return false; }
+}
+async function initNaraScreen() {
   const completedThemes=getCompletedThemes(), totalThemes=TABS.filter(t=>!t.isProfil).length, filled=getFilledQ();
   const noteEl=document.getElementById('nara-threshold-note');
+  naraAnswerSummary=buildAnswerSummary();
+
+  // Load partner kalau couple mode
+  let partnerLoaded = false;
+  if(appMode==='couple' && linkedPartnerCode && SB && !isGuest) {
+    partnerLoaded = await loadPartnerAnswers();
+  }
+
   if(filled===0) {
     noteEl.innerHTML=`Belum ada jawaban yang bisa aku baca. Isi dulu beberapa pertanyaan, lalu kembali ke sini.`;
     document.getElementById('nara-input').disabled=true; document.getElementById('nara-send-btn').disabled=true;
+  } else if(appMode==='couple') {
+    if(partnerLoaded) {
+      noteEl.innerHTML=`Mode couple aktif — aku sudah bisa membaca jawaban kamu dan <strong>${partnerName}</strong>. Minta aku untuk membandingkan topik tertentu, atau tanya apa saja.`;
+    } else {
+      noteEl.innerHTML=`Mode couple aktif, tapi jawaban pasanganmu belum tersedia. Mungkin mereka belum mengisi Apreez, atau kode belum terhubung. Untuk sekarang aku hanya bisa refleksi dari jawabanmu saja.`;
+    }
+    document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
   } else if(completedThemes<2) {
-    // ← UPDATED: mention theme threshold clearly
     noteEl.innerHTML=`Aku sudah bisa membaca apa yang kamu tulis, tapi refleksiku akan jauh lebih bermakna kalau kamu sudah menyelesaikan <strong>minimal 2 tema penuh</strong> — bukan sekadar beberapa pertanyaan. Sekarang baru <strong>${completedThemes} tema</strong> yang tuntas. Selesaikan lebih dulu, lalu kita ngobrol lebih dalam. Tapi kalau kamu mau tanya sesuatu dulu, boleh.`;
     document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
   } else {
     noteEl.innerHTML=`<strong>${completedThemes} dari ${totalThemes} tema</strong> sudah selesai — aku sudah bisa memberi refleksi yang bermakna. Tanya aku apa saja tentang perjalananmu.`;
     document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
   }
-  naraAnswerSummary=buildAnswerSummary();
   if(naraChatHistory.length===0&&completedThemes>=2) setTimeout(()=>autoNaraReflection(), 400);
 }
 async function autoNaraReflection() {
-  await sendToNara(`Berikan refleksi awal yang personal dan hangat berdasarkan jawaban refleksi pra-nikah yang sudah aku isi. Fokus pada pola yang kamu lihat dan satu atau dua hal yang menarik perhatianmu. Maksimal 4 paragraf pendek.`, false);
+  const isCouple = appMode==='couple' && partnerAnswers;
+  const prompt = isCouple
+    ? `Berikan refleksi awal yang hangat berdasarkan jawaban refleksi pra-nikah dari ${userName} dan ${partnerName}. Temukan satu atau dua hal yang menarik — bisa keselarasan atau perbedaan yang worth didiskusikan. Maksimal 4 paragraf pendek.`
+    : `Berikan refleksi awal yang personal dan hangat berdasarkan jawaban refleksi pra-nikah yang sudah aku isi. Fokus pada pola yang kamu lihat dan satu atau dua hal yang menarik perhatianmu. Maksimal 4 paragraf pendek.`;
+  await sendToNara(prompt, false);
 }
 function stripMarkdown(text) {
   return text
