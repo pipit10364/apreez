@@ -1590,7 +1590,11 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       }
     });
     await new Promise(r=>setTimeout(r,300));
-    const {data:{session}} = await SB.auth.getSession();
+    const sessionResult = await Promise.race([
+      SB.auth.getSession(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),8000))
+    ]);
+    const {data:{session}} = sessionResult;
     hideSplash();
     if(currentUser) return; // sudah di-handle oleh onAuthStateChange (INITIAL_SESSION)
     if(session?.user) { await onLoginSuccess(session.user); return; }
