@@ -1051,15 +1051,31 @@ async function authRegister() {
 }
 async function authGoogleLogin() {
   showAuthMsg('Membuka Google...', false);
-  const {error} = await SB.auth.signInWithOAuth({provider:'google', options:{redirectTo:window.location.origin}});
+  const {error} = await SB.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.href.split('#')[0],
+      queryParams: { prompt: 'select_account' } // selalu tampilkan pilihan akun
+    }
+  });
   if(error) showAuthMsg(error.message);
 }
 async function onLoginSuccess(user, nameOverride=null) {
   if(currentUser?.id === user?.id) return;
+
+  // Kalau user berbeda dari yang sebelumnya, bersihkan state lama dulu
+  const prevUserId = currentUser?.id;
+  if(prevUserId && prevUserId !== user.id) {
+    answers = {}; userName = ''; partnerCode = ''; linkedPartnerCode = ''; appMode = 'solo';
+    localStorage.removeItem('apreez_v4');
+    localStorage.removeItem('apreez_onboarding_seen');
+  }
+
   currentUser = user; isGuest = false;
   document.getElementById('auth-screen').style.display='none';
-  if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
   await loadFromSupabase(); // pull data dulu sebelum render
+  // Bersihkan hash SETELAH Supabase sudah baca token-nya
+  if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
   if(!userName) { userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0]; }
   if(!partnerCode) { appMode=selectedMode; partnerCode=generateCode(); }
   if(selectedMode==='couple') {
@@ -1067,8 +1083,8 @@ async function onLoginSuccess(user, nameOverride=null) {
     if(inputCode && inputCode.length===6) linkedPartnerCode = inputCode;
   }
   saveLocalState();
-  enterApp(); // masuk app dulu
-  syncToSupabase(); // sync di background, tidak perlu ditunggu
+  enterApp();
+  syncToSupabase();
 }
 function enterApp() {
   if(!userName) userName='Tamu';
@@ -1088,12 +1104,14 @@ function finishOnboarding() {
   goTo('s-dashboard');
 }
 async function authLogout() {
-  const ok = confirm('Keluar dari akun?\n\nJawabanmu tetap tersimpan dan bisa diakses lagi saat kamu masuk kembali.');
+  const ok = confirm('Keluar dari akun?\n\nJawabanmu tetap tersimpan di server dan bisa diakses lagi saat kamu masuk kembali.');
   if(!ok) return;
   if(SB && currentUser) await SB.auth.signOut();
-  // Hanya reset status auth — jawaban & data tetap ada di localStorage
+  // Clear semua state lokal — data aman di Supabase
   currentUser = null; isGuest = false;
-  saveLocalState();
+  answers = {}; userName = ''; partnerCode = ''; linkedPartnerCode = ''; appMode = 'solo';
+  localStorage.removeItem('apreez_v4');
+  localStorage.removeItem('apreez_onboarding_seen');
   location.reload();
 }
 
