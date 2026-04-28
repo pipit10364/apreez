@@ -1261,8 +1261,14 @@ async function onLoginSuccess(user, nameOverride=null) {
   const overlay = document.getElementById('loading-overlay');
   overlay.style.display = 'flex';
   document.getElementById('loading-msg').textContent = 'Memuat jawabanmu...';
-  await loadFromSupabase(); // pull from server — overwrites local if data exists
-  overlay.style.display = 'none';
+  // Hard timeout: if fetch takes >8s, hide overlay anyway so app doesn't get stuck
+  const overlayTimeout = setTimeout(() => { overlay.style.display = 'none'; }, 8000);
+  try {
+    await loadFromSupabase(); // pull from server — overwrites local if data exists
+  } finally {
+    clearTimeout(overlayTimeout);
+    overlay.style.display = 'none';
+  }
   // Clean hash AFTER Supabase has read its token
   if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
   if(!userName) { userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0]; }
@@ -2097,6 +2103,7 @@ function showCelebration() {
 
 // ══ SAFETY FALLBACK ══
 setTimeout(()=>{
+  hideLoadingOverlay(); // always hide overlay on safety fallback
   const anyActive=document.querySelector('.screen.active'), authVisible=document.getElementById('auth-screen')?.style.display==='flex';
   if(!anyActive&&!authVisible) { if(isGuest&&userName) enterApp(); else document.getElementById('auth-screen').style.display='flex'; }
 }, 5000);
@@ -2111,6 +2118,10 @@ function hideSplash() {
   if(!el) return;
   el.style.opacity='0';
   setTimeout(()=>{ el.style.display='none'; }, 400);
+}
+function hideLoadingOverlay() {
+  const el = document.getElementById('loading-overlay');
+  if(el) el.style.display='none';
 }
 
 // ══ INIT ══
@@ -2141,6 +2152,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     showAuthScreen();
   } catch(e) {
     console.warn('[Apreez] Init fallback:', e.message);
+    hideLoadingOverlay();
     if(currentUser) { hideSplash(); enterApp(); return; }
     if(isGuest&&userName) { hideSplash(); enterApp(); return; }
     hideSplash(); document.getElementById('auth-screen').style.display='flex';
