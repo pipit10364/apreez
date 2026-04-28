@@ -1364,10 +1364,15 @@ async function onLoginSuccess(user, nameOverride=null) {
         .catch(()=>{});
     }
   }
-  if(!partnerCode) { appMode=selectedMode; partnerCode=generateCode(); }
+  // Regenerate partner code if missing or still old 6-char format
+  if(!partnerCode || partnerCode.length < 8) {
+    if(!partnerCode) appMode = selectedMode;
+    partnerCode = generateCode();
+    console.log('[Apreez] Generated new partner code:', partnerCode);
+  }
   if(selectedMode==='couple') {
     const inputCode = document.getElementById('partner-code-input')?.value.trim().toUpperCase();
-    if(inputCode && inputCode.length===6) linkedPartnerCode = inputCode;
+    if(inputCode && inputCode.length >= 6) linkedPartnerCode = inputCode;
   }
   saveLocalState();
   enterApp();
