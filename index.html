@@ -1462,8 +1462,17 @@ async function switchMode(mode) {
 }
 async function linkPartner() {
   const code = document.getElementById('settings-partner-input')?.value.trim().toUpperCase();
-  if(!code||code.length!==6||code===partnerCode) return;
-  linkedPartnerCode=code; saveState(); updateModeBadge(); closeModal();
+  if(!code || code.length < 6 || code === partnerCode) {
+    if(code === partnerCode) alert('Tidak bisa link ke kode kamu sendiri.');
+    return;
+  }
+  linkedPartnerCode = code;
+  appMode = 'couple';
+  saveLocalState();
+  syncToSupabase();
+  updateModeBadge();
+  closeModal();
+  renderDashboard();
 }
 
 // ══ THEME ══
