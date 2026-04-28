@@ -178,7 +178,7 @@ body {
 #s-dashboard { padding:0; }
 .dash-header {
   background:var(--header-bg);
-  padding: calc(16px + var(--safe-top)) 24px 14px;
+  padding: calc(12px + var(--safe-top)) 20px 10px;
   border-bottom:1px solid var(--border);
 }
 .dash-datetime { font-size:11px; color:var(--text3); letter-spacing:.5px; margin-bottom:4px; }
@@ -195,11 +195,13 @@ body {
   grid-template-columns:1fr 1fr;
   grid-template-rows:1fr auto;
   overflow:hidden;
-  height: calc(100dvh - 90px);
+  height: calc(100dvh - 88px);
+  min-height: 0;
 }
-.dash-left { padding:20px; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:16px; overflow-y:auto; }
+.dash-left { padding:16px 20px; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:12px; overflow-y:auto; min-height:0; }
 
 @media (max-width: 600px) {
+  #s-dashboard { overflow-y: auto; overflow-x: hidden; }
   .dash-body {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
@@ -210,13 +212,29 @@ body {
     border-right: none;
     border-bottom: 1px solid var(--border);
     overflow-y: visible;
+    gap: 10px;
+    padding: 14px 16px;
   }
   .dash-right {
     overflow-y: visible;
+    padding: 14px 16px;
+    gap: 8px;
   }
-  .tab-grid { grid-template-columns: repeat(3, 1fr); }
-  .mosaic-block { width:13px; height:13px; }
-  #s-dashboard { overflow-y: auto; }
+  .dash-actions-row {
+    padding: 10px 14px;
+    padding-bottom: calc(10px + var(--safe-bottom));
+    gap: 6px;
+  }
+  .btn-nara, .btn-pdf { height: 40px; font-size: 13px; }
+  .btn-wedding { width: 40px; height: 40px; }
+  .tab-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .tab-card { min-height: 56px; padding: 8px 6px; }
+  .tab-card .tab-pct { display: none; }
+  .mosaic-block { width: 12px; height: 12px; }
+  .mosaic-wrap { padding: 12px; }
+  .mosaic-count { font-size: 18px; }
+  .dash-greeting { font-size: 22px; }
+  .dash-header { padding: calc(12px + var(--safe-top)) 16px 10px; }
 }
 .mosaic-wrap { background:var(--bg2); border-radius:var(--radius-lg); padding:14px; border:1px solid var(--border); }
 .mosaic-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:400; color:var(--text); margin-bottom:4px; }
@@ -248,7 +266,7 @@ body {
 .btn-wedding { width:44px; height:44px; border-radius:var(--radius); border:1.5px solid var(--pink); background:var(--pink-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:var(--transition); color:var(--pink); }
 .btn-wedding svg { width:18px; height:18px; }
 .btn-wedding:hover { background:var(--pink); color:white; }
-.dash-right { padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
+.dash-right { padding:16px 20px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; min-height:0; }
 .tab-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
 .tab-card { background:var(--card); border-radius:var(--radius); padding:12px 10px; cursor:pointer; transition:all .2s var(--ease-smooth); position:relative; overflow:hidden; min-height:72px; display:flex; flex-direction:column; justify-content:space-between; }
 .tab-card.alt1 { background:var(--pink); }
@@ -473,6 +491,32 @@ body {
 .onboard-cta { width:100%; padding:14px; border-radius:var(--radius); border:none; background:var(--card); color:white; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:var(--transition); }
 .onboard-cta:hover { background:var(--card-hover); }
 
+/* ── CONFIRM MODAL ── */
+.confirm-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); backdrop-filter:blur(6px); z-index:9500; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity .25s ease; }
+.confirm-overlay.open { opacity:1; pointer-events:all; }
+.confirm-box { background:var(--bg); border-radius:var(--radius-lg); padding:28px 24px 20px; max-width:320px; width:100%; box-shadow:0 24px 60px rgba(0,0,0,.2); transform:scale(.95); transition:transform .25s ease; }
+.confirm-overlay.open .confirm-box { transform:scale(1); }
+.confirm-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; color:var(--text); margin-bottom:8px; }
+.confirm-body { font-size:13px; color:var(--text2); line-height:1.7; font-weight:300; margin-bottom:20px; }
+.confirm-actions { display:flex; gap:8px; }
+.confirm-cancel { flex:1; padding:11px; border-radius:var(--radius); border:1.5px solid var(--border); background:transparent; color:var(--text2); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:var(--transition); }
+.confirm-cancel:hover { border-color:var(--text2); color:var(--text); }
+.confirm-ok { flex:1; padding:11px; border-radius:var(--radius); border:none; background:var(--pink); color:white; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:.5px; cursor:pointer; transition:var(--transition); }
+.confirm-ok:hover { opacity:.85; }
+
+/* ── OFFLINE BANNER ── */
+#offline-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9000;
+  background: #c0392b; color: white;
+  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: .5px; text-align: center;
+  padding: calc(6px + var(--safe-top)) 16px 6px;
+  transform: translateY(-100%); transition: transform .3s ease;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+#offline-banner.visible { transform: translateY(0); }
+#offline-banner svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
 /* ── FEEDBACK FAB ── */
 .feedback-fab { position:fixed; bottom:calc(20px + var(--safe-bottom)); right:18px; z-index:500; width:34px; height:34px; border-radius:50%; background:var(--bg2); border:1.5px solid var(--border); cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text3); box-shadow:0 2px 12px rgba(0,0,0,.1); transition:var(--transition); opacity:.6; }
 .feedback-fab:hover { opacity:1; border-color:var(--card); color:var(--card); transform:scale(1.1); }
@@ -509,12 +553,12 @@ body {
 /* ── RESPONSIVE ── */
 @media (max-width:640px) {
   .dash-body { grid-template-columns:1fr; grid-template-rows:auto auto auto; overflow:visible; height:auto; }
-  .dash-left { order:2; border-right:none; border-top:1px solid var(--border); padding:12px; }
-  .dash-right { order:1; border-bottom:1px solid var(--border); padding:14px; }
+  .dash-left { order:2; border-right:none; border-top:1px solid var(--border); padding:12px; gap:10px; }
+  .dash-right { order:1; border-bottom:1px solid var(--border); padding:12px; gap:8px; }
   .dash-actions-row { order:3; grid-column:1; }
-  .tab-grid { grid-template-columns:repeat(8,1fr); gap:6px; }
-  .tab-card { min-height:44px; padding:8px 4px; align-items:center; justify-content:center; }
-  .tab-card .tab-name,.tab-card .tab-pct { display:none; }
+  .tab-grid { grid-template-columns:repeat(4,1fr); gap:6px; }
+  .tab-card { min-height:54px; padding:8px 6px; }
+  .tab-card .tab-pct { display:none; }
   .tab-card .tab-icon { margin-bottom:0; }
   .tab-card.profil-card { grid-column:1/-1; min-height:40px; padding:10px 14px; }
   .tab-card.profil-card .tab-name,.tab-card.profil-card .tab-pct { display:block; }
@@ -553,6 +597,35 @@ body {
 </div>
 
 
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title">Keluar dari akun?</div>
+    <div class="confirm-body" id="confirm-body"></div>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" onclick="closeConfirm()">Batal</button>
+      <button class="confirm-ok" id="confirm-ok-btn" onclick="confirmOk()">Ya, keluar</button>
+    </div>
+  </div>
+</div>
+
+<!-- OFFLINE BANNER -->
+<div id="offline-banner">
+  <svg viewBox="0 0 24 24"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+  Tidak ada koneksi · Jawabanmu tetap tersimpan di perangkat
+</div>
+
+<!-- LOADING OVERLAY (shown while fetching user data after auth) -->
+<div id="loading-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9998;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text);">Ap<em style="color:var(--card);font-style:italic;">reez</em></div>
+  <div style="display:flex;gap:6px;align-items:center;">
+    <div style="width:7px;height:7px;border-radius:50%;background:var(--card);animation:splashPulse 1.2s ease-in-out infinite;"></div>
+    <div style="width:7px;height:7px;border-radius:50%;background:var(--pink);animation:splashPulse 1.2s ease-in-out 0.2s infinite;"></div>
+    <div style="width:7px;height:7px;border-radius:50%;background:var(--peach);animation:splashPulse 1.2s ease-in-out 0.4s infinite;"></div>
+  </div>
+  <div id="loading-msg" style="font-size:11px;color:var(--text3);letter-spacing:.5px;">Memuat jawabanmu...</div>
+</div>
+
 <!-- AUTH -->
 <div id="auth-screen">
   <button class="btn-sm" onclick="toggleTheme()" id="theme-btn" style="position:fixed;top:calc(16px + var(--safe-top));right:16px;z-index:9999;">☀</button>
@@ -566,7 +639,7 @@ body {
     <div class="couple-code-box" id="couple-input-box">
       <div class="couple-code-label">PUNYA KODE PASANGAN?</div>
       <div class="auth-field" style="margin-bottom:0;">
-        <input class="auth-input" id="partner-code-input" type="text" placeholder="Masukkan kode pasanganmu" maxlength="8" style="text-align:center;letter-spacing:3px;text-transform:uppercase;font-family:'Cormorant Garamond',serif;font-size:18px;"/>
+        <input class="auth-input" id="partner-code-input" type="text" placeholder="Masukkan kode pasanganmu" maxlength="8" style="text-align:center;letter-spacing:3px;text-transform:uppercase;font-family:'Cormorant Garamond',serif;font-size:18px;" placeholder="8 huruf kode pasangan"/>
       </div>
       <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Atau buat akun dulu, kode akan muncul setelah masuk</div>
     </div>
@@ -852,6 +925,12 @@ const TABS = [
 ];
 
 // ══ SUPABASE ══
+// ⚠️ SECURITY NOTE: Pastikan RLS (Row Level Security) aktif di Supabase
+// untuk tabel 'apreez_sessions' dengan policy:
+//   SELECT: auth.uid() = user_id
+//   INSERT: auth.uid() = user_id
+//   UPDATE: auth.uid() = user_id
+// Tanpa RLS, anon key di bawah bisa dipakai siapapun untuk baca/tulis semua data.
 const SUPA_URL = 'https://fanbsvlzhuhsngsvwfkn.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbmJzdmx6aHVoc25nc3Z3ZmtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDg0NjQsImV4cCI6MjA5MTYyNDQ2NH0.6RRz3y56PtFZLpn3LSwBL986NIc1MmlxjuG44JHryb4';
 let SB = null;
@@ -869,14 +948,38 @@ let currentTabIdx = 0, currentSubIdx = 0, currentQIdx = 0;
 let isDark = false, saveTimer = null, isGuest = false;
 let openedFromMosaic = false; // ← NEW: flag for mosaic single-question mode
 
-function loadLocalState() {
+function _lsKey() {
+  // Isolate per-user so switching accounts never bleeds data
+  if(isGuest) return 'apreez_v4_guest';
+  if(currentUser?.id) return `apreez_v4_${currentUser.id}`;
+  return 'apreez_v4';
+}
+function loadLocalState(userId = null) {
   try {
-    const s = localStorage.getItem('apreez_v4');
-    if(s) { const d=JSON.parse(s); answers=d.answers||{}; userName=d.userName||''; isDark=d.isDark||false; appMode=d.appMode||'solo'; partnerCode=d.partnerCode||null; linkedPartnerCode=d.linkedPartnerCode||null; isGuest=d.isGuest||false; }
-  } catch(e) {}
+    const key = userId ? `apreez_v4_${userId}` : _lsKey();
+    const s = localStorage.getItem(key);
+    if(s) {
+      const d = JSON.parse(s);
+      // Deep-validate each field before trusting it
+      answers = (d.answers && typeof d.answers === 'object' && !Array.isArray(d.answers)) ? d.answers : {};
+      userName = typeof d.userName === 'string' ? d.userName : '';
+      isDark = typeof d.isDark === 'boolean' ? d.isDark : false;
+      appMode = ['solo','couple'].includes(d.appMode) ? d.appMode : 'solo';
+      partnerCode = typeof d.partnerCode === 'string' ? d.partnerCode : null;
+      linkedPartnerCode = typeof d.linkedPartnerCode === 'string' ? d.linkedPartnerCode : null;
+      isGuest = typeof d.isGuest === 'boolean' ? d.isGuest : false;
+    } else {
+      answers={}; userName=''; appMode='solo'; partnerCode=null; linkedPartnerCode=null;
+    }
+  } catch(e) {
+    // Corrupt localStorage entry — reset to safe defaults
+    console.warn('[Apreez] Corrupt local state, resetting.', e.message);
+    answers={}; userName=''; appMode='solo'; partnerCode=null; linkedPartnerCode=null;
+    try { localStorage.removeItem(userId ? `apreez_v4_${userId}` : _lsKey()); } catch(_) {}
+  }
 }
 function saveLocalState() {
-  try { localStorage.setItem('apreez_v4', JSON.stringify({answers,userName,isDark,appMode,partnerCode,linkedPartnerCode,isGuest})); } catch(e) {}
+  try { localStorage.setItem(_lsKey(), JSON.stringify({answers,userName,isDark,appMode,partnerCode,linkedPartnerCode,isGuest})); } catch(e) {}
 }
 function saveState() {
   saveLocalState();
@@ -903,22 +1006,20 @@ function setSyncDot(state) {
 
 async function syncToSupabase() {
   if(!SB || !currentUser) return;
-  const syncAnswers = {...answers};
-
-  const payload = { user_id:currentUser.id, user_name:userName, answers:syncAnswers, app_mode:appMode, partner_code:partnerCode, linked_partner_code:linkedPartnerCode, updated_at:new Date().toISOString() };
+  const payload = {
+    user_id: currentUser.id, user_name: userName,
+    answers: {...answers}, app_mode: appMode,
+    partner_code: partnerCode, linked_partner_code: linkedPartnerCode,
+    updated_at: new Date().toISOString()
+  };
   try {
-    // Try update first
-    const {data:existing} = await SB.from('apreez_sessions').select('user_id').eq('user_id', currentUser.id).maybeSingle();
-    if(existing) {
-      const {error} = await SB.from('apreez_sessions').update(payload).eq('user_id', currentUser.id);
-      if(error) throw error;
-    } else {
-      const {error} = await SB.from('apreez_sessions').insert(payload);
-      if(error) throw error;
-    }
+    // upsert is atomic — one round trip, no race condition between select+insert/update
+    const { error } = await SB.from('apreez_sessions')
+      .upsert(payload, { onConflict: 'user_id' });
+    if(error) throw error;
     setSyncDot('');
   } catch(e) {
-    console.error('[Apreez] Sync failed:', e);
+    console.error('[Apreez] Sync failed:', e.message);
     setSyncDot('error');
   }
 }
@@ -929,14 +1030,23 @@ async function loadFromSupabase() {
     const { data, error } = await SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle();
     if(error) throw error;
     if(data) {
-      answers = data.answers || {};
-      appMode = data.app_mode || 'solo';
+      // Validate answers is an object before using — guard against corrupted data
+      if(data.answers && typeof data.answers === 'object' && !Array.isArray(data.answers)) {
+        answers = data.answers;
+      } else if(data.answers) {
+        console.warn('[Apreez] Corrupted answers data from server, resetting.');
+        answers = {};
+      }
+      appMode = ['solo','couple'].includes(data.app_mode) ? data.app_mode : 'solo';
       partnerCode = data.partner_code || null;
       linkedPartnerCode = data.linked_partner_code || null;
       if(data.user_name && !userName) userName = data.user_name;
       saveLocalState();
     }
-  } catch(e) { console.warn('Load from Supabase failed, using local:', e); }
+  } catch(e) {
+    console.warn('[Apreez] Load from Supabase failed, using local cache:', e.message);
+    // Don't crash — local state is already loaded, just continue
+  }
 }
 
 // Force sync from cloud (button in header)
@@ -957,12 +1067,84 @@ document.addEventListener('visibilitychange', async () => {
 });
 
 function generateCode() {
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c='';
-  for(let i=0;i<6;i++) c+=chars[Math.floor(Math.random()*chars.length)];
-  return c;
+  // 8 chars from 32-char set = 32^8 ≈ 1 trillion combinations, brute-force resistant
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let code='';
+  const arr = new Uint8Array(8);
+  crypto.getRandomValues(arr); // cryptographically random
+  for(let i=0;i<8;i++) code+=chars[arr[i]%chars.length];
+  return code;
 }
 
-loadLocalState();
+// ══ CUSTOM CONFIRM MODAL ══
+let _confirmResolve = null;
+function showConfirm(title, body, okLabel='Ya') {
+  return new Promise(resolve => {
+    _confirmResolve = resolve;
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-body').textContent = body;
+    document.getElementById('confirm-ok-btn').textContent = okLabel;
+    document.getElementById('confirm-overlay').classList.add('open');
+  });
+}
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+  if(_confirmResolve) { _confirmResolve(false); _confirmResolve = null; }
+}
+function confirmOk() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+  if(_confirmResolve) { _confirmResolve(true); _confirmResolve = null; }
+}
+
+// ══ OFFLINE DETECTION ══
+function updateOnlineStatus() {
+  const banner = document.getElementById('offline-banner');
+  if(!banner) return;
+  if(!navigator.onLine) {
+    banner.classList.add('visible');
+  } else {
+    banner.classList.remove('visible');
+    // When we come back online, try to sync pending answers
+    if(currentUser && !isGuest && Object.keys(answers).length > 0) {
+      setSyncDot('syncing');
+      syncToSupabase();
+    }
+  }
+}
+window.addEventListener('online', updateOnlineStatus);
+
+// ══ BEFOREUNLOAD — flush pending sync immediately if tab is closing ══
+window.addEventListener('beforeunload', () => {
+  if(saveTimer && currentUser && !isGuest) {
+    clearTimeout(saveTimer);
+    // Use sendBeacon for reliable fire-and-forget on tab close
+    if(navigator.sendBeacon && SB) {
+      const payload = JSON.stringify({
+        user_id: currentUser.id, user_name: userName,
+        answers, app_mode: appMode, partner_code: partnerCode,
+        linked_partner_code: linkedPartnerCode,
+        updated_at: new Date().toISOString()
+      });
+      // Fallback: at minimum save to localStorage synchronously
+      saveLocalState();
+    } else {
+      saveLocalState();
+    }
+  }
+});
+window.addEventListener('offline', updateOnlineStatus);
+
+// Load only theme preference before auth — don't pre-load user data
+(function loadThemeOnly() {
+  try {
+    // Try to restore isDark from any stored key so screen doesn't flash on load
+    for(const k of Object.keys(localStorage)) {
+      if(k.startsWith('apreez_v4')) {
+        const d = JSON.parse(localStorage.getItem(k)||'{}');
+        if(typeof d.isDark === 'boolean') { isDark = d.isDark; break; }
+      }
+    }
+  } catch(e) {}
+})();
 
 // ══ PWA MANIFEST INJECTION ══
 (function injectPWA() {
@@ -1061,20 +1243,27 @@ async function authGoogleLogin() {
   if(error) showAuthMsg(error.message);
 }
 async function onLoginSuccess(user, nameOverride=null) {
-  if(currentUser?.id === user?.id) return;
+  // Only skip if this exact user is already fully loaded (has answers in memory)
+  if(currentUser?.id === user?.id && Object.keys(answers).length > 0) return;
 
-  // Kalau user berbeda dari yang sebelumnya, bersihkan state lama dulu
-  const prevUserId = currentUser?.id;
-  if(prevUserId && prevUserId !== user.id) {
-    answers = {}; userName = ''; partnerCode = ''; linkedPartnerCode = ''; appMode = 'solo';
-    localStorage.removeItem('apreez_v4');
-    localStorage.removeItem('apreez_onboarding_seen');
-  }
+  // Always clear in-memory state before loading new user — prevents bleed between accounts
+  answers = {}; userName = ''; partnerCode = null; linkedPartnerCode = null; appMode = 'solo';
+  localStorage.removeItem('apreez_v4');
+  localStorage.removeItem('apreez_onboarding_seen');
 
   currentUser = user; isGuest = false;
+
+  // Load this user's local cache first (may be empty for new users)
+  loadLocalState(user.id);
+
+  // Show loading overlay while fetching from Supabase
   document.getElementById('auth-screen').style.display='none';
-  await loadFromSupabase(); // pull data dulu sebelum render
-  // Bersihkan hash SETELAH Supabase sudah baca token-nya
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.display = 'flex';
+  document.getElementById('loading-msg').textContent = 'Memuat jawabanmu...';
+  await loadFromSupabase(); // pull from server — overwrites local if data exists
+  overlay.style.display = 'none';
+  // Clean hash AFTER Supabase has read its token
   if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
   if(!userName) { userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0]; }
   if(!partnerCode) { appMode=selectedMode; partnerCode=generateCode(); }
@@ -1104,13 +1293,21 @@ function finishOnboarding() {
   goTo('s-dashboard');
 }
 async function authLogout() {
-  const ok = confirm('Keluar dari akun?\n\nJawabanmu tetap tersimpan di server dan bisa diakses lagi saat kamu masuk kembali.');
+  const ok = await showConfirm(
+    'Keluar dari akun?',
+    'Jawabanmu tetap tersimpan di server dan bisa diakses lagi saat kamu masuk kembali.',
+    'Ya, keluar'
+  );
   if(!ok) return;
   if(SB && currentUser) await SB.auth.signOut();
   // Clear semua state lokal — data aman di Supabase
+  const _uid = currentUser?.id;
   currentUser = null; isGuest = false;
-  answers = {}; userName = ''; partnerCode = ''; linkedPartnerCode = ''; appMode = 'solo';
+  answers = {}; userName = ''; partnerCode = null; linkedPartnerCode = null; appMode = 'solo';
+  // Remove both generic key and per-user key
   localStorage.removeItem('apreez_v4');
+  if(_uid) localStorage.removeItem(`apreez_v4_${_uid}`);
+  localStorage.removeItem('apreez_v4_guest');
   localStorage.removeItem('apreez_onboarding_seen');
   location.reload();
 }
@@ -1210,13 +1407,19 @@ function goTo(id) {
 }
 
 // ══ DASHBOARD ══
+let _renderDashTimer = null;
 function renderDashboard() {
-  updateDatetime();
-  const greet=document.getElementById('dash-greeting');
-  if(greet) greet.innerHTML=`${getGreeting()}, <em>${userName}!</em>`;
-  renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderPartnerCard();
-  const fc=document.getElementById('mosaic-count');
-  if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`;
+  // Debounce: collapse rapid consecutive calls into one 16ms window
+  if(_renderDashTimer) clearTimeout(_renderDashTimer);
+  _renderDashTimer = setTimeout(() => {
+    _renderDashTimer = null;
+    updateDatetime();
+    const greet=document.getElementById('dash-greeting');
+    if(greet) greet.innerHTML=`${getGreeting()}, <em>${userName}!</em>`;
+    renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderPartnerCard();
+    const fc=document.getElementById('mosaic-count');
+    if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`;
+  }, 16);
 }
 
 async function renderPartnerCard() {
@@ -1913,7 +2116,7 @@ function hideSplash() {
 // ══ INIT ══
 document.addEventListener('DOMContentLoaded', async ()=>{
   showSplash();
-  if(isDark) document.documentElement.setAttribute('data-theme','dark');
+  if(isDark) { document.documentElement.setAttribute('data-theme','dark'); document.getElementById('meta-theme-color').content='#0D1B2A'; }
   updateThemeIcons(); updateDatetime(); setInterval(updateDatetime, 1000);
   initSupabase();
   if(!SB) { if(!userName) userName='Tamu'; isGuest=true; saveLocalState(); hideSplash(); enterApp(); return; }
