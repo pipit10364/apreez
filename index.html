@@ -1035,7 +1035,7 @@ async function _fetchFromSupabase() {
   // Single attempt with 12s timeout
   const { data, error } = await Promise.race([
     SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle(),
-    new Promise((_,reject) => setTimeout(() => reject(new Error('loadFromSupabase timeout')), 12000))
+    new Promise((_,reject) => setTimeout(() => reject(new Error('loadFromSupabase timeout')), 8000))
   ]);
   if(error) throw error;
   return data;
@@ -1075,7 +1075,7 @@ async function loadFromSupabase() {
       console.warn(`[Apreez] Load attempt ${attempt}/${maxRetries} failed:`, e.message);
       if(attempt < maxRetries) {
         // Wait before retry: 2s, then 4s
-        await new Promise(r => setTimeout(r, attempt * 2000));
+        await new Promise(r => setTimeout(r, attempt * 1000)); // 1s, then 2s — warmup already done
       } else {
         // All retries exhausted — fall back to localStorage
         console.warn('[Apreez] All retries failed, using local cache');
@@ -1133,16 +1133,27 @@ function confirmOk() {
 }
 
 // ══ SUPABASE KEEP-ALIVE ══
-// Ping the DB 3s after app loads to warm connection for subsequent requests
 function warmSupabaseConnection() {
   if(!SB || isGuest) return;
   setTimeout(async () => {
     try {
-      // Lightweight ping — just check session, no data fetch
       await SB.auth.getSession();
       console.log('[Apreez] Connection warmed');
     } catch(e) { /* silent */ }
   }, 3000);
+}
+
+// Warm DB connection immediately on page load — before user clicks login
+// So by the time auth completes, connection is already warm
+function _earlyWarmup() {
+  if(!SB) return;
+  // Fire a lightweight query immediately — result doesn't matter
+  setTimeout(async () => {
+    try {
+      await SB.from('apreez_sessions').select('user_id').limit(1).maybeSingle();
+      console.log('[Apreez] Early warmup done');
+    } catch(e) { /* silent — just warming the pipe */ }
+  }, 500); // 500ms after init — very early
 }
 
 // ══ OFFLINE DETECTION ══
@@ -2214,6 +2225,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   if(isDark) { document.documentElement.setAttribute('data-theme','dark'); document.getElementById('meta-theme-color').content='#0D1B2A'; }
   updateThemeIcons(); updateDatetime(); setInterval(updateDatetime, 1000);
   initSupabase();
+  _earlyWarmup(); // warm DB connection immediately so first real query is fast
 
   function showAuthScreen() { hideSplash(); document.getElementById('auth-screen').style.display='flex'; }
 
