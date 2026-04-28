@@ -1057,7 +1057,11 @@ async function loadFromSupabase() {
         appMode = ['solo','couple'].includes(data.app_mode) ? data.app_mode : 'solo';
         partnerCode = data.partner_code || null;
         linkedPartnerCode = data.linked_partner_code || null;
-        if(data.user_name) userName = data.user_name;
+        // Reject placeholder names so they get overwritten from auth metadata
+        const _ph = ['baru', 'tamu', 'user', 'kamu', ''];
+        if(data.user_name && !_ph.includes(data.user_name.toLowerCase())) {
+          userName = data.user_name;
+        }
         saveLocalState();
       } else {
         console.log('[Apreez] No data on server for this user (new account) — attempt', attempt);
@@ -1331,8 +1335,14 @@ async function onLoginSuccess(user, nameOverride=null) {
   if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
   // Always resolve userName fresh for this user — don't let another user's cached name bleed in
   // Priority: Supabase server (already set by loadFromSupabase) > nameOverride > auth metadata > email prefix
-  if(!userName || userName === 'Tamu') {
+  // Reject placeholder names from SQL reset or defaults
+  const _placeholders = ['', 'tamu', 'baru', 'user', 'kamu'];
+  if(_placeholders.includes((userName||'').toLowerCase())) {
     userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+    // Also update on server so placeholder gets overwritten
+    if(SB && currentUser && userName) {
+      SB.from('apreez_sessions').update({user_name: userName}).eq('user_id', currentUser.id).then(()=>{}).catch(()=>{});
+    }
   }
   if(!partnerCode) { appMode=selectedMode; partnerCode=generateCode(); }
   if(selectedMode==='couple') {
@@ -2195,22 +2205,46 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   if(isDark) { document.documentElement.setAttribute('data-theme','dark'); document.getElementById('meta-theme-color').content='#0D1B2A'; }
   updateThemeIcons(); updateDatetime(); setInterval(updateDatetime, 1000);
   initSupabase();
-  if(!SB) { if(!userName) userName='Tamu'; isGuest=true; saveLocalState(); hideSplash(); enterApp(); return; }
+
   function showAuthScreen() { hideSplash(); document.getElementById('auth-screen').style.display='flex'; }
-  try {
-    SB.auth.onAuthStateChange(async(event,session)=>{
-      if(['SIGNED_IN','TOKEN_REFRESHED','INITIAL_SESSION'].includes(event) && session?.user) {
-        // Handle both: first login AND re-login after timeout fallback showed auth screen
-        if(!currentUser || currentUser.id !== session.user.id) {
-          await onLoginSuccess(session.user);
-          hideSplash();
-        }
-      } else if(event==='SIGNED_OUT') {
-        currentUser = null; _serverLoadComplete = false;
-      } else if(event==='INITIAL_SESSION' && !session?.user && !currentUser) {
-        showAuthScreen();
+
+  if(!SB) {
+    if(!userName) userName='Tamu'; isGuest=true; saveLocalState(); hideSplash(); enterApp(); return;
+  }
+
+  // ── FAST PATH (like Inarte) ──
+  // Check localStorage for a cached valid session — skip waiting for Supabase
+  // This makes returning users go straight to app without any timeout
+  const cachedUserId = _getCachedUserId();
+  if(cachedUserId && userName && !isGuest) {
+    // Load local state immediately and show app
+    loadLocalState(cachedUserId);
+    if(userName && userName !== 'Tamu') {
+      // Set a placeholder currentUser so onLoginSuccess guard works
+      currentUser = { id: cachedUserId };
+      hideSplash();
+      enterApp();
+      // Then verify & sync with Supabase in background
+      _backgroundSessionSync();
+      return;
+    }
+  }
+  if(isGuest && userName) { hideSplash(); enterApp(); return; }
+
+  // ── SLOW PATH — no local cache, must wait for Supabase ──
+  SB.auth.onAuthStateChange(async(event,session)=>{
+    if(['SIGNED_IN','TOKEN_REFRESHED','INITIAL_SESSION'].includes(event) && session?.user) {
+      if(!currentUser || currentUser.id !== session.user.id) {
+        await onLoginSuccess(session.user);
+        hideSplash();
       }
-    });
+    } else if(event==='SIGNED_OUT') {
+      currentUser = null; _serverLoadComplete = false;
+    } else if(event==='INITIAL_SESSION' && !session?.user && !currentUser) {
+      showAuthScreen();
+    }
+  });
+  try {
     const sessionResult = await Promise.race([
       SB.auth.getSession(),
       new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),15000))
@@ -2218,16 +2252,57 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     const {data:{session}} = sessionResult;
     if(currentUser) { hideSplash(); return; }
     if(session?.user) { await onLoginSuccess(session.user); hideSplash(); return; }
-    if(isGuest&&userName) { hideSplash(); enterApp(); return; }
     showAuthScreen();
   } catch(e) {
     console.warn('[Apreez] Init fallback:', e.message);
     hideLoadingOverlay();
     if(currentUser) { hideSplash(); enterApp(); return; }
-    if(isGuest&&userName) { hideSplash(); enterApp(); return; }
     hideSplash(); document.getElementById('auth-screen').style.display='flex';
   }
 });
+
+// Get cached user ID from any per-user localStorage key
+function _getCachedUserId() {
+  try {
+    for(const k of Object.keys(localStorage)) {
+      if(k.startsWith('apreez_v4_') && k !== 'apreez_v4_guest') {
+        const uid = k.replace('apreez_v4_', '');
+        if(uid && uid.length > 10) return uid; // looks like a real UUID
+      }
+    }
+  } catch(e) {}
+  return null;
+}
+
+// Background sync: verify session with Supabase after fast-path app load
+async function _backgroundSessionSync() {
+  if(!SB) return;
+  try {
+    const { data: { session } } = await SB.auth.getSession();
+    if(session?.user) {
+      // Valid session — update currentUser and sync data
+      if(currentUser?.id !== session.user.id) {
+        // Different user somehow — re-login properly
+        await onLoginSuccess(session.user);
+        return;
+      }
+      currentUser = session.user; // upgrade from placeholder to real user object
+      await loadFromSupabase(); // sync latest data in background
+      renderDashboard(); // refresh UI with server data
+    } else {
+      // Session expired — kick to auth screen
+      console.warn('[Apreez] Background sync: session expired, re-authenticating');
+      currentUser = null; _serverLoadComplete = false;
+      answers = {}; userName = ''; partnerCode = null; linkedPartnerCode = null;
+      document.getElementById('auth-screen').style.display='flex';
+    }
+  } catch(e) {
+    console.warn('[Apreez] Background sync failed (offline?):', e.message);
+    // Stay on app with local data — offline mode
+    _serverLoadComplete = true;
+    warmSupabaseConnection();
+  }
+}
 </script>
 </body>
 </html>
