@@ -1040,12 +1040,13 @@ async function loadFromSupabase() {
       appMode = ['solo','couple'].includes(data.app_mode) ? data.app_mode : 'solo';
       partnerCode = data.partner_code || null;
       linkedPartnerCode = data.linked_partner_code || null;
-      if(data.user_name && !userName) userName = data.user_name;
+      if(data.user_name) userName = data.user_name; // always trust server name over local cache
       saveLocalState();
     }
   } catch(e) {
-    console.warn('[Apreez] Load from Supabase failed, using local cache:', e.message);
-    // Don't crash — local state is already loaded, just continue
+    console.warn('[Apreez] Load from Supabase failed, falling back to local cache:', e.message);
+    // Only now fall back to localStorage — Supabase is unavailable
+    loadLocalState(currentUser?.id);
   }
 }
 
@@ -1252,9 +1253,9 @@ async function onLoginSuccess(user, nameOverride=null) {
   localStorage.removeItem('apreez_onboarding_seen');
 
   currentUser = user; isGuest = false;
-
-  // Load this user's local cache first (may be empty for new users)
-  loadLocalState(user.id);
+  // NOTE: intentionally NOT loading localStorage here for logged-in users.
+  // Supabase is the source of truth. localStorage is only used as offline fallback
+  // AFTER Supabase load fails. This prevents stale data from a previous user bleeding in.
 
   // Show loading overlay while fetching from Supabase
   document.getElementById('auth-screen').style.display='none';
@@ -1271,7 +1272,11 @@ async function onLoginSuccess(user, nameOverride=null) {
   }
   // Clean hash AFTER Supabase has read its token
   if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
-  if(!userName) { userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0]; }
+  // Always resolve userName fresh for this user — don't let another user's cached name bleed in
+  // Priority: Supabase server (already set by loadFromSupabase) > nameOverride > auth metadata > email prefix
+  if(!userName || userName === 'Tamu') {
+    userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+  }
   if(!partnerCode) { appMode=selectedMode; partnerCode=generateCode(); }
   if(selectedMode==='couple') {
     const inputCode = document.getElementById('partner-code-input')?.value.trim().toUpperCase();
@@ -1279,7 +1284,9 @@ async function onLoginSuccess(user, nameOverride=null) {
   }
   saveLocalState();
   enterApp();
-  syncToSupabase();
+  // Only push to Supabase after we've pulled — prevents writing stale answers to a new account
+  // Small delay to let enterApp render first
+  setTimeout(() => syncToSupabase(), 200);
 }
 function enterApp() {
   if(!userName) userName='Tamu';
