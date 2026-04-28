@@ -1057,11 +1057,14 @@ async function loadFromSupabase() {
         appMode = ['solo','couple'].includes(data.app_mode) ? data.app_mode : 'solo';
         partnerCode = data.partner_code || null;
         linkedPartnerCode = data.linked_partner_code || null;
-        // Reject placeholder names so they get overwritten from auth metadata
-        const _ph = ['baru', 'tamu', 'user', 'kamu', ''];
-        if(data.user_name && !_ph.includes(data.user_name.toLowerCase())) {
-          userName = data.user_name;
+        // Store server name only if it looks like a real name (not a placeholder/reset value)
+        // onLoginSuccess will do final resolution using auth metadata as fallback
+        const _ph = ['baru', 'tamu', 'user', 'kamu', 'reset', 'null', 'undefined', ''];
+        const serverName = (data.user_name || '').trim();
+        if(serverName && !_ph.includes(serverName.toLowerCase())) {
+          userName = serverName;
         }
+        // else: leave userName as '' so onLoginSuccess picks up from auth metadata
         saveLocalState();
       } else {
         console.log('[Apreez] No data on server for this user (new account) — attempt', attempt);
@@ -1335,13 +1338,19 @@ async function onLoginSuccess(user, nameOverride=null) {
   if(window.location.hash.includes('access_token')) history.replaceState(null,'',window.location.pathname);
   // Always resolve userName fresh for this user — don't let another user's cached name bleed in
   // Priority: Supabase server (already set by loadFromSupabase) > nameOverride > auth metadata > email prefix
-  // Reject placeholder names from SQL reset or defaults
-  const _placeholders = ['', 'tamu', 'baru', 'user', 'kamu'];
-  if(_placeholders.includes((userName||'').toLowerCase())) {
-    userName = nameOverride || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
-    // Also update on server so placeholder gets overwritten
+  // Reject placeholder names — always resolve to real name from auth metadata
+  const _placeholders = ['', 'tamu', 'baru', 'user', 'kamu', 'reset', 'null', 'undefined'];
+  if(_placeholders.includes((userName||'').trim().toLowerCase())) {
+    userName = nameOverride
+      || user.user_metadata?.full_name
+      || user.user_metadata?.name
+      || user.email.split('@')[0];
+    // Push corrected name to server immediately
     if(SB && currentUser && userName) {
-      SB.from('apreez_sessions').update({user_name: userName}).eq('user_id', currentUser.id).then(()=>{}).catch(()=>{});
+      SB.from('apreez_sessions')
+        .upsert({user_id: currentUser.id, user_name: userName}, {onConflict: 'user_id'})
+        .then(()=>console.log('[Apreez] Name corrected on server:', userName))
+        .catch(()=>{});
     }
   }
   if(!partnerCode) { appMode=selectedMode; partnerCode=generateCode(); }
