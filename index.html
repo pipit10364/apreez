@@ -935,6 +935,7 @@ const SUPA_URL = 'https://fanbsvlzhuhsngsvwfkn.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbmJzdmx6aHVoc25nc3Z3ZmtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDg0NjQsImV4cCI6MjA5MTYyNDQ2NH0.6RRz3y56PtFZLpn3LSwBL986NIc1MmlxjuG44JHryb4';
 let SB = null;
 let currentUser = null;
+let _serverLoadComplete = false; // only true after loadFromSupabase succeeds for this session
 
 function initSupabase() {
   try { SB = supabase.createClient(SUPA_URL, SUPA_KEY, {auth:{persistSession:true,storageKey:'apreez_auth',storage:window.localStorage}}); return true; }
@@ -1006,6 +1007,12 @@ function setSyncDot(state) {
 
 async function syncToSupabase() {
   if(!SB || !currentUser) return;
+  // Guard: don't sync if we haven't loaded from server yet this session
+  // This prevents writing stale localStorage data to a new account
+  if(!_serverLoadComplete) {
+    console.warn('[Apreez] syncToSupabase blocked — server load not complete yet');
+    return;
+  }
   const payload = {
     user_id: currentUser.id, user_name: userName,
     answers: {...answers}, app_mode: appMode,
@@ -1029,7 +1036,7 @@ async function loadFromSupabase() {
   try {
     const fetchWithTimeout = Promise.race([
       SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle(),
-      new Promise((_,reject) => setTimeout(() => reject(new Error('loadFromSupabase timeout')), 6000))
+      new Promise((_,reject) => setTimeout(() => reject(new Error('loadFromSupabase timeout')), 12000))
     ]);
     const { data, error } = await fetchWithTimeout;
     if(error) throw error;
@@ -1048,10 +1055,12 @@ async function loadFromSupabase() {
       if(data.user_name) userName = data.user_name; // always trust server name over local cache
       saveLocalState();
     }
+    _serverLoadComplete = true; // mark server load done — safe to sync now
   } catch(e) {
     console.warn('[Apreez] Load from Supabase failed, falling back to local cache:', e.message);
     // Only now fall back to localStorage — Supabase is unavailable
     loadLocalState(currentUser?.id);
+    _serverLoadComplete = true; // allow sync even on fallback
   }
 }
 
@@ -1253,6 +1262,7 @@ async function onLoginSuccess(user, nameOverride=null) {
   if(currentUser?.id === user?.id && Object.keys(answers).length > 0) return;
 
   // Always clear in-memory state before loading new user — prevents bleed between accounts
+  _serverLoadComplete = false; // reset — must load from server before any sync
   answers = {}; userName = ''; partnerCode = null; linkedPartnerCode = null; appMode = 'solo';
   localStorage.removeItem('apreez_v4');
   localStorage.removeItem('apreez_onboarding_seen');
@@ -1269,7 +1279,7 @@ async function onLoginSuccess(user, nameOverride=null) {
   overlay.style.display = 'flex';
   document.getElementById('loading-msg').textContent = 'Memuat jawabanmu...';
   // Hard timeout: if fetch takes >8s, hide overlay anyway so app doesn't get stuck
-  const overlayTimeout = setTimeout(() => { overlay.style.display = 'none'; }, 8000);
+  const overlayTimeout = setTimeout(() => { overlay.style.display = 'none'; }, 14000);
   try {
     await loadFromSupabase(); // pull from server — overwrites local if data exists
   } finally {
@@ -2147,16 +2157,21 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   function showAuthScreen() { hideSplash(); document.getElementById('auth-screen').style.display='flex'; }
   try {
     SB.auth.onAuthStateChange(async(event,session)=>{
-      if(['SIGNED_IN','TOKEN_REFRESHED','INITIAL_SESSION'].includes(event) && session?.user && !currentUser) {
-        await onLoginSuccess(session.user);
-        hideSplash();
+      if(['SIGNED_IN','TOKEN_REFRESHED','INITIAL_SESSION'].includes(event) && session?.user) {
+        // Handle both: first login AND re-login after timeout fallback showed auth screen
+        if(!currentUser || currentUser.id !== session.user.id) {
+          await onLoginSuccess(session.user);
+          hideSplash();
+        }
+      } else if(event==='SIGNED_OUT') {
+        currentUser = null; _serverLoadComplete = false;
       } else if(event==='INITIAL_SESSION' && !session?.user && !currentUser) {
         showAuthScreen();
       }
     });
     const sessionResult = await Promise.race([
       SB.auth.getSession(),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),8000))
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),15000))
     ]);
     const {data:{session}} = sessionResult;
     if(currentUser) { hideSplash(); return; }
