@@ -1031,36 +1031,51 @@ async function syncToSupabase() {
   }
 }
 
+async function _fetchFromSupabase() {
+  // Single attempt with 12s timeout
+  const { data, error } = await Promise.race([
+    SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle(),
+    new Promise((_,reject) => setTimeout(() => reject(new Error('loadFromSupabase timeout')), 12000))
+  ]);
+  if(error) throw error;
+  return data;
+}
 async function loadFromSupabase() {
   if(!SB || !currentUser) return;
-  try {
-    const fetchWithTimeout = Promise.race([
-      SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle(),
-      new Promise((_,reject) => setTimeout(() => reject(new Error('loadFromSupabase timeout')), 12000))
-    ]);
-    const { data, error } = await fetchWithTimeout;
-    if(error) throw error;
-    if(data) {
-      console.log('[Apreez] Loaded from Supabase — user_name:', data.user_name, '| answers keys:', Object.keys(data.answers||{}).length);
-      // Validate answers is an object before using — guard against corrupted data
-      if(data.answers && typeof data.answers === 'object' && !Array.isArray(data.answers)) {
-        answers = data.answers;
-      } else if(data.answers) {
-        console.warn('[Apreez] Corrupted answers data from server, resetting.');
-        answers = {};
+  const maxRetries = 3;
+  for(let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const data = await _fetchFromSupabase();
+      if(data) {
+        console.log('[Apreez] Loaded from Supabase (attempt', attempt, ') — user_name:', data.user_name, '| answers keys:', Object.keys(data.answers||{}).length);
+        if(data.answers && typeof data.answers === 'object' && !Array.isArray(data.answers)) {
+          answers = data.answers;
+        } else if(data.answers) {
+          console.warn('[Apreez] Corrupted answers data, resetting.');
+          answers = {};
+        }
+        appMode = ['solo','couple'].includes(data.app_mode) ? data.app_mode : 'solo';
+        partnerCode = data.partner_code || null;
+        linkedPartnerCode = data.linked_partner_code || null;
+        if(data.user_name) userName = data.user_name;
+        saveLocalState();
+      } else {
+        console.log('[Apreez] No data on server for this user (new account) — attempt', attempt);
       }
-      appMode = ['solo','couple'].includes(data.app_mode) ? data.app_mode : 'solo';
-      partnerCode = data.partner_code || null;
-      linkedPartnerCode = data.linked_partner_code || null;
-      if(data.user_name) userName = data.user_name; // always trust server name over local cache
-      saveLocalState();
+      _serverLoadComplete = true;
+      return; // success — exit
+    } catch(e) {
+      console.warn(`[Apreez] Load attempt ${attempt}/${maxRetries} failed:`, e.message);
+      if(attempt < maxRetries) {
+        // Wait before retry: 2s, then 4s
+        await new Promise(r => setTimeout(r, attempt * 2000));
+      } else {
+        // All retries exhausted — fall back to localStorage
+        console.warn('[Apreez] All retries failed, using local cache');
+        loadLocalState(currentUser?.id);
+        _serverLoadComplete = true;
+      }
     }
-    _serverLoadComplete = true; // mark server load done — safe to sync now
-  } catch(e) {
-    console.warn('[Apreez] Load from Supabase failed, falling back to local cache:', e.message);
-    // Only now fall back to localStorage — Supabase is unavailable
-    loadLocalState(currentUser?.id);
-    _serverLoadComplete = true; // allow sync even on fallback
   }
 }
 
@@ -1108,6 +1123,19 @@ function closeConfirm() {
 function confirmOk() {
   document.getElementById('confirm-overlay').classList.remove('open');
   if(_confirmResolve) { _confirmResolve(true); _confirmResolve = null; }
+}
+
+// ══ SUPABASE KEEP-ALIVE ══
+// Ping the DB 3s after app loads to warm connection for subsequent requests
+function warmSupabaseConnection() {
+  if(!SB || isGuest) return;
+  setTimeout(async () => {
+    try {
+      // Lightweight ping — just check session, no data fetch
+      await SB.auth.getSession();
+      console.log('[Apreez] Connection warmed');
+    } catch(e) { /* silent */ }
+  }, 3000);
 }
 
 // ══ OFFLINE DETECTION ══
@@ -1278,12 +1306,25 @@ async function onLoginSuccess(user, nameOverride=null) {
   const overlay = document.getElementById('loading-overlay');
   overlay.style.display = 'flex';
   document.getElementById('loading-msg').textContent = 'Memuat jawabanmu...';
+  // Update loading message on retries so user knows it's not frozen
+  let _retryMsgTimer = setInterval(() => {
+    const msg = document.getElementById('loading-msg');
+    if(msg && overlay.style.display === 'flex') {
+      const dots = msg.textContent.endsWith('...') ? '' : (msg.textContent.endsWith('..') ? '...' : (msg.textContent.endsWith('.') ? '..' : '.'));
+      if(msg.textContent.includes('Mencoba')) {
+        msg.textContent = 'Mencoba lagi' + dots;
+      }
+    } else {
+      clearInterval(_retryMsgTimer);
+    }
+  }, 800);
   // Hard timeout: if fetch takes >8s, hide overlay anyway so app doesn't get stuck
-  const overlayTimeout = setTimeout(() => { overlay.style.display = 'none'; }, 14000);
+  const overlayTimeout = setTimeout(() => { overlay.style.display = 'none'; }, 35000); // covers up to 3 retries
   try {
     await loadFromSupabase(); // pull from server — overwrites local if data exists
   } finally {
     clearTimeout(overlayTimeout);
+    if(typeof _retryMsgTimer !== 'undefined') clearInterval(_retryMsgTimer);
     overlay.style.display = 'none';
   }
   // Clean hash AFTER Supabase has read its token
@@ -1300,6 +1341,7 @@ async function onLoginSuccess(user, nameOverride=null) {
   }
   saveLocalState();
   enterApp();
+  warmSupabaseConnection();
   // Only push to Supabase after we've pulled — prevents writing stale answers to a new account
   // Small delay to let enterApp render first
   setTimeout(() => syncToSupabase(), 200);
