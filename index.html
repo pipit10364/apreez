@@ -1027,9 +1027,14 @@ async function syncToSupabase() {
 async function loadFromSupabase() {
   if(!SB || !currentUser) return;
   try {
-    const { data, error } = await SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle();
+    const fetchWithTimeout = Promise.race([
+      SB.from('apreez_sessions').select('*').eq('user_id', currentUser.id).maybeSingle(),
+      new Promise((_,reject) => setTimeout(() => reject(new Error('loadFromSupabase timeout')), 6000))
+    ]);
+    const { data, error } = await fetchWithTimeout;
     if(error) throw error;
     if(data) {
+      console.log('[Apreez] Loaded from Supabase — user_name:', data.user_name, '| answers keys:', Object.keys(data.answers||{}).length);
       // Validate answers is an object before using — guard against corrupted data
       if(data.answers && typeof data.answers === 'object' && !Array.isArray(data.answers)) {
         answers = data.answers;
@@ -1253,6 +1258,7 @@ async function onLoginSuccess(user, nameOverride=null) {
   localStorage.removeItem('apreez_onboarding_seen');
 
   currentUser = user; isGuest = false;
+  console.log('[Apreez] onLoginSuccess for:', user.email, '| id:', user.id.slice(0,8));
   // NOTE: intentionally NOT loading localStorage here for logged-in users.
   // Supabase is the source of truth. localStorage is only used as offline fallback
   // AFTER Supabase load fails. This prevents stale data from a previous user bleeding in.
