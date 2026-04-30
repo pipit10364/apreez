@@ -1440,11 +1440,12 @@ function showModeSettings() {
     </div>
     ${isCouple?`
     <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE KAMU</div>
-    <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;text-align:center;">
+    <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:6px;text-align:center;">
       <div style="font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:6px;color:var(--card);">${partnerCode}</div>
       <div style="font-size:10px;color:var(--text3);margin-top:4px;">Bagikan ke pasanganmu</div>
       <button onclick="navigator.clipboard.writeText('${partnerCode}').then(()=>this.textContent='Tersalin ✓')" style="margin-top:8px;padding:6px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;font-size:11px;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;">Salin kode</button>
     </div>
+    <button onclick="regenPartnerCode()" style="width:100%;padding:8px;background:transparent;color:var(--text3);border:1px dashed var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;margin-bottom:12px;letter-spacing:.3px;">↺ Ganti kode · putus akses pasangan lama</button>
     <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE PASANGAN</div>
     <div style="display:flex;gap:8px;margin-bottom:12px;">
       <input id="settings-partner-input" type="text" maxlength="8" placeholder="Masukkan kode pasangan (8 huruf)" value="${linkedPartnerCode||''}" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;text-transform:uppercase;letter-spacing:2px;"/>
@@ -1460,6 +1461,21 @@ async function switchMode(mode) {
   appMode=mode; if(mode==='couple'&&!partnerCode) partnerCode=generateCode();
   saveState(); updateModeBadge(); closeModal(); setTimeout(()=>showModeSettings(), 100);
 }
+async function regenPartnerCode() {
+  const ok = await showConfirm(
+    'Ganti kode?',
+    'Kode lama akan tidak berlaku. Pasangan yang menggunakan kode lama tidak bisa lagi melihat progresmu. Kamu perlu berbagi kode baru ke pasangan.',
+    'Ya, ganti kode'
+  );
+  if(!ok) return;
+  partnerCode = generateCode();
+  linkedPartnerCode = null; // unlink current partner too — fresh start
+  saveLocalState();
+  syncToSupabase();
+  closeModal();
+  setTimeout(() => showModeSettings(), 150); // reopen modal with new code
+}
+
 async function linkPartner() {
   const code = document.getElementById('settings-partner-input')?.value.trim().toUpperCase();
   if(!code || code.length < 6 || code === partnerCode) {
@@ -1552,19 +1568,6 @@ async function renderPartnerCard() {
   const statusEl = document.getElementById('partner-card-status');
   const bodyEl = document.getElementById('partner-card-body');
 
-  // Kalau belum ada pasangan yang link
-  if(!linkedPartnerCode) {
-    titleEl.innerHTML = `Pasanganmu`;
-    statusEl.textContent = 'Belum terhubung';
-    statusEl.className = 'partner-card-status';
-    bodyEl.innerHTML = `<div class="partner-card-waiting">
-      <strong>Bagikan kode ini ke pasanganmu</strong>
-      <div class="partner-code-display">${partnerCode||''}</div>
-      <button class="partner-copy-btn" onclick="navigator.clipboard.writeText('${partnerCode||''}').then(()=>this.textContent='Tersalin ✓')">Salin kode</button>
-    </div>`;
-    return;
-  }
-
   // Load data pasangan dari Supabase
   if(!SB || isGuest) {
     card.classList.remove('visible');
@@ -1579,7 +1582,10 @@ async function renderPartnerCard() {
 
     if(error || !data) {
       titleEl.innerHTML = `Pasanganmu`;
-      statusEl.textContent = 'Belum bergabung';
+      // If RLS blocks it, it means partner exists but hasn't linked back yet
+      // (or partner_code doesn't exist at all)
+      const isRlsBlock = error?.code === 'PGRST116' || !data;
+      statusEl.textContent = isRlsBlock ? 'Menunggu pasangan' : 'Belum bergabung';
       statusEl.className = 'partner-card-status';
       bodyEl.innerHTML = `<div class="partner-card-waiting">
         <strong>Pasanganmu belum bergabung</strong>
