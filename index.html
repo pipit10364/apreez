@@ -1506,7 +1506,8 @@ async function linkPartner() {
   syncToSupabase();
   updateModeBadge();
   closeModal();
-  renderDashboard();
+  // Small delay so modal close animation completes before re-render
+  setTimeout(()=>renderDashboard(), 350);
 }
 
 // ══ THEME ══
@@ -1842,9 +1843,12 @@ function openModal(ti,si,qi) {
 }
 function renderModal() {
   const q=modalQ[currentQIdx]; if(!q) return;
+  const labelEl=document.getElementById('modal-tab-label');
+  const qEl=document.getElementById('modal-question');
+  if(!labelEl||!qEl) { console.warn('[Apreez] Modal elements not ready'); return; }
   const key=getQId(q.tabIdx,q.subIdx,q.qIdx), val=answers[key]||'', total=modalQ.length;
-  document.getElementById('modal-tab-label').textContent=`${q.tabName} · ${q.stName}`;
-  document.getElementById('modal-question').textContent=q.question;
+  labelEl.textContent=`${q.tabName} · ${q.stName}`;
+  qEl.textContent=q.question;
   document.getElementById('modal-prog-fill').style.width=Math.round((currentQIdx+1)/total*100)+'%';
   document.getElementById('modal-pos').textContent=`${currentQIdx+1} / ${total}`;
   document.getElementById('modal-ta').value=val;
@@ -2249,12 +2253,17 @@ function openWeddingQuestion(si,qi) {
 }
 function renderWeddingModal() {
   const q=modalQ[currentQIdx]; if(!q) return;
+  // Guard: if modal elements not in DOM yet, abort
+  const labelEl=document.getElementById('modal-tab-label');
+  const qEl=document.getElementById('modal-question');
+  const taEl=document.getElementById('modal-ta');
+  if(!labelEl||!qEl||!taEl) { console.warn('[Apreez] Modal elements not ready'); return; }
   const key=getWeddingQId(q.subIdx,q.qIdx), val=answers[key]||'', total=modalQ.length;
-  document.getElementById('modal-tab-label').textContent=`${q.tabName} · ${q.stName}`;
-  document.getElementById('modal-question').textContent=q.question;
+  labelEl.textContent=`${q.tabName} · ${q.stName}`;
+  qEl.textContent=q.question;
   document.getElementById('modal-prog-fill').style.width=Math.round((currentQIdx+1)/total*100)+'%';
   document.getElementById('modal-pos').textContent=`${currentQIdx+1} / ${total}`;
-  document.getElementById('modal-ta').value=val;
+  taEl.value=val;
   document.getElementById('modal-prev').disabled=currentQIdx===0;
   document.getElementById('modal-next').disabled=currentQIdx===total-1;
 }
@@ -2297,61 +2306,50 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   if(isDark) { document.documentElement.setAttribute('data-theme','dark'); document.getElementById('meta-theme-color').content='#0D1B2A'; }
   updateThemeIcons(); updateDatetime(); setInterval(updateDatetime, 1000);
   initSupabase();
-  _earlyWarmup(); // warm DB connection immediately so first real query is fast
 
   function showAuthScreen() { hideSplash(); document.getElementById('auth-screen').style.display='flex'; }
 
-  if(!SB) {
-    if(!userName) userName='Tamu'; isGuest=true; saveLocalState(); hideSplash(); enterApp(); return;
-  }
-
-  // ── FAST PATH (like Inarte) ──
-  // Check localStorage for a cached valid session — skip waiting for Supabase
-  // This makes returning users go straight to app without any timeout
+  // ── FAST PATH — Inarte pattern ──
+  // Returning user: if local cache exists, go straight to app. No waiting.
   const cachedUserId = _getCachedUserId();
-  if(cachedUserId && userName && !isGuest) {
-    // Load local state immediately and show app
+  if(cachedUserId) {
     loadLocalState(cachedUserId);
     if(userName && userName !== 'Tamu') {
-      // Set a placeholder currentUser so onLoginSuccess guard works
       currentUser = { id: cachedUserId };
       hideSplash();
       enterApp();
-      // Then verify & sync with Supabase in background
-      _backgroundSessionSync();
+      // Verify + sync in background — does not block UI
+      if(SB) _backgroundSessionSync();
       return;
     }
   }
+
+  // Guest already in session
   if(isGuest && userName) { hideSplash(); enterApp(); return; }
 
-  // ── SLOW PATH — no local cache, must wait for Supabase ──
+  // ── SLOW PATH — first time / no cache ──
+  if(!SB) { if(!userName) userName='Tamu'; isGuest=true; hideSplash(); enterApp(); return; }
+
+  // Listen for OAuth redirect (Google login)
   SB.auth.onAuthStateChange(async(event,session)=>{
-    if(['SIGNED_IN','TOKEN_REFRESHED','INITIAL_SESSION'].includes(event) && session?.user) {
-      if(!currentUser || currentUser.id !== session.user.id) {
-        await onLoginSuccess(session.user);
-        hideSplash();
-      }
-    } else if(event==='SIGNED_OUT') {
-      currentUser = null; _serverLoadComplete = false;
-    } else if(event==='INITIAL_SESSION' && !session?.user && !currentUser) {
-      showAuthScreen();
+    if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED') && session?.user && !currentUser) {
+      await onLoginSuccess(session.user);
+      hideSplash();
     }
   });
+
+  // Small wait for onAuthStateChange to fire from OAuth redirect before calling getSession
+  await new Promise(r=>setTimeout(r,300));
+  if(currentUser) return;
+
   try {
-    const sessionResult = await Promise.race([
-      SB.auth.getSession(),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),15000))
-    ]);
-    const {data:{session}} = sessionResult;
-    if(currentUser) { hideSplash(); return; }
+    const {data:{session}} = await SB.auth.getSession();
     if(session?.user) { await onLoginSuccess(session.user); hideSplash(); return; }
-    showAuthScreen();
   } catch(e) {
-    console.warn('[Apreez] Init fallback:', e.message);
-    hideLoadingOverlay();
-    if(currentUser) { hideSplash(); enterApp(); return; }
-    hideSplash(); document.getElementById('auth-screen').style.display='flex';
+    console.warn('[Apreez] getSession failed:', e.message);
   }
+
+  showAuthScreen();
 });
 
 // Get cached user ID from any per-user localStorage key
