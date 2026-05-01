@@ -290,6 +290,14 @@ body {
 .tab-card.profil-card .tab-pct { color:var(--profil-text); opacity:.7; }
 .tab-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:white; line-height:1.3; }
 .tab-pct { font-size:10px; color:rgba(255,255,255,.7); margin-top:4px; }
+@media (max-width:600px) {
+  .tab-card { min-height:60px; padding:10px 8px; justify-content:center; align-items:center; gap:4px; }
+  .tab-name { display:none; }
+  .tab-pct { font-size:9px; margin-top:0; text-align:center; }
+  .tab-icon { margin-bottom:0; width:20px; height:20px; }
+  .tab-card.profil-card { flex-direction:row; padding:12px 14px; }
+  .tab-card.profil-card .tab-name { display:flex; }
+}
 .mode-badge { display:inline-flex; align-items:center; gap:5px; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text3); padding:3px 8px; border-radius:20px; border:1px solid var(--border); background:var(--bg2); cursor:pointer; transition:var(--transition); margin-top:4px; }
 .mode-badge:hover { border-color:var(--card); color:var(--card); }
 .mode-badge svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2; }
@@ -491,6 +499,19 @@ body {
 .onboard-cta { width:100%; padding:14px; border-radius:var(--radius); border:none; background:var(--card); color:white; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:var(--transition); }
 .onboard-cta:hover { background:var(--card-hover); }
 
+/* ── ONBOARDING ── */
+.onboarding-overlay { position:fixed; inset:0; background:var(--bg); z-index:9700; display:flex; align-items:center; justify-content:center; padding:32px 24px; opacity:0; transition:opacity .4s ease; }
+.onboarding-overlay.visible { opacity:1; }
+.onboarding-box { max-width:360px; width:100%; }
+.onboarding-logo { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:300; color:var(--text); margin-bottom:4px; }
+.onboarding-logo em { color:var(--card); font-style:italic; }
+.onboarding-sub { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--text3); margin-bottom:32px; }
+.onboarding-nara-name { font-family:'Cormorant Garamond',serif; font-size:13px; font-style:italic; color:var(--card); margin-bottom:10px; }
+.onboarding-msg { font-size:14px; color:var(--text2); line-height:1.9; font-weight:300; margin-bottom:32px; }
+.onboarding-msg em { color:var(--text); font-style:normal; font-weight:400; }
+.onboarding-btn { width:100%; padding:16px; background:var(--card); color:white; border:none; border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; letter-spacing:1px; cursor:pointer; transition:var(--transition); }
+.onboarding-btn:hover { opacity:.88; }
+
 /* ── THEME CELEBRATION ── */
 @keyframes toast-pop{0%{transform:translate(-50%,-50%) scale(.7);opacity:0;}70%{transform:translate(-50%,-50%) scale(1.05);opacity:1;}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
 @keyframes particle-fly{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0;}}
@@ -600,6 +621,22 @@ body {
   </style>
 </div>
 
+
+<!-- ONBOARDING -->
+<div class="onboarding-overlay" id="onboarding-overlay" style="display:none;">
+  <div class="onboarding-box">
+    <div class="onboarding-logo">Ap<em>reez</em></div>
+    <div class="onboarding-sub">Refleksi Pra-Nikah · Part of Inarte</div>
+    <div class="onboarding-nara-name">Nara</div>
+    <div class="onboarding-msg">
+      Halo! Aku Nara — teman refleksimu di sini.<br><br>
+      Apreez bukan kuis atau tes. Tidak ada jawaban benar atau salah. Ini ruang untukmu <em>jujur pada diri sendiri</em> — tentang siapa kamu, apa yang kamu yakini, dan seperti apa kehidupan yang kamu impikan bersama seseorang.<br><br>
+      Kalau kamu mengisi ini bersama pasangan, kalian bisa saling membaca jawaban — dan mungkin saling mengenal lebih dalam dari yang pernah kalian bayangkan.<br><br>
+      Mulai dari mana saja. Tidak harus urut. <em>Tidak harus selesai hari ini.</em>
+    </div>
+    <button class="onboarding-btn" onclick="dismissOnboarding()">Aku siap mulai ✦</button>
+  </div>
+</div>
 
 <!-- CONFIRM MODAL -->
 <div class="confirm-overlay" id="confirm-overlay">
@@ -1116,6 +1153,27 @@ function generateCode() {
   return code;
 }
 
+// ══ ONBOARDING ══
+function showOnboarding() {
+  const el = document.getElementById('onboarding-overlay');
+  if(!el) return;
+  el.style.display = 'flex';
+  setTimeout(()=>el.classList.add('visible'), 50);
+}
+function dismissOnboarding() {
+  const el = document.getElementById('onboarding-overlay');
+  if(!el) return;
+  el.classList.remove('visible');
+  setTimeout(()=>{ el.style.display='none'; }, 400);
+  localStorage.setItem('apreez_onboarding_seen', '1');
+}
+function checkShowOnboarding() {
+  // Show only for new users who haven't seen it
+  if(!localStorage.getItem('apreez_onboarding_seen')) {
+    setTimeout(()=>showOnboarding(), 600);
+  }
+}
+
 // ══ EDIT NAME ══
 function editName() {
   const newName=prompt('Ubah namamu:',userName||'');
@@ -1127,7 +1185,9 @@ function editName() {
 
 // ══ THEME CELEBRATION ══
 const THEME_EMOJIS={'Profil':'🌟','Hobi':'🎨','Mimpi':'✨','Visi & Misi':'🧭','Agama':'🤲','Latar Belakang':'🌳','Keuangan':'💰','Pengasuhan':'👶','Pendidikan Anak':'📚','Pembagian Tugas':'🤝','Kesehatan':'💚','Trauma':'🌿','Love Language':'💝','Konflik':'🕊️','Relasi Sosial':'🌏','Ekspektasi':'🎯','Respon':'💬','Rencana Pernikahan':'💍'};
-const _celebratedThemes=new Set();
+let _celebratedThemes=new Set();
+// Reset celebrated themes on each session so user gets celebrations for newly completed work
+function resetCelebratedThemes() { _celebratedThemes.clear(); }
 function checkThemeCelebration(tabName){
   if(!tabName||_celebratedThemes.has(tabName))return;
   _celebratedThemes.add(tabName);
@@ -1436,6 +1496,7 @@ async function onLoginSuccess(user, nameOverride=null) {
   enterApp();
   warmSupabaseConnection();
   startPartnerAutoRefresh();
+  checkShowOnboarding(); // show intro for new users
   // Only push to Supabase after we've pulled — prevents writing stale answers to a new account
   // Small delay to let enterApp render first
   setTimeout(() => syncToSupabase(), 200);
@@ -1611,7 +1672,7 @@ function renderDashboard() {
     if(greet) {
       const displayName = userName && userName.split(' ')[0].length > 0 && userName.length > 13
         ? userName.split(' ')[0] : userName;
-      greet.innerHTML=`${getGreeting()}, <em>${displayName}!</em>`;
+      greet.innerHTML=`${getGreeting()}, <em>${displayName}!</em> <button onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:0 4px;color:var(--text3);font-size:16px;vertical-align:middle;opacity:.5;transition:opacity .2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.5">✎</button>`;
     }
     renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderPartnerCard();
     const fc=document.getElementById('mosaic-count');
@@ -1917,18 +1978,17 @@ function modalSave() {
   if(!isWedding) {
     animateMosaicBlock(q.tabIdx,q.subIdx,q.qIdx,!!val.trim());
     updateMosaicCounts(); updateTabCard(q.tabIdx); checkAndCelebrate();
-    // Check if this tab just completed
-    if(val.trim() && getTabFilled(q.tabIdx)===getTabTotal(q.tabIdx)) {
-      setTimeout(()=>checkThemeCelebration(TABS[q.tabIdx]?.name), 500);
+    // Check if this tab just completed — check regardless of val (might be last empty save)
+    if(getTabFilled(q.tabIdx)===getTabTotal(q.tabIdx) && getTabTotal(q.tabIdx)>0) {
+      setTimeout(()=>checkThemeCelebration(TABS[q.tabIdx]?.name), 600);
     }
-  } else if(isWedding && val.trim()) {
-    // Check wedding completion
+  } else if(isWedding) {
     const wTotal=WEDDING_TAB.subtabs.reduce((s,st)=>s+st.questions.length,0);
     const wFilled=WEDDING_TAB.subtabs.reduce((s,st,si)=>s+st.questions.filter((_,qi)=>isWeddingAnswered(si,qi)).length,0);
-    if(wFilled===wTotal) setTimeout(()=>checkThemeCelebration(WEDDING_TAB.name), 500);
+    if(wFilled===wTotal && wTotal>0) setTimeout(()=>checkThemeCelebration(WEDDING_TAB.name), 600);
   }
 
-  // ← KEY FIX: if opened from mosaic, close after saving — don't advance
+  // if opened from mosaic, close after saving — don't advance
   if(openedFromMosaic) { closeModal(); return; }
 
   if(currentQIdx<modalQ.length-1) { currentQIdx++; if(isWedding) renderWeddingModal(); else renderModal(); }
@@ -2093,19 +2153,29 @@ function renderNaraSuggestions(isCouple) {
     `Bagaimana kami melengkapi satu sama lain?`,
   ];
   const suggestions = isCouple ? couple : solo;
-  el.innerHTML = suggestions.map(s =>
-    `<button class="nara-suggestion-btn" onclick="useSuggestion(this)">${s}</button>`
-  ).join('');
+  el.innerHTML = `<div id="nara-suggest-header" onclick="toggleNaraSuggestions()" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 0 8px;font-size:11px;color:var(--text3);letter-spacing:.5px;user-select:none;"><span id="nara-suggest-arrow" style="display:inline-block;transition:transform .2s;">▾</span><span>Pertanyaan untuk Nara</span></div><div id="nara-suggest-chips" style="display:flex;flex-wrap:wrap;gap:6px;">${suggestions.map(s=>`<button class="nara-suggestion-btn" onclick="useSuggestion(this)">${s}</button>`).join('')}</div>`;
+}
+
+function toggleNaraSuggestions() {
+  const chips=document.getElementById('nara-suggest-chips');
+  const arrow=document.getElementById('nara-suggest-arrow');
+  if(!chips) return;
+  const isOpen=chips.style.display!=='none';
+  chips.style.display=isOpen?'none':'flex';
+  if(arrow) arrow.style.transform=isOpen?'rotate(-90deg)':'rotate(0deg)';
+}
+
+function hideNaraSuggestions() {
+  const el=document.getElementById('nara-suggestions');
+  if(el) { el.style.opacity='0'; setTimeout(()=>{el.style.display='none';},300); }
 }
 
 function useSuggestion(btn) {
-  const input = document.getElementById('nara-input');
+  const input=document.getElementById('nara-input');
   if(!input) return;
-  input.value = btn.textContent;
+  input.value=btn.textContent;
   input.focus();
-  // Sembunyikan chips setelah dipilih
-  const el = document.getElementById('nara-suggestions');
-  if(el) el.style.display = 'none';
+  hideNaraSuggestions();
 }
 async function autoNaraReflection() {
   const isCouple = appMode==='couple' && partnerAnswers;
@@ -2114,6 +2184,32 @@ async function autoNaraReflection() {
     : `Berikan refleksi awal yang personal dan hangat berdasarkan jawaban refleksi pra-nikah yang sudah aku isi. Fokus pada pola yang kamu lihat dan satu atau dua hal yang menarik perhatianmu. Maksimal 4 paragraf pendek.`;
   await sendToNara(prompt, false);
 }
+function addNaraFollowUp() {
+  const followUps = appMode==='couple' ? [
+    'Mau kita bahas lebih dalam bagian mana dari tadi?',
+    'Ada hal dari jawaban pasanganmu yang ingin kamu tanyakan lebih lanjut?',
+    'Apakah ada yang tadi aku sebutkan yang terasa mengejutkan?',
+  ] : [
+    'Mau kita eksplorasi lebih dalam bagian mana dari tadi?',
+    'Ada pertanyaan yang tadi membuatmu berpikir lebih lama?',
+    'Apakah ada hal yang ingin kamu ceritakan lebih banyak?',
+  ];
+  const q=followUps[Math.floor(Math.random()*followUps.length)];
+  const area=document.getElementById('nara-chat-area'); if(!area) return;
+  const wrap=document.createElement('div'); wrap.style.cssText='display:flex;justify-content:flex-start;margin-top:-4px;';
+  const bubble=document.createElement('div');
+  bubble.style.cssText='background:transparent;border:1.5px dashed var(--border);border-radius:12px 12px 12px 4px;padding:9px 14px;max-width:82%;font-size:12px;color:var(--text3);line-height:1.6;font-style:italic;cursor:pointer;transition:border-color .2s,color .2s;';
+  bubble.textContent=q;
+  bubble.onmouseenter=()=>{bubble.style.borderColor='var(--card)';bubble.style.color='var(--text2)';};
+  bubble.onmouseleave=()=>{bubble.style.borderColor='var(--border)';bubble.style.color='var(--text3)';};
+  bubble.onclick=()=>{
+    const inp=document.getElementById('nara-input'); if(!inp) return;
+    inp.value=q; inp.focus(); wrap.remove();
+  };
+  wrap.appendChild(bubble); area.appendChild(wrap);
+  area.scrollTop=area.scrollHeight;
+}
+
 function stripMarkdown(text) {
   return text
     .replace(/\*\*\*(.+?)\*\*\*/g, '$1')  // ***bold italic***
@@ -2151,6 +2247,11 @@ async function sendToNara(userMessage, showUserBubble=true) {
     const reply=data.content?.[0]?.text||'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
     removeTypingIndicator(); addChatBubble('nara', reply); naraChatHistory.push({role:'assistant',content:reply});
     if(naraChatHistory.length>40) naraChatHistory=naraChatHistory.slice(-30);
+    // Hide suggestion chips after first exchange
+    if(naraChatHistory.length>=2) hideNaraSuggestions();
+    // Proactive follow-up every 2nd Nara response
+    const _nrc=naraChatHistory.filter(m=>m.role==='assistant').length;
+    if(_nrc>=2 && _nrc%2===0) setTimeout(()=>addNaraFollowUp(), 1800);
   } catch(e) { removeTypingIndicator(); addChatBubble('nara','Koneksiku terputus sejenak. Coba kirim lagi ya.'); }
   naraIsTyping=false; document.getElementById('nara-send-btn').disabled=false;
 }
