@@ -491,6 +491,10 @@ body {
 .onboard-cta { width:100%; padding:14px; border-radius:var(--radius); border:none; background:var(--card); color:white; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:var(--transition); }
 .onboard-cta:hover { background:var(--card-hover); }
 
+/* ── THEME CELEBRATION ── */
+@keyframes toast-pop{0%{transform:translate(-50%,-50%) scale(.7);opacity:0;}70%{transform:translate(-50%,-50%) scale(1.05);opacity:1;}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
+@keyframes particle-fly{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0;}}
+
 /* ── CONFIRM MODAL ── */
 .confirm-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); backdrop-filter:blur(6px); z-index:9500; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity .25s ease; }
 .confirm-overlay.open { opacity:1; pointer-events:all; }
@@ -1112,6 +1116,43 @@ function generateCode() {
   return code;
 }
 
+// ══ EDIT NAME ══
+function editName() {
+  const newName=prompt('Ubah namamu:',userName||'');
+  if(newName!==null&&newName.trim()&&newName.trim()!==userName){
+    userName=newName.trim(); saveLocalState(); syncToSupabase(); renderDashboard();
+    closeModal(); setTimeout(()=>showModeSettings(),250);
+  }
+}
+
+// ══ THEME CELEBRATION ══
+const THEME_EMOJIS={'Profil':'🌟','Hobi':'🎨','Mimpi':'✨','Visi & Misi':'🧭','Agama':'🤲','Latar Belakang':'🌳','Keuangan':'💰','Pengasuhan':'👶','Pendidikan Anak':'📚','Pembagian Tugas':'🤝','Kesehatan':'💚','Trauma':'🌿','Love Language':'💝','Konflik':'🕊️','Relasi Sosial':'🌏','Ekspektasi':'🎯','Respon':'💬','Rencana Pernikahan':'💍'};
+const _celebratedThemes=new Set();
+function checkThemeCelebration(tabName){
+  if(!tabName||_celebratedThemes.has(tabName))return;
+  _celebratedThemes.add(tabName);
+  _showThemeCelebration(THEME_EMOJIS[tabName]||'🎉',tabName);
+}
+function _showThemeCelebration(emoji,tabName){
+  const colors=['#8FBC93','#E9ACBB','#C8A97A','#7BA3CC','#D4A574','#F4C2D0'];
+  for(let i=0;i<28;i++){
+    const p=document.createElement('div');
+    const angle=(i/28)*360,dist=80+Math.random()*130;
+    const tx=Math.cos(angle*Math.PI/180)*dist,ty=Math.sin(angle*Math.PI/180)*dist-60;
+    const size=5+Math.random()*7;
+    p.style.cssText=`position:fixed;left:50%;top:50%;width:${size}px;height:${size}px;border-radius:50%;background:${colors[i%colors.length]};pointer-events:none;z-index:9599;animation:particle-fly ${0.7+Math.random()*0.5}s ease-out ${Math.random()*0.15}s forwards;--tx:${tx}px;--ty:${ty}px;`;
+    document.body.appendChild(p); setTimeout(()=>p.remove(),1600);
+  }
+  const bd=document.createElement('div');
+  bd.style.cssText='position:fixed;inset:0;z-index:9595;';
+  const toast=document.createElement('div');
+  toast.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);background:var(--bg);border-radius:var(--radius-lg);padding:28px 32px;box-shadow:0 24px 60px rgba(0,0,0,.18);z-index:9600;text-align:center;max-width:280px;width:90%;animation:toast-pop .4s cubic-bezier(.175,.885,.32,1.275) forwards;';
+  toast.innerHTML=`<div style="font-size:40px;margin-bottom:10px;">${emoji}</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text);margin-bottom:6px;">${tabName} selesai!</div><div style="font-size:12px;color:var(--text2);font-weight:300;line-height:1.6;">Kamu selangkah lebih dekat<br>untuk saling mengenal 🌿</div>`;
+  document.body.appendChild(bd); document.body.appendChild(toast);
+  const dismiss=()=>{bd.remove();toast.remove();};
+  bd.onclick=dismiss; toast.onclick=dismiss; setTimeout(dismiss,3500);
+}
+
 // ══ CUSTOM CONFIRM MODAL ══
 let _confirmResolve = null;
 function showConfirm(title, body, okLabel='Ya') {
@@ -1448,7 +1489,7 @@ function showModeSettings() {
   let html = `<div class="modal-handle"></div>
   <div class="modal-header"><div class="modal-tab-label">Pengaturan Mode</div><button class="modal-close" onclick="closeModal()">✕</button></div>
   <div class="modal-settings-body">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);margin-bottom:4px;">Halo, <em style="color:var(--card);">${userName}</em></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);">Halo, <em style="color:var(--card);">${userName}</em></div><button onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:2px 6px;color:var(--text3);font-size:14px;line-height:1;border-radius:4px;">✎</button></div>
     <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">${isGuest?'Mode tamu · data hanya tersimpan di perangkat ini':currentUser?.email||''}</div>
     ${!isGuest?`
     <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">MODE REFLEKSI</div>
@@ -1477,7 +1518,7 @@ function showModeSettings() {
 }
 async function switchMode(mode) {
   appMode=mode; if(mode==='couple'&&!partnerCode) partnerCode=generateCode();
-  saveState(); updateModeBadge(); closeModal(); setTimeout(()=>showModeSettings(), 100);
+  saveState(); closeModal(); setTimeout(()=>{ updateModeBadge(); renderDashboard(); if(document.getElementById('partner-card')) renderPartnerCard(); }, 350);
 }
 async function regenPartnerCode() {
   const ok = await showConfirm(
@@ -1504,10 +1545,12 @@ async function linkPartner() {
   appMode = 'couple';
   saveLocalState();
   syncToSupabase();
-  updateModeBadge();
   closeModal();
-  // Small delay so modal close animation completes before re-render
-  setTimeout(()=>renderDashboard(), 350);
+  setTimeout(()=>{
+    updateModeBadge();
+    renderDashboard();
+    if(document.getElementById('partner-card')) renderPartnerCard();
+  }, 350);
 }
 
 // ══ THEME ══
@@ -1664,7 +1707,7 @@ function updateEmpathyPhrase() {
 // ══ HELPERS ══
 function getQId(ti,si,qi) { return `${TABS[ti].id}__${si}__${qi}`; }
 function isAnswered(ti,si,qi) { const v=answers[getQId(ti,si,qi)]; return v&&v.trim().length>0; }
-function getTotalQ() { let t=0; TABS.forEach(tab=>{ if(tab.isProfil) t+=tab.fields.length; else tab.subtabs.forEach(s=>t+=s.questions.length); }); return t; }
+function getTotalQ() { let t=0; TABS.forEach(tab=>{ if(tab.isProfil) t+=tab.fields.length; else tab.subtabs.forEach(s=>t+=s.questions.length); }); if(typeof WEDDING_TAB!=='undefined') WEDDING_TAB.subtabs.forEach(s=>t+=s.questions.length); return t; }
 function getFilledQ() {
   let c = 0;
   TABS.forEach((tab, ti) => {
@@ -1674,6 +1717,7 @@ function getFilledQ() {
       tab.subtabs.forEach((st, si) => st.questions.forEach((_, qi) => { if(isAnswered(ti, si, qi)) c++; }));
     }
   });
+  if(typeof WEDDING_TAB!=='undefined') WEDDING_TAB.subtabs.forEach((st,si)=>st.questions.forEach((_,qi)=>{ if(isWeddingAnswered(si,qi)) c++; }));
   return c;
 }
 function getTabTotal(ti) { const t=TABS[ti]; if(t.isProfil) return t.fields.length; return t.subtabs.reduce((s,st)=>s+st.questions.length,0); }
@@ -1870,7 +1914,19 @@ function modalSave() {
   const key=isWedding?getWeddingQId(q.subIdx,q.qIdx):getQId(q.tabIdx,q.subIdx,q.qIdx);
   const val=document.getElementById('modal-ta').value;
   answers[key]=val; saveState(); showSaveToast();
-  if(!isWedding) { animateMosaicBlock(q.tabIdx,q.subIdx,q.qIdx,!!val.trim()); updateMosaicCounts(); updateTabCard(q.tabIdx); checkAndCelebrate(); }
+  if(!isWedding) {
+    animateMosaicBlock(q.tabIdx,q.subIdx,q.qIdx,!!val.trim());
+    updateMosaicCounts(); updateTabCard(q.tabIdx); checkAndCelebrate();
+    // Check if this tab just completed
+    if(val.trim() && getTabFilled(q.tabIdx)===getTabTotal(q.tabIdx)) {
+      setTimeout(()=>checkThemeCelebration(TABS[q.tabIdx]?.name), 500);
+    }
+  } else if(isWedding && val.trim()) {
+    // Check wedding completion
+    const wTotal=WEDDING_TAB.subtabs.reduce((s,st)=>s+st.questions.length,0);
+    const wFilled=WEDDING_TAB.subtabs.reduce((s,st,si)=>s+st.questions.filter((_,qi)=>isWeddingAnswered(si,qi)).length,0);
+    if(wFilled===wTotal) setTimeout(()=>checkThemeCelebration(WEDDING_TAB.name), 500);
+  }
 
   // ← KEY FIX: if opened from mosaic, close after saving — don't advance
   if(openedFromMosaic) { closeModal(); return; }
@@ -2183,8 +2239,10 @@ function downloadPDF() {
   }
 
   html+=`<div class="footer">Apreez \u00B7 Part of Inarte \u00B7 ${new Date().toLocaleDateString('id-ID',{year:'numeric',month:'long',day:'numeric'})}</div></body></html>`;
-  const blob=new Blob([html],{type:'text/html'}), url=URL.createObjectURL(blob), a=document.createElement('a');
-  a.href=url; a.download=`Apreez_${userName}_${new Date().toISOString().split('T')[0]}.html`; a.click(); URL.revokeObjectURL(url);
+  const printWin=window.open('','_blank');
+  if(!printWin){alert('Izinkan popup untuk download PDF.');return;}
+  printWin.document.write(html); printWin.document.close();
+  setTimeout(()=>printWin.print(),500);
 }
 
 // ══ WEDDING ══
