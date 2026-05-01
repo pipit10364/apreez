@@ -2302,11 +2302,14 @@ function openWeddingQList(si) {
   goTo('s-qlist');
 }
 function openWeddingQuestion(si,qi) {
-  openedFromMosaic=false;
+  isWedding=true; openedFromMosaic=false;
   modalQ=[];
   WEDDING_TAB.subtabs[si].questions.forEach((q,qIdx)=>modalQ.push({tabIdx:-1,subIdx:si,qIdx:qIdx,question:q,tabName:'Rencana Pernikahan',stName:WEDDING_TAB.subtabs[si].name,isWedding:true}));
-  currentQIdx=qi; renderWeddingModal();
-  document.getElementById('modal-overlay').classList.add('open');
+  currentQIdx=qi;
+  const overlay=document.getElementById('modal-overlay');
+  if(!overlay){console.warn('[Apreez] modal-overlay missing');return;}
+  renderWeddingModal();
+  overlay.classList.add('open');
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderWeddingModal() {
