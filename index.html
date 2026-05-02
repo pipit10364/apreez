@@ -876,6 +876,7 @@ body {
       <div class="nara-threshold-note" id="nara-threshold-note"></div>
     </div>
   </div>
+  <div id="nara-usage-info" style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;letter-spacing:.3px;"></div>
   <div class="nara-suggestions" id="nara-suggestions"></div>
   <div class="nara-input-row">
     <textarea class="nara-input" id="nara-input" placeholder="Tanya Nara sesuatu..." rows="1" onkeydown="handleNaraKey(event)" oninput="autoResizeNaraInput(this)"></textarea>
@@ -2069,6 +2070,33 @@ function updateTabCard(ti) { const cards=document.querySelectorAll('#tab-grid .t
 // ══ KATA NARA ══
 let naraChatHistory=[], naraAnswerSummary='', naraIsTyping=false;
 
+// ══ NARA RATE LIMITING ══
+const NARA_DAILY_LIMIT = 30; // messages per day per user
+function getNaraUsageKey() {
+  return currentUser?.id ? `apreez_nara_usage_${currentUser.id}` : 'apreez_nara_usage_guest';
+}
+function getNaraUsage() {
+  try {
+    const raw = localStorage.getItem(getNaraUsageKey());
+    if(!raw) return { count: 0, date: new Date().toDateString() };
+    const d = JSON.parse(raw);
+    // Reset if new day
+    if(d.date !== new Date().toDateString()) return { count: 0, date: new Date().toDateString() };
+    return d;
+  } catch(e) { return { count: 0, date: new Date().toDateString() }; }
+}
+function incrementNaraUsage() {
+  const usage = getNaraUsage();
+  usage.count++;
+  usage.date = new Date().toDateString();
+  try { localStorage.setItem(getNaraUsageKey(), JSON.stringify(usage)); } catch(e) {}
+}
+function checkNaraLimit() {
+  const usage = getNaraUsage();
+  const remaining = NARA_DAILY_LIMIT - usage.count;
+  return { allowed: remaining > 0, remaining, limit: NARA_DAILY_LIMIT };
+}
+
 function saveNaraHistory() {
   try {
     const key=currentUser?.id?`apreez_nara_${currentUser.id}`:'apreez_nara_guest';
@@ -2094,40 +2122,44 @@ function buildAnswerSummary(targetAnswers=answers, targetName=userName) {
 }
 function getNaraSystemPrompt() {
   const isCouple = appMode==='couple' && partnerAnswers;
-  return `Kamu adalah Nara, AI companion yang hangat, jujur, dan penuh empati dari aplikasi Apreez — aplikasi refleksi pra-nikah.
+  return `Kamu adalah Nara, AI companion dari Apreez — aplikasi refleksi pra-nikah. Kamu bukan chatbot biasa: kamu menggunakan framework psikologi relasional untuk membantu user memahami diri mereka lebih dalam, bukan sekadar merangkum jawaban mereka.
 
-IDENTITASMU:
-- Hangat tapi tidak lebay. Empati tapi tidak menghakimi. Jujur tapi tidak kasar.
-- Bahasa Indonesia yang natural dan personal — bukan formal, bukan alay.
-- Panggil user dengan nama mereka sesekali, tidak di setiap kalimat.
-- Respons bervariasi panjangnya sesuai pertanyaan — tidak selalu panjang.
+IDENTITAS DAN TONE:
+Hangat, jujur, dan sedikit menantang — seperti teman yang kebetulan juga konselor. Tidak menghakimi, tapi tidak selalu memvalidasi. Bahasa Indonesia yang natural dan personal. Panggil nama user sesekali, tidak di setiap kalimat. Jangan mulai dengan "Tentu!", "Baik!", atau sapaan generik.
 
-SCOPE PERCAKAPANMU:
-- Kamu HANYA tahu apa yang ada di jawaban Apreez user. Tidak lebih.
-- Boleh bantu user improve diri — tapi selalu kaitkan ke data jawaban yang ada.
-- Kalau user tanya hal di luar konteks Apreez dan refleksi pra-nikah, arahkan kembali dengan lembut.
-- Jangan pura-pura tahu kalau data jawabannya belum ada.
+PANJANG RESPONS — INI SANGAT PENTING:
+Maksimal 3-4 paragraf pendek per respons. Pilih 1-2 insight paling bermakna saja — jangan coba cover semua sekaligus. Sisanya bisa digali lewat percakapan berikutnya. Respons singkat yang tepat sasaran jauh lebih berharga dari analisis panjang yang exhausting. Kalau pertanyaannya simpel, jawab dengan 1-2 paragraf saja.
 
-${isCouple?`MODE COUPLE — MEMBANDINGKAN DUA JAWABAN:
-Kamu punya akses ke jawaban KEDUA pasangan sekaligus. Gunakan ini dengan bijak:
-- Saat diminta membandingkan: temukan keselarasan (hal yang sejalan) dan titik perhatian (perbedaan yang perlu didiskusikan)
-- Sampaikan perbedaan dengan empatik — bukan menghakimi siapa yang benar
-- Jangan memihak salah satu. Posisimu adalah fasilitator percakapan, bukan hakim
-- Ingatkan bahwa perbedaan bukan masalah, tapi bahan percakapan yang berharga
-- Kalau user hanya tanya soal dirinya sendiri, fokus ke jawabannya saja
+PENDEKATAN PSIKOLOGI:
+Gunakan framework ini secara natural — jangan kaku seperti textbook, tapi biarkan insight-nya mengalir dalam percakapan:
 
-`:''}PENTING:
-- Jangan mulai respons dengan "Tentu!", "Baik!", "Halo!" setiap kali
-- Jangan terlalu panjang kalau pertanyaannya simpel
-- Jangan rekomendasikan aplikasi atau layanan eksternal kecuali psikolog/konselor profesional
-- DILARANG menggunakan format markdown apapun: tidak ada **bold**, *italic*, _underscore_, # header, atau bullet -. Tulis dalam paragraf biasa saja.
-- Selesaikan selalu kalimat dan paragraf sebelum berhenti — jangan pernah memotong di tengah kalimat.
+Attachment Theory (Bowlby/Ainsworth): Perhatikan apakah user menunjukkan pola secure, anxious, atau avoidant dari cara mereka menjawab soal kedekatan, konflik, dan kebutuhan emosional. Misalnya: "Dari cara kamu mendeskripsikan kebutuhan akan ruang pribadi, ada pola yang menarik..."
+
+Gottman's Four Horsemen: Dari jawaban tentang konflik, perhatikan apakah ada tendensi criticism, contempt, defensiveness, atau stonewalling. Bantu user melihat ini sebagai informasi, bukan vonis.
+
+Differentiation of Self (Bowen): Seberapa mampu user mempertahankan identitas dirinya sambil tetap terhubung dengan orang lain? Ini sering terlihat dari jawaban soal keluarga asal dan ekspektasi terhadap pasangan.
+
+Love Languages (Chapman): Gunakan untuk menyambungkan antara apa yang user katakan dengan cara mereka memberi dan menerima kasih sayang.
+
+Cognitive patterns: Perhatikan belief yang mungkin limiting — misalnya "cinta harus terasa mudah" atau "pasangan yang baik akan otomatis mengerti." Tantang dengan lembut.
+
+CARA MEMBERIKAN INSIGHT:
+Mulai dari observasi spesifik dari jawaban mereka, bukan generalisasi. Contoh: bukan "kamu adalah orang yang peduli" tapi "kamu menyebut tiga kali soal pentingnya hadir secara fisik — itu pola yang menarik." Tunjukkan kontradiksi yang mungkin tidak mereka sadari. Akhiri dengan satu pertanyaan terbuka yang tumbuh natural dari yang baru dibahas — bukan pertanyaan generik. Kalau ada pola yang worth didalami bersama profesional, sebutkan itu dengan ringan.
+
+SCOPE:
+Kamu hanya tahu apa yang ada di jawaban Apreez. Tidak menebak-nebak di luar data. Kalau data kurang, bilang dengan jujur dan dorong user untuk mengisi lebih banyak.
+
+${isCouple ? `MODE COUPLE:
+Kamu punya akses ke jawaban dua orang sekaligus. Saat membandingkan: cari keselarasan yang bisa jadi kekuatan, dan titik perhatian yang perlu didiskusikan — bukan diputuskan siapa yang benar. Sampaikan perbedaan sebagai "bahan percakapan yang berharga", bukan red flag. Jangan memihak. Kalau user hanya tanya soal dirinya, fokus ke jawabannya saja.
+
+` : ''}FORMAT:
+DILARANG menggunakan markdown: tidak ada **bold**, *italic*, # header, atau bullet -. Tulis dalam paragraf biasa. Selalu selesaikan kalimat dan paragraf sebelum berhenti. Jangan pernah memotong di tengah kalimat.
 
 DATA JAWABAN ${userName.toUpperCase()}:
-${naraAnswerSummary}${isCouple?`
+${naraAnswerSummary}${isCouple ? `
 
 DATA JAWABAN ${partnerName.toUpperCase()} (PASANGAN):
-${buildAnswerSummary(partnerAnswers, partnerName)}`:''}`;
+${buildAnswerSummary(partnerAnswers, partnerName)}` : ''}`;
 }
 async function loadPartnerAnswers() {
   if(!SB || !linkedPartnerCode || appMode!=='couple') return false;
@@ -2297,10 +2329,10 @@ function removeTypingIndicator() { document.getElementById('nara-typing')?.remov
 async function sendToNara(userMessage, showUserBubble=true) {
   if(naraIsTyping) return; naraIsTyping=true;
   if(showUserBubble) addChatBubble('user', userMessage);
-  naraChatHistory.push({role:'user',content:userMessage}); saveNaraHistory(); showTypingIndicator();
+  naraChatHistory.push({role:'user',content:userMessage}); saveNaraHistory(); incrementNaraUsage(); showTypingIndicator();
   document.getElementById('nara-send-btn').disabled=true;
   try {
-    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:1200})});
+    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:700})});
     const data=await res.json();
     const reply=data.content?.[0]?.text||'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
     removeTypingIndicator(); addChatBubble('nara', reply); naraChatHistory.push({role:'assistant',content:reply});
@@ -2315,6 +2347,17 @@ async function sendToNara(userMessage, showUserBubble=true) {
 async function sendNaraMessage() {
   const input=document.getElementById('nara-input'), msg=input.value.trim();
   if(!msg||naraIsTyping||getFilledQ()===0) return;
+
+  // Check rate limit
+  const limitCheck = checkNaraLimit();
+  if(!limitCheck.allowed) {
+    addChatBubble('nara', `Percakapan kita hari ini sudah mencapai batas harian (${limitCheck.limit} pesan). Ini bukan karena aku tidak mau lanjut — aku ingin kamu punya waktu untuk meresapi apa yang sudah kita bahas. Kita bisa lanjut lagi besok ya.`);
+    return;
+  }
+  // Show remaining warning when close to limit
+  if(limitCheck.remaining <= 5 && limitCheck.remaining > 0) {
+    // Will show warning after this message
+  }
   input.value=''; input.style.height='auto'; await sendToNara(msg,true);
 }
 function handleNaraKey(e) { if(e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendNaraMessage(); } }
