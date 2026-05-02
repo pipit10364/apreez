@@ -233,7 +233,8 @@ body {
   .mosaic-block { width: 12px; height: 12px; }
   .mosaic-wrap { padding: 12px; }
   .mosaic-count { font-size: 18px; }
-  .dash-greeting { font-size: 22px; }
+  .dash-greeting { font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dash-greeting .edit-pencil { font-size: 13px; }
   .dash-header { padding: calc(12px + var(--safe-top)) 16px 10px; }
 }
 .mosaic-wrap { background:var(--bg2); border-radius:var(--radius-lg); padding:14px; border:1px solid var(--border); }
@@ -291,12 +292,23 @@ body {
 .tab-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:white; line-height:1.3; }
 .tab-pct { font-size:10px; color:rgba(255,255,255,.7); margin-top:4px; }
 @media (max-width:600px) {
-  .tab-card { min-height:60px; padding:10px 8px; justify-content:center; align-items:center; gap:4px; }
+  .tab-card { min-height:52px; padding:8px 6px; justify-content:center; align-items:center; gap:3px; }
   .tab-name { display:none; }
   .tab-pct { font-size:9px; margin-top:0; text-align:center; }
   .tab-icon { margin-bottom:0; width:20px; height:20px; }
-  .tab-card.profil-card { flex-direction:row; padding:12px 14px; }
+  .tab-card.profil-card { flex-direction:row; padding:10px 14px; }
   .tab-card.profil-card .tab-name { display:flex; }
+  /* Name tooltip on active/focus */
+  .tab-card.show-name .tab-name { display:block; font-size:9px; line-height:1.2; }
+  .tab-card.show-name { min-height:62px; }
+  .tab-name-tooltip {
+    position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+    background:rgba(0,0,0,.75); color:white; font-size:10px; padding:4px 8px;
+    border-radius:6px; white-space:nowrap; pointer-events:none; z-index:100;
+    opacity:0; transition:opacity .15s;
+  }
+  .tab-card:active .tab-name-tooltip,
+  .tab-card.tapped .tab-name-tooltip { opacity:1; }
 }
 .mode-badge { display:inline-flex; align-items:center; gap:5px; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text3); padding:3px 8px; border-radius:20px; border:1px solid var(--border); background:var(--bg2); cursor:pointer; transition:var(--transition); margin-top:4px; }
 .mode-badge:hover { border-color:var(--card); color:var(--card); }
@@ -1672,7 +1684,7 @@ function renderDashboard() {
     if(greet) {
       const displayName = userName && userName.split(' ')[0].length > 0 && userName.length > 13
         ? userName.split(' ')[0] : userName;
-      greet.innerHTML=`${getGreeting()}, <em>${displayName}!</em> <button onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:0 4px;color:var(--text3);font-size:16px;vertical-align:middle;opacity:.5;transition:opacity .2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.5">✎</button>`;
+      greet.innerHTML=`${getGreeting()}, <em>${displayName}!</em> <button class="edit-pencil" onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:0 4px;color:var(--text3);font-size:16px;vertical-align:middle;opacity:.5;transition:opacity .2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.5">✎</button>`;
     }
     renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderPartnerCard();
     const fc=document.getElementById('mosaic-count');
@@ -1836,8 +1848,23 @@ function renderTabGrid() {
     const total=getTabTotal(ti), filled=getTabFilled(ti), pct=total>0?Math.round(filled/total*100):0;
     const icon=ICONS[tab.icon]||'';
     if(tab.isProfil) { card.innerHTML=`<span class="tab-name" style="display:flex;align-items:center;gap:8px;"><span class="tab-icon" style="width:16px;height:16px;margin-bottom:0;flex-shrink:0;">${icon}</span>${tab.name}</span><span class="tab-pct">${pct}%</span>`; }
-    else { card.innerHTML=`<div class="tab-icon">${icon}</div><div class="tab-name">${tab.name}</div><div class="tab-pct">${pct}%</div>`; }
-    card.onclick=()=>openTab(ti); grid.appendChild(card);
+    else {
+      card.innerHTML=`<div class="tab-name-tooltip">${tab.name}</div><div class="tab-icon">${icon}</div><div class="tab-name">${tab.name}</div><div class="tab-pct">${pct}%</div>`;
+    }
+    // On mobile: first tap shows name tooltip, second tap opens tab
+    let _tapped=false, _tapTimer=null;
+    card.onclick=(e)=>{
+      if(window.innerWidth<=600 && !tab.isProfil) {
+        if(!_tapped) {
+          _tapped=true; card.classList.add('tapped');
+          _tapTimer=setTimeout(()=>{ _tapped=false; card.classList.remove('tapped'); }, 1500);
+          return; // first tap: just show name
+        }
+        clearTimeout(_tapTimer); _tapped=false; card.classList.remove('tapped');
+      }
+      openTab(ti);
+    };
+    grid.appendChild(card);
   });
 }
 
@@ -2041,6 +2068,22 @@ function updateTabCard(ti) { const cards=document.querySelectorAll('#tab-grid .t
 
 // ══ KATA NARA ══
 let naraChatHistory=[], naraAnswerSummary='', naraIsTyping=false;
+
+function saveNaraHistory() {
+  try {
+    const key=currentUser?.id?`apreez_nara_${currentUser.id}`:'apreez_nara_guest';
+    localStorage.setItem(key,JSON.stringify({history:naraChatHistory.slice(-30),ts:Date.now()}));
+  } catch(e){}
+}
+function loadNaraHistory() {
+  try {
+    const key=currentUser?.id?`apreez_nara_${currentUser.id}`:'apreez_nara_guest';
+    const raw=localStorage.getItem(key); if(!raw) return false;
+    const d=JSON.parse(raw);
+    if(Date.now()-d.ts>7*24*60*60*1000){localStorage.removeItem(key);return false;}
+    naraChatHistory=d.history||[]; return naraChatHistory.length>0;
+  } catch(e){return false;}
+}
 let partnerAnswers=null, partnerName='';
 function getCompletedThemes() { let c=0; TABS.forEach((tab,ti)=>{ if(tab.isProfil) return; if(getTabFilled(ti)>=getTabTotal(ti)&&getTabTotal(ti)>0) c++; }); return c; }
 function buildAnswerSummary(targetAnswers=answers, targetName=userName) {
@@ -2131,8 +2174,22 @@ async function initNaraScreen() {
     noteEl.innerHTML=`<strong>${completedThemes} dari ${totalThemes} tema</strong> sudah selesai — aku sudah bisa memberi refleksi yang bermakna. Tanya aku apa saja tentang perjalananmu.${progressBar}`;
     document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
   }
-  if(naraChatHistory.length===0&&completedThemes>=2) setTimeout(()=>autoNaraReflection(), 400);
-  renderNaraSuggestions(appMode==='couple' && partnerLoaded);
+  // Restore previous chat history from localStorage
+  const area = document.getElementById('nara-chat-area');
+  const hadHistory = loadNaraHistory();
+  if(hadHistory && naraChatHistory.length > 0) {
+    if(area) area.innerHTML = '';
+    naraChatHistory.forEach(msg => {
+      if(msg.role==='user') addChatBubble('user', msg.content);
+      else if(msg.role==='assistant') addChatBubble('nara', msg.content);
+    });
+    if(area) area.scrollTop = area.scrollHeight;
+    hideNaraSuggestions();
+  } else {
+    // No history — maybe auto-reflect for new session
+    if(naraChatHistory.length===0 && completedThemes>=2) setTimeout(()=>autoNaraReflection(), 400);
+    renderNaraSuggestions(appMode==='couple' && partnerLoaded);
+  }
 }
 
 function renderNaraSuggestions(isCouple) {
@@ -2178,6 +2235,7 @@ function useSuggestion(btn) {
   hideNaraSuggestions();
 }
 async function autoNaraReflection() {
+  if(naraChatHistory.length > 0) return; // skip if already has history
   const isCouple = appMode==='couple' && partnerAnswers;
   const prompt = isCouple
     ? `Berikan refleksi awal yang hangat berdasarkan jawaban refleksi pra-nikah dari ${userName} dan ${partnerName}. Temukan satu atau dua hal yang menarik — bisa keselarasan atau perbedaan yang worth didiskusikan. Maksimal 4 paragraf pendek.`
@@ -2239,7 +2297,7 @@ function removeTypingIndicator() { document.getElementById('nara-typing')?.remov
 async function sendToNara(userMessage, showUserBubble=true) {
   if(naraIsTyping) return; naraIsTyping=true;
   if(showUserBubble) addChatBubble('user', userMessage);
-  naraChatHistory.push({role:'user',content:userMessage}); showTypingIndicator();
+  naraChatHistory.push({role:'user',content:userMessage}); saveNaraHistory(); showTypingIndicator();
   document.getElementById('nara-send-btn').disabled=true;
   try {
     const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:1200})});
@@ -2247,11 +2305,10 @@ async function sendToNara(userMessage, showUserBubble=true) {
     const reply=data.content?.[0]?.text||'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
     removeTypingIndicator(); addChatBubble('nara', reply); naraChatHistory.push({role:'assistant',content:reply});
     if(naraChatHistory.length>40) naraChatHistory=naraChatHistory.slice(-30);
-    // Hide suggestion chips after first exchange
+    saveNaraHistory();
     if(naraChatHistory.length>=2) hideNaraSuggestions();
-    // Proactive follow-up every 2nd Nara response
     const _nrc=naraChatHistory.filter(m=>m.role==='assistant').length;
-    if(_nrc>=2 && _nrc%2===0) setTimeout(()=>addNaraFollowUp(), 1800);
+    if(_nrc>=1 && _nrc%2===1) setTimeout(()=>addNaraFollowUp(), 2000);
   } catch(e) { removeTypingIndicator(); addChatBubble('nara','Koneksiku terputus sejenak. Coba kirim lagi ya.'); }
   naraIsTyping=false; document.getElementById('nara-send-btn').disabled=false;
 }
