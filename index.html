@@ -2319,7 +2319,14 @@ function addChatBubble(role,text) {
   if(role==='nara') { const s=document.createElement('div'); s.className='chat-sender'; s.textContent='NARA'; wrap.appendChild(s); }
   const bubble=document.createElement('div'); bubble.className=`chat-bubble ${role}`;
   bubble.textContent = role==='nara' ? stripMarkdown(text) : text;
-  wrap.appendChild(bubble); area.appendChild(wrap); area.scrollTop=area.scrollHeight;
+  wrap.appendChild(bubble);
+  if(role==='nara') {
+    const disc=document.createElement('div');
+    disc.style.cssText='font-size:9px;color:var(--text3);margin-top:4px;margin-left:4px;line-height:1.5;opacity:.65;max-width:85%;';
+    disc.textContent='Nara adalah AI, bukan pengganti konselor profesional. Pertimbangkan berkonsultasi dengan psikolog atau konselor pernikahan untuk eksplorasi lebih dalam.';
+    wrap.appendChild(disc);
+  }
+  area.appendChild(wrap); area.scrollTop=area.scrollHeight;
 }
 function showTypingIndicator() {
   const area=document.getElementById('nara-chat-area'), t=document.createElement('div');
