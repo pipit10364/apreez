@@ -2108,14 +2108,14 @@ async function renderPartnerCard() {
       mosaicHtml += '</div>';
     });
     if(typeof WEDDING_TAB !== 'undefined') {
+      mosaicHtml += '<div class="partner-mosaic-row partner-wedding-row">';
       WEDDING_TAB.subtabs.forEach((st, si) => {
-        mosaicHtml += '<div class="partner-mosaic-row">';
         st.questions.forEach((_, qi) => {
           const filled = !!pAnswers[getWeddingQId(si, qi)]?.trim();
           mosaicHtml += `<div class="partner-mosaic-block${filled?' filled':''}"></div>`;
         });
-        mosaicHtml += '</div>';
       });
+      mosaicHtml += '</div>';
     }
     mosaicHtml += '</div>';
     mosaicHtml += `<div class="partner-card-meta">${pFilled} dari ${pTotal} pertanyaan dijawab · Diperbarui saat kamu buka Nara</div>`;
