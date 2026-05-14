@@ -706,7 +706,9 @@ body {
 .home-progress-card { padding:24px; }
 .home-progress-line { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:12px 0 18px; }
 .mode-badge { background:rgba(255,255,255,.36); border-color:var(--border); padding:8px 12px; margin-top:0; }
-.mosaic-wrap.home-mosaic-card { background:transparent; border:0; padding:0; border-radius:0; }
+.mosaic-wrap.home-mosaic-card { background:transparent; border:0; padding:0; border-radius:0; max-height:128px; overflow:hidden; position:relative; }
+.mosaic-wrap.home-mosaic-card::after { content:''; position:absolute; left:0; right:0; bottom:0; height:42px; background:linear-gradient(to bottom, rgba(251,248,241,0), var(--bg3)); pointer-events:none; }
+.home-mosaic-card .mosaic-grid { max-height:118px; overflow:hidden; }
 .mosaic-grid { gap:4px; }
 .mosaic-row { gap:4px; }
 .mosaic-block {
@@ -716,6 +718,7 @@ body {
   border:0;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
 }
+.mosaic-block.filled,.journey-mosaic-grid .mosaic-block.filled,.home-mosaic-card .mosaic-block.filled { background:var(--mosaic-fill) !important; opacity:1 !important; box-shadow:0 0 0 2px rgba(46,115,89,.10), 0 6px 14px rgba(46,115,89,.16); }
 .mosaic-badge { border-radius:999px; background:var(--peach); }
 .home-cta {
   width:100%;
@@ -731,6 +734,9 @@ body {
   cursor:pointer;
   box-shadow:0 14px 30px rgba(46,115,89,.20);
 }
+.home-secondary-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+.home-secondary-actions button { border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.34); color:var(--text2); padding:11px 12px; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; }
+.home-secondary-actions button:hover { color:var(--card); border-color:rgba(46,115,89,.24); }
 .home-nara-card { padding:24px; display:flex; flex-direction:column; justify-content:flex-end; min-height:260px; position:relative; overflow:hidden; }
 .home-nara-card::before { content:'✦'; position:absolute; right:24px; top:18px; color:var(--peach); font-size:34px; opacity:.7; }
 .home-nara-card p { font-family:'Cormorant Garamond',serif; font-size:clamp(23px,3vw,32px); line-height:1.25; margin:22px 0; color:var(--text); }
@@ -750,24 +756,33 @@ body {
 .journey-milestones { max-width:860px; margin:18px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
 .milestone-card { background:rgba(255,255,255,.34); border:1px solid var(--border); border-radius:22px; padding:16px; color:var(--text2); }
 .milestone-card strong { display:block; font-family:'Cormorant Garamond',serif; color:var(--text); font-size:20px; margin-bottom:4px; }
-.themes-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:stretch; }
+.themes-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:stretch; }
 .themes-grid .tab-card {
-  min-height:148px;
+  min-height:104px;
   background:linear-gradient(145deg, rgba(255,255,255,.56), rgba(244,241,232,.72));
   border:1px solid var(--border);
   box-shadow:var(--soft-shadow-sm);
   color:var(--text);
-  padding:20px;
+  padding:18px 20px;
+  flex-direction:row;
+  align-items:center;
+  justify-content:flex-start;
+  gap:16px;
 }
 .themes-grid .tab-card.alt1,.themes-grid .tab-card.alt2 { background:linear-gradient(145deg, rgba(255,255,255,.56), rgba(244,241,232,.72)); }
-.themes-grid .tab-icon { color:var(--card); width:28px; height:28px; }
+.themes-grid .tab-name-tooltip { display:none; }
+.themes-grid .tab-icon { color:var(--card); width:30px; height:30px; margin:0; }
 .themes-grid .tab-name { display:block; color:var(--text); font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; }
-.themes-grid .tab-pct { color:var(--text3); font-size:12px; }
-.themes-grid .tab-card.profil-card { min-height:112px; }
+.themes-grid .tab-pct { color:var(--text3); font-size:12px; margin-left:auto; }
+.themes-grid .tab-card.profil-card { min-height:104px; }
+.themes-grid .tab-card.wedding-card .tab-icon { color:var(--pink); }
 .couple-status-card { padding:22px; max-width:680px; margin:0 auto 18px; }
 .couple-avatars { display:flex; align-items:center; justify-content:center; gap:18px; color:var(--text2); margin-bottom:18px; }
-.couple-avatars span { width:86px; height:86px; border-radius:50%; background:var(--bg2); display:flex; align-items:center; justify-content:center; box-shadow:var(--soft-shadow-sm); }
+.couple-avatar { width:92px; height:92px; border-radius:50%; background:linear-gradient(145deg,var(--bg3),var(--bg2)); display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--soft-shadow-sm); border:1px solid var(--border); }
+.couple-avatar strong { font-family:'Cormorant Garamond',serif; font-size:26px; line-height:1; color:var(--card); }
+.couple-avatar span { font-size:11px; color:var(--text3); margin-top:6px; }
 .couple-avatars i { color:var(--pink); font-style:normal; }
+.couple-note { margin-top:14px; color:var(--text3); font-size:12px; line-height:1.7; text-align:center; }
 .couple-bars { display:grid; gap:10px; }
 .couple-bar-row { display:grid; grid-template-columns:90px 1fr auto; gap:10px; align-items:center; font-size:12px; color:var(--text2); }
 .couple-bar-track { height:8px; border-radius:999px; background:var(--mosaic-empty); overflow:hidden; }
@@ -816,6 +831,22 @@ body {
 .chat-bubble.user { background:linear-gradient(135deg,var(--card),var(--card-hover)); }
 .nara-suggestions { max-width:760px; width:100%; margin:0 auto; }
 #s-nara .nara-input-row { padding-bottom:calc(86px + var(--safe-bottom)); }
+@media (min-width:900px) {
+  .screen.app-main-screen { padding-left:104px; padding-bottom:0; }
+  .app-bottom-nav {
+    left:24px;
+    top:50%;
+    bottom:auto;
+    transform:translateY(-50%);
+    width:72px;
+    flex-direction:column;
+    border-radius:30px;
+    padding:10px 8px;
+  }
+  .app-bottom-nav button { min-width:0; width:54px; padding:11px 6px; }
+  .app-bottom-nav button span { font-size:9px; }
+  #s-nara .nara-input-row { padding-bottom:calc(12px + var(--safe-bottom)); }
+}
 @media (max-width:760px) {
   .home-shell,.journey-shell,.themes-shell,.couple-shell { padding:calc(24px + var(--safe-top)) 20px 20px; }
   .home-hero { display:block; }
@@ -1012,6 +1043,10 @@ body {
           <div class="mosaic-grid" id="mosaic-grid"></div>
         </div>
         <button class="home-cta" onclick="continueReflection()">Lanjutkan refleksi →</button>
+        <div class="home-secondary-actions">
+          <button onclick="goTo('s-wedding')">Rencana pernikahan</button>
+          <button onclick="downloadPDF()">Unduh PDF</button>
+        </div>
       </section>
 
       <aside class="home-nara-card">
@@ -1060,8 +1095,13 @@ body {
       <p>Sinkronisasi bukan untuk menilai siapa yang lebih cepat, tapi membantu kalian menemukan bahan percakapan yang lebih jujur.</p>
     </header>
     <section class="couple-status-card">
-      <div class="couple-avatars"><span>Kamu</span><i>♡</i><span>Pasangan</span></div>
+      <div class="couple-avatars">
+        <div class="couple-avatar"><strong id="couple-you-initial">K</strong><span id="couple-you-label">Kamu</span></div>
+        <i>♡</i>
+        <div class="couple-avatar"><strong id="couple-partner-initial">?</strong><span id="couple-partner-label">Pasangan</span></div>
+      </div>
       <div class="couple-bars" id="couple-bars"></div>
+      <div class="couple-note">Apreez membaca pola jawaban dan ritme refleksi kalian; tidak perlu menebak gender untuk membuat perbandingan terasa personal.</div>
     </section>
     <div class="partner-card couple-partner-card" id="partner-card">
       <div class="partner-card-header">
@@ -2084,39 +2124,18 @@ function renderJourneyPage() {
   renderJourneyMilestones();
 }
 function renderJourneyMosaic() {
-  const grid = document.getElementById('journey-mosaic-grid');
-  if(!grid) return;
-  grid.innerHTML = '';
-  TABS.forEach((tab,ti)=>{
-    const row=document.createElement('div'); row.className='mosaic-row';
-    let questions=[];
-    if(tab.isProfil) tab.fields.forEach((f,fieldIdx)=>questions.push({tabIdx:ti,isField:true,fieldIdx}));
-    else tab.subtabs?.forEach((st,si)=>st.questions.forEach((_,qi)=>questions.push({tabIdx:ti,subIdx:si,qIdx:qi})));
-    questions.forEach(q=>{
-      const block=document.createElement('div'); block.className='mosaic-block';
-      const filled = q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx,q.subIdx,q.qIdx);
-      if(filled) block.classList.add('filled');
-      block.title = tab.name;
-      block.onclick = () => {
-        if(q.isField) { openedFromMosaic = true; openProfilFieldModal(q.fieldIdx); }
-        else openMosaicQuestion(q.tabIdx,q.subIdx,q.qIdx);
-      };
-      row.appendChild(block);
-    });
-    renderMosaicBadge(row,ti);
-    grid.appendChild(row);
-  });
+  renderMosaicInto(document.getElementById('journey-mosaic-grid'));
 }
 function renderJourneyMilestones() {
   const el=document.getElementById('journey-milestones');
   if(!el) return;
   const completed = getCompletedThemes();
   const pct = getProgressPct();
-  const nextTab = TABS.find((tab,ti)=>getTabFilled(ti) < getTabTotal(ti));
+  const nextGroup = buildMosaicGroups().find(group=>group.filled < group.total);
   el.innerHTML = [
     `<div class="milestone-card"><strong>${pct}%</strong>Ruang refleksi yang sudah kamu isi.</div>`,
     `<div class="milestone-card"><strong>${completed}</strong>Tema selesai sepenuhnya.</div>`,
-    `<div class="milestone-card"><strong>${nextTab ? nextTab.name : 'Lengkap'}</strong>${nextTab ? 'Tema berikutnya yang menunggu.' : 'Perjalanan utama sudah selesai.'}</div>`
+    `<div class="milestone-card"><strong>${nextGroup ? nextGroup.name : 'Lengkap'}</strong>${nextGroup ? 'Tema berikutnya yang menunggu.' : 'Perjalanan utama sudah selesai.'}</div>`
   ].join('');
 }
 function renderCouplePage() {
@@ -2125,9 +2144,16 @@ function renderCouplePage() {
   const total=getTotalQ(), mine=getFilledQ(), minePct=total?Math.round(mine/total*100):0;
   let partnerCount = partnerAnswers ? Object.values(partnerAnswers).filter(v=>v&&v.trim()).length : 0;
   let partnerPct = total?Math.round(partnerCount/total*100):0;
+  const youLabel = userName || 'Kamu';
+  const partnerLabel = partnerName || 'Pasangan';
+  const youInitial = (youLabel.trim()[0] || 'K').toUpperCase();
+  const partnerInitial = partnerAnswers ? (partnerLabel.trim()[0] || 'P').toUpperCase() : '?';
+  const yi=document.getElementById('couple-you-initial'), yl=document.getElementById('couple-you-label'), pi=document.getElementById('couple-partner-initial'), pl=document.getElementById('couple-partner-label');
+  if(yi) yi.textContent=youInitial; if(yl) yl.textContent=youLabel;
+  if(pi) pi.textContent=partnerInitial; if(pl) pl.textContent=partnerAnswers?partnerLabel:'Pasangan';
   el.innerHTML = `
-    <div class="couple-bar-row"><span>Kamu</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${minePct}%"></div></div><span>${mine}/${total}</span></div>
-    <div class="couple-bar-row"><span>Pasangan</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${partnerPct}%;background:var(--pink)"></div></div><span>${partnerAnswers?`${partnerCount}/${total}`:'menunggu'}</span></div>
+    <div class="couple-bar-row"><span>${youLabel}</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${minePct}%"></div></div><span>${mine}/${total}</span></div>
+    <div class="couple-bar-row"><span>${partnerAnswers?partnerLabel:'Pasangan'}</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${partnerPct}%;background:var(--pink)"></div></div><span>${partnerAnswers?`${partnerCount}/${total}`:'menunggu'}</span></div>
   `;
 }
 function renderBottomNav(activeId='s-dashboard') {
@@ -2142,7 +2168,7 @@ function renderBottomNav(activeId='s-dashboard') {
   }
   const items = [
     ['s-dashboard','Beranda','<path d="M3 10.5 12 3l9 7.5V21H5a2 2 0 0 1-2-2z"/><path d="M9 21v-7h6v7"/>'],
-    ['s-journey','Mosaik','<circle cx="7" cy="7" r="2"/><circle cx="17" cy="7" r="2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 7h6M7 9v6M17 9v6M9 17h6"/>'],
+    ['s-journey','Perjalanan','<circle cx="7" cy="7" r="2"/><circle cx="17" cy="7" r="2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 7h6M7 9v6M17 9v6M9 17h6"/>'],
     ['s-themes','Tema','<path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h10"/>'],
     ['s-couple','Couple','<path d="M16 11a4 4 0 1 0-8 0c0 5 8 9 8 9s8-4 8-9a4 4 0 0 0-8 0" transform="scale(.8) translate(3 1)"/>'],
     ['s-nara','Nara','<path d="M12 3c2.8 3.2 4.2 6.1 4.2 8.7A4.2 4.2 0 0 1 12 16a4.2 4.2 0 0 1-4.2-4.3C7.8 9.1 9.2 6.2 12 3z"/><path d="M5 21c2-2 4.3-3 7-3s5 1 7 3"/>']
@@ -2170,25 +2196,41 @@ function getTabTotal(ti) { const t=TABS[ti]; if(t.isProfil) return t.fields.leng
 function getTabFilled(ti) { const t=TABS[ti]; let c=0; if(t.isProfil) { t.fields.forEach((f,i)=>{ if(answers[`profil__field__${i}`]?.trim()) c++; }); } else { t.subtabs.forEach((st,si)=>st.questions.forEach((_,qi)=>{ if(isAnswered(ti,si,qi)) c++; })); } return c; }
 
 // ══ MOSAIC ══
-function renderMosaic() {
-  const grid=document.getElementById('mosaic-grid');
+function getWeddingTotal() { return (typeof WEDDING_TAB==='undefined') ? 0 : WEDDING_TAB.subtabs.reduce((s,st)=>s+st.questions.length,0); }
+function getWeddingFilled() { return (typeof WEDDING_TAB==='undefined') ? 0 : WEDDING_TAB.subtabs.reduce((s,st,si)=>s+st.questions.filter((_,qi)=>isWeddingAnswered(si,qi)).length,0); }
+function buildMosaicGroups() {
+  const groups=[];
+  TABS.forEach((tab,ti)=>{
+    const questions=[];
+    if(tab.isProfil) tab.fields.forEach((f,origIdx)=>questions.push({tabIdx:ti,isField:true,fieldIdx:origIdx,field:f}));
+    else tab.subtabs?.forEach((st,si)=>st.questions.forEach((_,qi)=>questions.push({tabIdx:ti,subIdx:si,qIdx:qi})));
+    groups.push({name:tab.name, tabIdx:ti, total:getTabTotal(ti), filled:getTabFilled(ti), questions});
+  });
+  if(typeof WEDDING_TAB!=='undefined') {
+    const questions=[];
+    WEDDING_TAB.subtabs.forEach((st,si)=>st.questions.forEach((_,qi)=>questions.push({isWedding:true,subIdx:si,qIdx:qi})));
+    groups.push({name:WEDDING_TAB.name, isWedding:true, total:getWeddingTotal(), filled:getWeddingFilled(), questions});
+  }
+  return groups;
+}
+function renderMosaicInto(grid, {preview=false}={}) {
   if(!grid) return;
   grid.innerHTML='';
-  TABS.forEach((tab,ti)=>{
-    const row=document.createElement('div'); row.className='mosaic-row';
-    let questions=[];
-    if(tab.isProfil) {
-      // Use original field index (not re-indexed) so keys match stored answers
-      tab.fields.forEach((f,origIdx)=>{ questions.push({tabIdx:ti,isField:true,fieldIdx:origIdx,field:f}); });
-    } else { tab.subtabs?.forEach((st,si)=>st.questions.forEach((_,qi)=>questions.push({tabIdx:ti,subIdx:si,qIdx:qi}))); }
-    questions.forEach(q=>{
+  const groups=buildMosaicGroups();
+  groups.forEach((group,gi)=>{
+    const row=document.createElement('div'); row.className='mosaic-row'; row.title=group.name;
+    group.questions.forEach(q=>{
       const block=document.createElement('div'); block.className='mosaic-block';
-      const filled = q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx,q.subIdx,q.qIdx);
+      const filled = q.isWedding ? isWeddingAnswered(q.subIdx,q.qIdx) : (q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx,q.subIdx,q.qIdx));
       if(filled) block.classList.add('filled');
-      block.title=tab.name;
+      block.title=group.name;
       block.onclick=()=>{
-        if(q.isField) {
-          openedFromMosaic = true; // ← mosaic mode: close after save, don't advance
+        if(q.isWedding) {
+          openWeddingQuestion(q.subIdx,q.qIdx);
+          openedFromMosaic = true;
+          document.getElementById('modal-overlay')?.classList.add('mosaic-mode');
+        } else if(q.isField) {
+          openedFromMosaic = true;
           openProfilFieldModal(q.fieldIdx);
         } else {
           openMosaicQuestion(q.tabIdx, q.subIdx, q.qIdx);
@@ -2196,17 +2238,23 @@ function renderMosaic() {
       };
       row.appendChild(block);
     });
-    const maxQ=27, dripNeeded=maxQ-questions.length;
-    for(let d=0;d<Math.min(dripNeeded,5);d++) {
-      const drip=document.createElement('div'); drip.className='mosaic-block';
-      drip.style.opacity=String(.3-d*.06); drip.style.pointerEvents='none'; row.appendChild(drip);
+    if(preview && gi<6) {
+      const maxQ=27, dripNeeded=maxQ-group.questions.length;
+      for(let d=0;d<Math.min(dripNeeded,5);d++) {
+        const drip=document.createElement('div'); drip.className='mosaic-block';
+        drip.style.opacity=String(.3-d*.06); drip.style.pointerEvents='none'; row.appendChild(drip);
+      }
     }
-    renderMosaicBadge(row,ti); grid.appendChild(row);
+    renderMosaicBadge(row,group); grid.appendChild(row);
   });
 }
-function renderMosaicBadge(row,ti) {
-  if(getTabFilled(ti)>=getTabTotal(ti)&&getTabTotal(ti)>0) {
-    const badge=document.createElement('div'); badge.className='mosaic-badge'; badge.title=`${TABS[ti].name} selesai!`;
+function renderMosaic() {
+  renderMosaicInto(document.getElementById('mosaic-grid'), {preview:true});
+}
+function renderMosaicBadge(row,groupOrTi) {
+  const group = typeof groupOrTi==='number' ? buildMosaicGroups()[groupOrTi] : groupOrTi;
+  if(group && group.filled>=group.total && group.total>0) {
+    const badge=document.createElement('div'); badge.className='mosaic-badge'; badge.title=`${group.name} selesai!`;
     badge.innerHTML=`<svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>`; row.appendChild(badge);
   }
 }
@@ -2222,16 +2270,15 @@ function renderTabGrid() {
     const icon=ICONS[tab.icon]||'';
     if(tab.isProfil) { card.innerHTML=`<span class="tab-name" style="display:flex;align-items:center;gap:8px;"><span class="tab-icon" style="width:16px;height:16px;margin-bottom:0;flex-shrink:0;">${icon}</span>${tab.name}</span><span class="tab-pct">${pct}%</span>`; }
     else {
-      card.innerHTML=`<div class="tab-name-tooltip">${tab.name}</div><div class="tab-icon">${icon}</div><div class="tab-name">${tab.name}</div><div class="tab-pct">${pct}%</div>`;
+      card.innerHTML=`<div class="tab-name-tooltip">${tab.name}</div><div class="tab-icon">${icon}</div><div><div class="tab-name">${tab.name}</div><div class="tab-pct">${filled}/${total} terjawab</div></div>`;
     }
-    // On mobile: first tap shows name tooltip, second tap opens tab
     let _tapped=false, _tapTimer=null;
     card.onclick=(e)=>{
       if(window.innerWidth<=600 && !tab.isProfil) {
         if(!_tapped) {
           _tapped=true; card.classList.add('tapped');
           _tapTimer=setTimeout(()=>{ _tapped=false; card.classList.remove('tapped'); }, 1500);
-          return; // first tap: just show name
+          return;
         }
         clearTimeout(_tapTimer); _tapped=false; card.classList.remove('tapped');
       }
@@ -2239,6 +2286,14 @@ function renderTabGrid() {
     };
     grid.appendChild(card);
   });
+  if(typeof WEDDING_TAB!=='undefined') {
+    const total=getWeddingTotal(), filled=getWeddingFilled(), pct=total>0?Math.round(filled/total*100):0;
+    const card=document.createElement('div');
+    card.className='tab-card wedding-card';
+    card.innerHTML=`<div class="tab-name-tooltip">${WEDDING_TAB.name}</div><div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="tab-name">${WEDDING_TAB.name}</div><div class="tab-pct">${filled}/${total} terjawab</div></div>`;
+    card.onclick=()=>goTo('s-wedding');
+    grid.appendChild(card);
+  }
 }
 
 // ══ MOSAIC SINGLE QUESTION (new) ══
