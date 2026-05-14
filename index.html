@@ -295,36 +295,39 @@ body {
 #s-dashboard { position:relative; overflow:hidden; }
 .dash-grain {
   position:fixed; inset:0; pointer-events:none; z-index:1;
-  opacity:.022;
+  opacity:.045;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:220px 220px;
 }
-[data-theme="dark"] .dash-grain { opacity:.035; }
+[data-theme="dark"] .dash-grain { opacity:.06; }
 
 /* ══ REDESIGN: BLOB ACCENTS ══ */
 .dash-blob {
   position:fixed; pointer-events:none; z-index:0;
-  filter:blur(72px); will-change:transform;
+  will-change:transform;
 }
 .dash-blob-1 {
-  width:320px; height:300px;
-  background:var(--pink); opacity:.07;
-  top:-100px; right:-80px;
+  width:260px; height:240px;
+  background:var(--pink); opacity:.22;
+  top:-80px; right:-60px;
   border-radius:62% 38% 46% 54% / 60% 44% 56% 40%;
+  filter:blur(48px);
   animation:blobDrift1 18s ease-in-out infinite alternate;
 }
 .dash-blob-2 {
-  width:240px; height:260px;
-  background:var(--peach); opacity:.08;
-  bottom:60px; left:-80px;
+  width:200px; height:220px;
+  background:var(--peach); opacity:.2;
+  bottom:100px; left:-60px;
   border-radius:40% 60% 70% 30% / 50% 68% 32% 50%;
+  filter:blur(44px);
   animation:blobDrift2 22s ease-in-out infinite alternate;
 }
 .dash-blob-3 {
-  width:160px; height:150px;
-  background:var(--card); opacity:.05;
-  top:45%; right:10%;
+  width:140px; height:130px;
+  background:var(--card); opacity:.14;
+  top:42%; right:8%;
   border-radius:50% 50% 40% 60% / 45% 55% 45% 55%;
+  filter:blur(36px);
   animation:blobDrift1 14s ease-in-out 4s infinite alternate;
 }
 @keyframes blobDrift1 {
@@ -413,12 +416,16 @@ body {
 
 /* ══ REDESIGN: ENHANCED MOSAIC ══ */
 .mosaic-wrap {
-  background:rgba(255,255,255,.6); backdrop-filter:blur(8px);
-  border:1px solid var(--border);
+  background:rgba(255,255,255,.75); backdrop-filter:blur(12px);
+  border:1px solid rgba(var(--card-rgb, 45,106,79),.15);
+  box-shadow: 0 4px 24px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.8);
   border-radius:var(--radius-lg);
   padding:16px; position:relative; z-index:2;
 }
-[data-theme="dark"] .mosaic-wrap { background:rgba(9,21,37,.7); }
+[data-theme="dark"] .mosaic-wrap {
+  background:rgba(9,21,37,.75);
+  box-shadow: 0 4px 24px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.05);
+}
 .mosaic-block.filled {
   background:linear-gradient(135deg, var(--mosaic-fill) 0%, color-mix(in srgb, var(--mosaic-fill) 70%, var(--mosaic-drip)) 100%);
   border-color:transparent;
@@ -434,19 +441,32 @@ body {
 
 /* ══ REDESIGN: TILE PERSONALITY ══ */
 .tab-card { position:relative; overflow:hidden; transition:transform .22s var(--ease), box-shadow .22s var(--ease); }
-/* Subtle rotations — alternating tiles feel alive */
-.tab-grid .tab-card:not(.profil-card):nth-child(4n+2) { transform:rotate(-1.5deg); }
-.tab-grid .tab-card:not(.profil-card):nth-child(4n+3) { transform:rotate(1deg); }
-.tab-grid .tab-card:not(.profil-card):nth-child(6n+5) { transform:rotate(-0.8deg); }
-.tab-card:not(.profil-card):hover { transform:rotate(0deg) translateY(-3px) scale(1.03) !important; box-shadow:0 8px 28px rgba(0,0,0,.18); }
-/* Frosted glass effect on tile overlay */
+
+/* Frosted glass highlight */
 .tab-card::before {
   content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 60%);
-  pointer-events:none; z-index:1;
+  background:linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 55%);
+  pointer-events:none; z-index:1; border-radius:inherit;
 }
-/* Profil card glass */
-.tab-card.profil-card { border-radius:var(--radius-lg); }
+
+/* Featured tile: spans 2 columns, taller */
+.tab-card.featured {
+  grid-column: span 2;
+  min-height: 88px !important;
+}
+
+/* Subtle rotations — force with specificity */
+#tab-grid .tab-card.rot-neg2 { transform: rotate(-2deg) !important; }
+#tab-grid .tab-card.rot-pos1 { transform: rotate(1.2deg) !important; }
+#tab-grid .tab-card.rot-neg1 { transform: rotate(-0.8deg) !important; }
+#tab-grid .tab-card.rot-pos2 { transform: rotate(1.8deg) !important; }
+#tab-grid .tab-card:not(.profil-card):hover {
+  transform: rotate(0deg) translateY(-3px) scale(1.03) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.2) !important;
+}
+
+/* Profil card */
+.tab-card.profil-card { border-radius: var(--radius-lg); }
 
 /* Panel labels for mobile */
 .panel-eyebrow {
@@ -2027,23 +2047,35 @@ function renderMosaicBadge(row,ti) {
 function renderTabGrid() {
   const grid=document.getElementById('tab-grid'); if(!grid) return; grid.innerHTML='';
   const colors=['','alt1','alt2'];
+  // Rotation pattern: which positions get which rotation class
+  const rotClasses = ['','rot-neg2','rot-pos1','','rot-neg1','','rot-pos2','rot-neg1','','rot-pos1','','rot-neg2','rot-pos2','','rot-neg1','','rot-pos1',''];
+  // Featured tiles: index positions that get 2-wide treatment (non-profil only)
+  const featuredIdx = [4, 11]; // e.g. Keuangan, Love Language
+  let nonProfilCount = 0;
   TABS.forEach((tab,ti)=>{
     const card=document.createElement('div'); const ci=ti%3;
     card.className='tab-card'+(tab.isProfil?' profil-card':` ${colors[ci]}`);
+    if(!tab.isProfil) {
+      // Apply rotation
+      const rotClass = rotClasses[nonProfilCount % rotClasses.length];
+      if(rotClass) card.classList.add(rotClass);
+      // Apply featured
+      if(featuredIdx.includes(nonProfilCount)) card.classList.add('featured');
+      nonProfilCount++;
+    }
     const total=getTabTotal(ti), filled=getTabFilled(ti), pct=total>0?Math.round(filled/total*100):0;
     const icon=ICONS[tab.icon]||'';
     if(tab.isProfil) { card.innerHTML=`<span class="tab-name" style="display:flex;align-items:center;gap:8px;"><span class="tab-icon" style="width:16px;height:16px;margin-bottom:0;flex-shrink:0;">${icon}</span>${tab.name}</span><span class="tab-pct">${pct}%</span>`; }
     else {
       card.innerHTML=`<div class="tab-name-tooltip">${tab.name}</div><div class="tab-icon">${icon}</div><div class="tab-name">${tab.name}</div><div class="tab-pct">${pct}%</div>`;
     }
-    // On mobile: first tap shows name tooltip, second tap opens tab
     let _tapped=false, _tapTimer=null;
     card.onclick=(e)=>{
       if(window.innerWidth<=600 && !tab.isProfil) {
         if(!_tapped) {
           _tapped=true; card.classList.add('tapped');
           _tapTimer=setTimeout(()=>{ _tapped=false; card.classList.remove('tapped'); }, 1500);
-          return; // first tap: just show name
+          return;
         }
         clearTimeout(_tapTimer); _tapped=false; card.classList.remove('tapped');
       }
