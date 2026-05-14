@@ -608,6 +608,232 @@ body {
 @media (max-width:380px) {
   .tab-grid { grid-template-columns:repeat(4,1fr); }
 }
+
+
+/* ── APREEZ EDITORIAL REDESIGN ── */
+:root {
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-lg: 28px;
+}
+[data-theme="light"] {
+  --bg:#FBF8F1;
+  --bg2:#F4F1E8;
+  --bg3:#FFFDF7;
+  --card:#2E7359;
+  --card-hover:#245E49;
+  --pink:#D77A61;
+  --pink-dim:#F7E2D8;
+  --peach:#EFCB8A;
+  --peach-dim:#FBF1DC;
+  --taupe:#8B8174;
+  --text:#24231F;
+  --text2:#5E625B;
+  --text3:#A9A59B;
+  --border:rgba(80,72,58,.12);
+  --mosaic-empty:rgba(116,119,110,.14);
+  --mosaic-fill:#2E7359;
+  --header-bg:rgba(251,248,241,.84);
+  --soft-shadow:0 24px 70px rgba(67,55,38,.10);
+  --soft-shadow-sm:0 10px 32px rgba(67,55,38,.08);
+}
+[data-theme="dark"] {
+  --bg:#171B17;
+  --bg2:#20271F;
+  --bg3:#252D25;
+  --card:#9BC6A7;
+  --card-hover:#82B892;
+  --pink:#D99A7E;
+  --pink-dim:#3A2922;
+  --peach:#D7B675;
+  --peach-dim:#312A1E;
+  --taupe:#A49D90;
+  --text:#F4EFE4;
+  --text2:#C5C0B4;
+  --text3:#8F8A80;
+  --border:rgba(244,239,228,.10);
+  --mosaic-empty:rgba(244,239,228,.13);
+  --mosaic-fill:#9BC6A7;
+  --header-bg:rgba(23,27,23,.88);
+  --soft-shadow:0 24px 70px rgba(0,0,0,.25);
+  --soft-shadow-sm:0 10px 32px rgba(0,0,0,.18);
+}
+body {
+  background:
+    radial-gradient(circle at 12% 4%, rgba(239,203,138,.22), transparent 30vw),
+    radial-gradient(circle at 88% 14%, rgba(46,115,89,.10), transparent 28vw),
+    var(--bg);
+  letter-spacing:-.01em;
+}
+.screen.app-main-screen { padding-bottom:calc(88px + var(--safe-bottom)); }
+.home-shell,.journey-shell,.themes-shell,.couple-shell {
+  width:min(1120px,100%);
+  margin:0 auto;
+  padding:clamp(22px,4vw,48px);
+}
+.home-hero,.page-hero {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:24px;
+  margin-bottom:28px;
+}
+.home-hero { padding-top:var(--safe-top); }
+.home-actions { display:flex; gap:10px; }
+.btn-sm.ghost { background:rgba(255,255,255,.36); border-color:var(--border); box-shadow:var(--soft-shadow-sm); backdrop-filter:blur(12px); }
+.dash-datetime,.page-kicker,.home-card-kicker {
+  font-size:11px;
+  letter-spacing:2.6px;
+  text-transform:uppercase;
+  color:var(--text3);
+}
+.dash-greeting { font-size:clamp(34px,6vw,58px); letter-spacing:-.04em; max-width:620px; }
+.dash-sub { font-size:clamp(15px,2.5vw,18px); line-height:1.65; max-width:560px; margin-top:8px; }
+.home-composition {
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);
+  gap:22px;
+  align-items:stretch;
+}
+.home-progress-card,.home-nara-card,.journey-mosaic-card,.couple-status-card,.couple-partner-card {
+  background:linear-gradient(145deg, rgba(255,255,255,.58), rgba(244,241,232,.62));
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--soft-shadow);
+  backdrop-filter:blur(16px);
+}
+[data-theme="dark"] .home-progress-card,[data-theme="dark"] .home-nara-card,[data-theme="dark"] .journey-mosaic-card,[data-theme="dark"] .couple-status-card,[data-theme="dark"] .couple-partner-card { background:linear-gradient(145deg, rgba(37,45,37,.82), rgba(32,39,31,.62)); }
+.home-progress-card { padding:24px; }
+.home-progress-line { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:12px 0 18px; }
+.mode-badge { background:rgba(255,255,255,.36); border-color:var(--border); padding:8px 12px; margin-top:0; }
+.mosaic-wrap.home-mosaic-card { background:transparent; border:0; padding:0; border-radius:0; }
+.mosaic-grid { gap:4px; }
+.mosaic-row { gap:4px; }
+.mosaic-block {
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  border:0;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
+}
+.mosaic-badge { border-radius:999px; background:var(--peach); }
+.home-cta {
+  width:100%;
+  margin-top:22px;
+  padding:15px 18px;
+  border:0;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--card),var(--card-hover));
+  color:white;
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  letter-spacing:.5px;
+  cursor:pointer;
+  box-shadow:0 14px 30px rgba(46,115,89,.20);
+}
+.home-nara-card { padding:24px; display:flex; flex-direction:column; justify-content:flex-end; min-height:260px; position:relative; overflow:hidden; }
+.home-nara-card::before { content:'✦'; position:absolute; right:24px; top:18px; color:var(--peach); font-size:34px; opacity:.7; }
+.home-nara-card p { font-family:'Cormorant Garamond',serif; font-size:clamp(23px,3vw,32px); line-height:1.25; margin:22px 0; color:var(--text); }
+.home-nara-card button { align-self:flex-start; border:1px solid var(--border); background:rgba(255,255,255,.35); color:var(--card); border-radius:999px; padding:10px 14px; font-family:'DM Sans',sans-serif; cursor:pointer; }
+.page-hero { max-width:760px; display:block; }
+.page-hero.centered { text-align:center; margin-left:auto; margin-right:auto; }
+.page-hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,7vw,68px); line-height:.98; font-weight:400; letter-spacing:-.04em; margin:10px 0 14px; }
+.page-hero p { color:var(--text2); font-size:15px; line-height:1.8; max-width:620px; }
+.page-hero.centered p { margin:0 auto; }
+.journey-mosaic-card { padding:clamp(22px,4vw,42px); max-width:860px; margin:0 auto; }
+.journey-stat { text-align:center; margin-bottom:22px; }
+.journey-stat strong { font-family:'Cormorant Garamond',serif; font-size:48px; color:var(--card); font-weight:500; }
+.journey-stat span { color:var(--text3); margin-left:6px; }
+.journey-mosaic-grid { display:flex; flex-direction:column; gap:7px; align-items:center; overflow:auto; padding:8px 0; }
+.journey-mosaic-grid .mosaic-row { justify-content:center; gap:7px; }
+.journey-mosaic-grid .mosaic-block { width:14px; height:14px; }
+.journey-milestones { max-width:860px; margin:18px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.milestone-card { background:rgba(255,255,255,.34); border:1px solid var(--border); border-radius:22px; padding:16px; color:var(--text2); }
+.milestone-card strong { display:block; font-family:'Cormorant Garamond',serif; color:var(--text); font-size:20px; margin-bottom:4px; }
+.themes-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:stretch; }
+.themes-grid .tab-card {
+  min-height:148px;
+  background:linear-gradient(145deg, rgba(255,255,255,.56), rgba(244,241,232,.72));
+  border:1px solid var(--border);
+  box-shadow:var(--soft-shadow-sm);
+  color:var(--text);
+  padding:20px;
+}
+.themes-grid .tab-card.alt1,.themes-grid .tab-card.alt2 { background:linear-gradient(145deg, rgba(255,255,255,.56), rgba(244,241,232,.72)); }
+.themes-grid .tab-icon { color:var(--card); width:28px; height:28px; }
+.themes-grid .tab-name { display:block; color:var(--text); font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; }
+.themes-grid .tab-pct { color:var(--text3); font-size:12px; }
+.themes-grid .tab-card.profil-card { min-height:112px; }
+.couple-status-card { padding:22px; max-width:680px; margin:0 auto 18px; }
+.couple-avatars { display:flex; align-items:center; justify-content:center; gap:18px; color:var(--text2); margin-bottom:18px; }
+.couple-avatars span { width:86px; height:86px; border-radius:50%; background:var(--bg2); display:flex; align-items:center; justify-content:center; box-shadow:var(--soft-shadow-sm); }
+.couple-avatars i { color:var(--pink); font-style:normal; }
+.couple-bars { display:grid; gap:10px; }
+.couple-bar-row { display:grid; grid-template-columns:90px 1fr auto; gap:10px; align-items:center; font-size:12px; color:var(--text2); }
+.couple-bar-track { height:8px; border-radius:999px; background:var(--mosaic-empty); overflow:hidden; }
+.couple-bar-fill { height:100%; border-radius:999px; background:var(--card); }
+.couple-partner-card { display:block; max-width:860px; margin:0 auto; padding:18px; }
+.app-bottom-nav {
+  position:fixed;
+  left:50%;
+  bottom:calc(14px + var(--safe-bottom));
+  transform:translateX(-50%);
+  width:min(520px, calc(100% - 32px));
+  z-index:1200;
+  display:flex;
+  justify-content:space-around;
+  gap:4px;
+  padding:8px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:rgba(251,248,241,.78);
+  backdrop-filter:blur(18px);
+  box-shadow:0 18px 46px rgba(67,55,38,.16);
+}
+[data-theme="dark"] .app-bottom-nav { background:rgba(23,27,23,.78); }
+.app-bottom-nav button {
+  border:0;
+  background:transparent;
+  color:var(--text3);
+  border-radius:999px;
+  padding:10px 12px;
+  min-width:54px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;
+  cursor:pointer;
+}
+.app-bottom-nav button.active { color:var(--card); background:rgba(46,115,89,.10); }
+.app-bottom-nav svg { width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.sub-header,.answer-header,.nara-input-row { background:var(--header-bg); backdrop-filter:blur(14px); border-color:var(--border); }
+.sub-header { box-shadow:0 10px 30px rgba(67,55,38,.04); }
+#s-nara { background:radial-gradient(circle at 50% 0, rgba(239,203,138,.18), transparent 42vw), var(--bg); }
+.nara-chat-area { max-width:760px; width:100%; margin:0 auto; padding-top:28px; }
+.nara-intro-bubble,.chat-bubble.nara,.nara-typing { background:rgba(255,255,255,.42); box-shadow:var(--soft-shadow-sm); border-color:var(--border); }
+.chat-bubble.user { background:linear-gradient(135deg,var(--card),var(--card-hover)); }
+.nara-suggestions { max-width:760px; width:100%; margin:0 auto; }
+#s-nara .nara-input-row { padding-bottom:calc(86px + var(--safe-bottom)); }
+@media (max-width:760px) {
+  .home-shell,.journey-shell,.themes-shell,.couple-shell { padding:calc(24px + var(--safe-top)) 20px 20px; }
+  .home-hero { display:block; }
+  .home-actions { position:absolute; top:calc(18px + var(--safe-top)); right:20px; }
+  .home-composition { grid-template-columns:1fr; }
+  .home-progress-card,.home-nara-card { padding:20px; }
+  .home-progress-line { align-items:flex-start; flex-direction:column; }
+  .journey-mosaic-card { margin-left:-6px; margin-right:-6px; padding:20px 10px; }
+  .journey-mosaic-grid { align-items:flex-start; }
+  .journey-mosaic-grid .mosaic-block { width:11px; height:11px; }
+  .journey-milestones { grid-template-columns:1fr; }
+  .themes-grid { grid-template-columns:1fr; gap:12px; }
+  .themes-grid .tab-card { min-height:118px; }
+  .themes-grid .tab-name { font-size:22px; }
+  .couple-bar-row { grid-template-columns:74px 1fr auto; }
+  .dash-greeting { padding-right:108px; }
+}
+
 </style>
 </head>
 <body>
@@ -757,60 +983,92 @@ body {
 </div>
 
 <!-- DASHBOARD -->
-<div id="s-dashboard" class="screen">
-  <div class="dash-header">
-    <div class="dash-header-row">
+<div id="s-dashboard" class="screen app-main-screen">
+  <div class="home-shell">
+    <header class="home-hero">
       <div>
         <div class="dash-datetime" id="dash-datetime"></div>
         <div class="dash-greeting" id="dash-greeting"></div>
         <div class="dash-sub" id="dash-sub"></div>
-        <button class="mode-badge" id="mode-badge" onclick="showModeSettings()">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span id="mode-badge-label">Solo</span>
-          <span class="sync-dot" id="sync-dot" title="Status sinkronisasi"></span>
-        </button>
       </div>
-      <div class="dash-header-right">
-        <button class="btn-sm" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
-        <button class="btn-sm" onclick="openFeedback()" title="Kirim feedback">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </button>
-        
-        <button class="btn-sm" onclick="authLogout()" title="Keluar">⇥</button>
+      <div class="home-actions">
+        <button class="btn-sm ghost" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
+        <button class="btn-sm ghost" onclick="authLogout()" title="Keluar">⇥</button>
       </div>
-    </div>
+    </header>
+
+    <main class="home-composition">
+      <section class="home-progress-card">
+        <div class="home-card-kicker">Perjalanan refleksimu</div>
+        <div class="home-progress-line">
+          <div class="mosaic-count" id="mosaic-count">0 <span>/ 0 pertanyaan</span></div>
+          <button class="mode-badge" id="mode-badge" onclick="showModeSettings()">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span id="mode-badge-label">Solo</span>
+            <span class="sync-dot" id="sync-dot" title="Status sinkronisasi"></span>
+          </button>
+        </div>
+        <div class="mosaic-wrap home-mosaic-card">
+          <div class="mosaic-grid" id="mosaic-grid"></div>
+        </div>
+        <button class="home-cta" onclick="continueReflection()">Lanjutkan refleksi →</button>
+      </section>
+
+      <aside class="home-nara-card">
+        <div class="home-card-kicker">Pesan dari Nara</div>
+        <p id="home-nara-insight">Setiap jawaban kecil adalah latihan mengenal diri dengan lebih jujur.</p>
+        <button onclick="openNara()">Dengar perspektif Nara</button>
+      </aside>
+    </main>
   </div>
-  <div class="dash-body">
-    <div class="dash-left">
-      <div class="tab-grid" id="tab-grid"></div>
-    </div>
-    <div class="dash-right">
-      <div class="partner-card" id="partner-card">
-        <div class="partner-card-header">
-          <div class="partner-card-title" id="partner-card-title">Pasangan</div>
-          <div class="partner-card-status" id="partner-card-status">Menunggu</div>
-        </div>
-        <div id="partner-card-body"></div>
+</div>
+
+<!-- JOURNEY -->
+<div id="s-journey" class="screen app-main-screen">
+  <div class="journey-shell">
+    <header class="page-hero centered">
+      <div class="page-kicker">Perjalanan Refleksimu</div>
+      <h1>Mosaik yang tumbuh bersama jawabanmu</h1>
+      <p>Ketuk titik mana pun untuk membuka pertanyaan. Mosaik ini adalah peta, navigasi, dan jejak perjalanan pra-nikahmu.</p>
+    </header>
+    <section class="journey-mosaic-card">
+      <div class="journey-stat"><strong id="journey-filled">0</strong><span id="journey-total">/ 0 pertanyaan dijawab</span></div>
+      <div class="journey-mosaic-grid" id="journey-mosaic-grid"></div>
+    </section>
+    <section class="journey-milestones" id="journey-milestones"></section>
+  </div>
+</div>
+
+<!-- THEMES -->
+<div id="s-themes" class="screen app-main-screen">
+  <div class="themes-shell">
+    <header class="page-hero">
+      <div class="page-kicker">Tema refleksi</div>
+      <h1>Pilih ruang yang ingin kamu masuki hari ini</h1>
+      <p>Tema-tema ini tidak perlu dikejar sekaligus. Datangi pelan-pelan, sesuai kesiapan hatimu.</p>
+    </header>
+    <div class="tab-grid themes-grid" id="tab-grid"></div>
+  </div>
+</div>
+
+<!-- COUPLE -->
+<div id="s-couple" class="screen app-main-screen">
+  <div class="couple-shell">
+    <header class="page-hero centered">
+      <div class="page-kicker">Bersama pasangan</div>
+      <h1>Melihat ritme kalian berdua dengan lembut</h1>
+      <p>Sinkronisasi bukan untuk menilai siapa yang lebih cepat, tapi membantu kalian menemukan bahan percakapan yang lebih jujur.</p>
+    </header>
+    <section class="couple-status-card">
+      <div class="couple-avatars"><span>Kamu</span><i>♡</i><span>Pasangan</span></div>
+      <div class="couple-bars" id="couple-bars"></div>
+    </section>
+    <div class="partner-card couple-partner-card" id="partner-card">
+      <div class="partner-card-header">
+        <div class="partner-card-title" id="partner-card-title">Pasangan</div>
+        <div class="partner-card-status" id="partner-card-status">Menunggu</div>
       </div>
-      <div class="mosaic-wrap">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
-          <div>
-            <div class="mosaic-title">Perjalananmu</div>
-            <div class="mosaic-sub">Ketuk blok untuk langsung ke pertanyaan</div>
-          </div>
-          <div style="text-align:right;">
-            <div class="mosaic-count" id="mosaic-count">0 <span>/ 0 pertanyaan</span></div>
-          </div>
-        </div>
-        <div class="mosaic-grid" id="mosaic-grid"></div>
-      </div>
-    </div>
-    <div class="dash-actions-row">
-      <button class="btn-nara" onclick="openNara()">✦ Kata Nara</button>
-      <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
-      <button class="btn-wedding" onclick="goTo('s-wedding')" title="Rencana Pernikahan">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="2.5"/></svg>
-      </button>
+      <div id="partner-card-body"></div>
     </div>
   </div>
 </div>
@@ -836,7 +1094,7 @@ body {
 <!-- TAB -->
 <div id="s-tab" class="screen">
   <div class="sub-header">
-    <button class="btn-back" onclick="goTo('s-dashboard')">‹</button>
+    <button class="btn-back" onclick="goTo('s-themes')">‹</button>
     <div class="sub-header-info"><div class="sub-header-name" id="tab-title"></div><div class="sub-header-count" id="tab-count"></div></div>
     
   </div>
@@ -1672,6 +1930,10 @@ function goTo(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0); updateThemeIcons();
   if(id==='s-wedding') renderWedding();
+  if(id==='s-journey') renderJourneyPage();
+  if(id==='s-themes') renderTabGrid();
+  if(id==='s-couple') { renderCouplePage(); renderPartnerCard(); }
+  renderBottomNav(id);
 }
 
 // ══ DASHBOARD ══
@@ -1688,7 +1950,7 @@ function renderDashboard() {
         ? userName.split(' ')[0] : userName;
       greet.innerHTML=`${getGreeting()}, <em>${displayName}!</em> <button class="edit-pencil" onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:0 4px;color:var(--text3);font-size:16px;vertical-align:middle;opacity:.5;transition:opacity .2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.5">✎</button>`;
     }
-    renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderPartnerCard();
+    renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderHomeInsight(); renderCouplePage();
     const fc=document.getElementById('mosaic-count');
     if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`;
   }, 16);
@@ -1698,8 +1960,8 @@ async function renderPartnerCard() {
   const card = document.getElementById('partner-card');
   if(!card) return;
 
-  // Sembunyikan kalau bukan couple mode atau belum punya pasangan
-  if(appMode !== 'couple' || !linkedPartnerCode) {
+  // Sembunyikan kalau bukan couple mode, tetapi tetap beri arahan lembut di halaman Couple.
+  if(appMode !== 'couple') {
     card.classList.remove('visible');
     return;
   }
@@ -1708,6 +1970,13 @@ async function renderPartnerCard() {
   const titleEl = document.getElementById('partner-card-title');
   const statusEl = document.getElementById('partner-card-status');
   const bodyEl = document.getElementById('partner-card-body');
+  if(!linkedPartnerCode) {
+    titleEl.innerHTML = 'Belum terhubung';
+    statusEl.textContent = 'Menunggu kode';
+    statusEl.className = 'partner-card-status';
+    bodyEl.innerHTML = `<div class="partner-card-waiting"><strong>Hubungkan pasangan saat kalian siap</strong>Buka pengaturan mode, bagikan kode kamu, atau masukkan kode pasangan agar Apreez bisa membaca ritme refleksi kalian berdua.<br><button class="partner-copy-btn" style="margin-top:8px;" onclick="showModeSettings()">Atur mode couple</button></div>`;
+    return;
+  }
 
   // Load data pasangan dari Supabase
   if(!SB || isGuest) {
@@ -1739,6 +2008,8 @@ async function renderPartnerCard() {
     // Pasangan ditemukan — render mosaic mereka
     const pName = data.user_name || 'Pasangan';
     const pAnswers = data.answers || {};
+    partnerAnswers = pAnswers;
+    partnerName = pName;
     const pFilled = Object.values(pAnswers).filter(v=>v&&v.trim()).length;
     const pTotal = getTotalQ();
     const pPct = pTotal > 0 ? Math.round(pFilled/pTotal*100) : 0;
@@ -1768,6 +2039,7 @@ async function renderPartnerCard() {
     mosaicHtml += '</div>';
     mosaicHtml += `<div class="partner-card-meta">${pFilled} dari ${pTotal} pertanyaan dijawab · Diperbarui saat kamu buka Nara</div>`;
     bodyEl.innerHTML = mosaicHtml;
+    renderCouplePage();
 
   } catch(e) {
     console.warn('[Apreez] Load partner card failed:', e);
@@ -1777,6 +2049,105 @@ async function renderPartnerCard() {
 function updateEmpathyPhrase() {
   const el=document.getElementById('dash-sub');
   if(el) el.textContent=getEmpathyPhrase(getFilledQ(), getTotalQ());
+}
+
+function getProgressPct() {
+  const total = getTotalQ();
+  return total > 0 ? Math.round(getFilledQ() / total * 100) : 0;
+}
+function renderHomeInsight() {
+  const el = document.getElementById('home-nara-insight');
+  if(!el) return;
+  const filled = getFilledQ();
+  if(filled === 0) el.textContent = 'Mulailah dari satu pertanyaan yang terasa paling mudah. Refleksi yang aman tidak perlu terburu-buru.';
+  else if(getProgressPct() < 20) el.textContent = 'Kamu sedang membangun bahasa untuk memahami dirimu sendiri. Pelan-pelan, setiap jawaban punya bobot.';
+  else if(appMode === 'couple') el.textContent = 'Saat kalian siap, perbedaan jawaban bisa menjadi undangan untuk saling mendengar, bukan saling menilai.';
+  else el.textContent = 'Ada pola yang mulai terlihat dari jawabanmu. Datang ke Nara saat kamu ingin membacanya dengan lebih lembut.';
+}
+function continueReflection() {
+  for(let ti=0; ti<TABS.length; ti++) {
+    const tab = TABS[ti];
+    if(tab.isProfil) {
+      for(let i=0; i<tab.fields.length; i++) if(!answers[`profil__field__${i}`]?.trim()) { openedFromMosaic = true; openProfilFieldModal(i); return; }
+    } else {
+      for(let si=0; si<tab.subtabs.length; si++) for(let qi=0; qi<tab.subtabs[si].questions.length; qi++) if(!isAnswered(ti,si,qi)) { openMosaicQuestion(ti,si,qi); return; }
+    }
+  }
+  goTo('s-journey');
+}
+function renderJourneyPage() {
+  const filled = getFilledQ(), total = getTotalQ();
+  const f = document.getElementById('journey-filled'), t = document.getElementById('journey-total');
+  if(f) f.textContent = filled;
+  if(t) t.textContent = ` / ${total} pertanyaan dijawab`;
+  renderJourneyMosaic();
+  renderJourneyMilestones();
+}
+function renderJourneyMosaic() {
+  const grid = document.getElementById('journey-mosaic-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  TABS.forEach((tab,ti)=>{
+    const row=document.createElement('div'); row.className='mosaic-row';
+    let questions=[];
+    if(tab.isProfil) tab.fields.forEach((f,fieldIdx)=>questions.push({tabIdx:ti,isField:true,fieldIdx}));
+    else tab.subtabs?.forEach((st,si)=>st.questions.forEach((_,qi)=>questions.push({tabIdx:ti,subIdx:si,qIdx:qi})));
+    questions.forEach(q=>{
+      const block=document.createElement('div'); block.className='mosaic-block';
+      const filled = q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx,q.subIdx,q.qIdx);
+      if(filled) block.classList.add('filled');
+      block.title = tab.name;
+      block.onclick = () => {
+        if(q.isField) { openedFromMosaic = true; openProfilFieldModal(q.fieldIdx); }
+        else openMosaicQuestion(q.tabIdx,q.subIdx,q.qIdx);
+      };
+      row.appendChild(block);
+    });
+    renderMosaicBadge(row,ti);
+    grid.appendChild(row);
+  });
+}
+function renderJourneyMilestones() {
+  const el=document.getElementById('journey-milestones');
+  if(!el) return;
+  const completed = getCompletedThemes();
+  const pct = getProgressPct();
+  const nextTab = TABS.find((tab,ti)=>getTabFilled(ti) < getTabTotal(ti));
+  el.innerHTML = [
+    `<div class="milestone-card"><strong>${pct}%</strong>Ruang refleksi yang sudah kamu isi.</div>`,
+    `<div class="milestone-card"><strong>${completed}</strong>Tema selesai sepenuhnya.</div>`,
+    `<div class="milestone-card"><strong>${nextTab ? nextTab.name : 'Lengkap'}</strong>${nextTab ? 'Tema berikutnya yang menunggu.' : 'Perjalanan utama sudah selesai.'}</div>`
+  ].join('');
+}
+function renderCouplePage() {
+  const el=document.getElementById('couple-bars');
+  if(!el) return;
+  const total=getTotalQ(), mine=getFilledQ(), minePct=total?Math.round(mine/total*100):0;
+  let partnerCount = partnerAnswers ? Object.values(partnerAnswers).filter(v=>v&&v.trim()).length : 0;
+  let partnerPct = total?Math.round(partnerCount/total*100):0;
+  el.innerHTML = `
+    <div class="couple-bar-row"><span>Kamu</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${minePct}%"></div></div><span>${mine}/${total}</span></div>
+    <div class="couple-bar-row"><span>Pasangan</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${partnerPct}%;background:var(--pink)"></div></div><span>${partnerAnswers?`${partnerCount}/${total}`:'menunggu'}</span></div>
+  `;
+}
+function renderBottomNav(activeId='s-dashboard') {
+  const screens = new Set(['s-dashboard','s-journey','s-themes','s-couple','s-nara']);
+  let nav = document.getElementById('app-bottom-nav');
+  if(!screens.has(activeId)) { if(nav) nav.remove(); return; }
+  if(!nav) {
+    nav = document.createElement('nav');
+    nav.id = 'app-bottom-nav';
+    nav.className = 'app-bottom-nav';
+    document.body.appendChild(nav);
+  }
+  const items = [
+    ['s-dashboard','Beranda','<path d="M3 10.5 12 3l9 7.5V21H5a2 2 0 0 1-2-2z"/><path d="M9 21v-7h6v7"/>'],
+    ['s-journey','Mosaik','<circle cx="7" cy="7" r="2"/><circle cx="17" cy="7" r="2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 7h6M7 9v6M17 9v6M9 17h6"/>'],
+    ['s-themes','Tema','<path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h10"/>'],
+    ['s-couple','Couple','<path d="M16 11a4 4 0 1 0-8 0c0 5 8 9 8 9s8-4 8-9a4 4 0 0 0-8 0" transform="scale(.8) translate(3 1)"/>'],
+    ['s-nara','Nara','<path d="M12 3c2.8 3.2 4.2 6.1 4.2 8.7A4.2 4.2 0 0 1 12 16a4.2 4.2 0 0 1-4.2-4.3C7.8 9.1 9.2 6.2 12 3z"/><path d="M5 21c2-2 4.3-3 7-3s5 1 7 3"/>']
+  ];
+  nav.innerHTML = items.map(([id,label,icon])=>`<button class="${activeId===id?'active':''}" onclick="${id==='s-nara'?'openNara()':`goTo('${id}')`}"><svg viewBox="0 0 24 24">${icon}</svg><span>${label}</span></button>`).join('');
 }
 
 // ══ HELPERS ══
@@ -2049,7 +2420,7 @@ function closeModal() {
   }
   document.getElementById('modal-overlay').classList.remove('open','mosaic-mode');
   openedFromMosaic = false;
-  renderMosaic(); renderTabGrid(); updateMosaicCounts();
+  renderMosaic(); renderJourneyMosaic(); renderTabGrid(); updateMosaicCounts(); renderHomeInsight(); renderJourneyMilestones(); renderCouplePage();
 }
 function handleModalOverlayClick(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
 function animateMosaicBlock(ti,si,qi,filled) {
@@ -2064,8 +2435,8 @@ function animateMosaicBlock(ti,si,qi,filled) {
 function openQuestion(ti,si,qi) { openModal(ti,si,qi); }
 
 // ══ LIVE UPDATES ══
-function updateMosaicBlock() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderMosaic(); }
-function updateMosaicCounts() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); }
+function updateMosaicBlock() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderMosaic(); renderJourneyMosaic(); renderHomeInsight(); renderJourneyMilestones(); renderCouplePage(); }
+function updateMosaicCounts() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderHomeInsight(); }
 function updateTabCard(ti) { const cards=document.querySelectorAll('#tab-grid .tab-card'); if(cards[ti]) { const pct=getTabTotal(ti)>0?Math.round(getTabFilled(ti)/getTabTotal(ti)*100):0; const pe=cards[ti].querySelector('.tab-pct'); if(pe) pe.textContent=pct+'%'; } }
 
 // ══ KATA NARA ══
