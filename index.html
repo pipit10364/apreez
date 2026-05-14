@@ -848,21 +848,42 @@ body {
   #s-nara .nara-input-row { padding-bottom:calc(12px + var(--safe-bottom)); }
 }
 @media (max-width:760px) {
-  .home-shell,.journey-shell,.themes-shell,.couple-shell { padding:calc(24px + var(--safe-top)) 20px 20px; }
+  body { overflow-x:hidden; }
+  .screen.app-main-screen { overflow-x:hidden; }
+  .home-shell,.journey-shell,.themes-shell,.couple-shell { width:100%; max-width:100vw; padding:calc(22px + var(--safe-top)) 16px 20px; overflow-x:hidden; }
   .home-hero { display:block; }
-  .home-actions { position:absolute; top:calc(18px + var(--safe-top)); right:20px; }
-  .home-composition { grid-template-columns:1fr; }
-  .home-progress-card,.home-nara-card { padding:20px; }
-  .home-progress-line { align-items:flex-start; flex-direction:column; }
-  .journey-mosaic-card { margin-left:-6px; margin-right:-6px; padding:20px 10px; }
-  .journey-mosaic-grid { align-items:flex-start; }
-  .journey-mosaic-grid .mosaic-block { width:11px; height:11px; }
-  .journey-milestones { grid-template-columns:1fr; }
+  .home-actions { position:absolute; top:calc(16px + var(--safe-top)); right:16px; }
+  .home-composition { grid-template-columns:minmax(0,1fr); gap:16px; }
+  .home-progress-card,.home-nara-card { width:100%; min-width:0; padding:18px; overflow:hidden; }
+  .home-progress-line { align-items:flex-start; flex-direction:column; gap:10px; }
+  .mosaic-wrap.home-mosaic-card { width:100%; max-width:100%; max-height:112px; overflow:hidden; }
+  .home-mosaic-card .mosaic-grid { width:100%; max-width:100%; max-height:104px; overflow:hidden; }
+  .home-mosaic-card .mosaic-row { gap:3px; max-width:100%; }
+  .home-mosaic-card .mosaic-block { width:7px; height:7px; }
+  .home-cta { width:100%; max-width:100%; }
+  .home-secondary-actions { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .home-secondary-actions button { min-width:0; padding:10px 8px; font-size:11px; }
+  .home-nara-card { min-height:auto; padding-bottom:24px; }
+  .home-nara-card p { font-size:clamp(28px,10vw,42px); line-height:1.22; }
+  .journey-mosaic-card { margin-left:0; margin-right:0; padding:18px 12px; overflow:hidden; }
+  .journey-mosaic-grid { align-items:center; overflow:hidden; width:100%; gap:4px; }
+  .journey-mosaic-grid .mosaic-row { justify-content:center; gap:4px; max-width:100%; }
+  .journey-mosaic-grid .mosaic-block { width:8px; height:8px; }
+  .journey-stat { margin-bottom:14px; }
+  .journey-stat strong { font-size:34px; }
+  .journey-stat span { display:block; margin:2px 0 0; font-size:12px; }
+  .journey-milestones { grid-template-columns:1fr; gap:10px; }
   .themes-grid { grid-template-columns:1fr; gap:12px; }
-  .themes-grid .tab-card { min-height:118px; }
+  .themes-grid .tab-card { min-height:104px; }
   .themes-grid .tab-name { font-size:22px; }
   .couple-bar-row { grid-template-columns:74px 1fr auto; }
-  .dash-greeting { padding-right:108px; }
+  .dash-greeting { padding-right:96px; font-size:clamp(32px,12vw,46px); }
+}
+@media (max-width:380px) {
+  .home-shell,.journey-shell,.themes-shell,.couple-shell { padding-left:14px; padding-right:14px; }
+  .journey-mosaic-grid .mosaic-row { gap:3px; }
+  .journey-mosaic-grid .mosaic-block { width:7px; height:7px; }
+  .home-mosaic-card .mosaic-block { width:6px; height:6px; }
 }
 
 </style>
