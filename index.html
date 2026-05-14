@@ -201,25 +201,6 @@ body {
 .dash-left { padding:16px 20px; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:12px; overflow-y:auto; min-height:0; }
 
 @media (max-width: 600px) {
-  #s-dashboard { overflow-y: auto; overflow-x: hidden; }
-  .dash-body {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    height: auto;
-    overflow: visible;
-  }
-  .dash-left {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    overflow-y: visible;
-    gap: 10px;
-    padding: 14px 16px;
-  }
-  .dash-right {
-    overflow-y: visible;
-    padding: 14px 16px;
-    gap: 8px;
-  }
   .dash-actions-row {
     padding: 10px 14px;
     padding-bottom: calc(10px + var(--safe-bottom));
@@ -310,6 +291,170 @@ body {
   .tab-card:active .tab-name-tooltip,
   .tab-card.tapped .tab-name-tooltip { opacity:1; }
 }
+/* ══ REDESIGN: ATMOSPHERIC BACKGROUND ══ */
+#s-dashboard { position:relative; overflow:hidden; }
+.dash-grain {
+  position:fixed; inset:0; pointer-events:none; z-index:1;
+  opacity:.022;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:220px 220px;
+}
+[data-theme="dark"] .dash-grain { opacity:.035; }
+
+/* ══ REDESIGN: BLOB ACCENTS ══ */
+.dash-blob {
+  position:fixed; pointer-events:none; z-index:0;
+  filter:blur(72px); will-change:transform;
+}
+.dash-blob-1 {
+  width:320px; height:300px;
+  background:var(--pink); opacity:.07;
+  top:-100px; right:-80px;
+  border-radius:62% 38% 46% 54% / 60% 44% 56% 40%;
+  animation:blobDrift1 18s ease-in-out infinite alternate;
+}
+.dash-blob-2 {
+  width:240px; height:260px;
+  background:var(--peach); opacity:.08;
+  bottom:60px; left:-80px;
+  border-radius:40% 60% 70% 30% / 50% 68% 32% 50%;
+  animation:blobDrift2 22s ease-in-out infinite alternate;
+}
+.dash-blob-3 {
+  width:160px; height:150px;
+  background:var(--card); opacity:.05;
+  top:45%; right:10%;
+  border-radius:50% 50% 40% 60% / 45% 55% 45% 55%;
+  animation:blobDrift1 14s ease-in-out 4s infinite alternate;
+}
+@keyframes blobDrift1 {
+  from { transform:translate(0,0) scale(1); }
+  to   { transform:translate(18px,-22px) scale(1.06); }
+}
+@keyframes blobDrift2 {
+  from { transform:translate(0,0) scale(1); }
+  to   { transform:translate(-14px,18px) scale(1.04); }
+}
+
+/* ══ REDESIGN: MOBILE SWIPE LAYOUT ══ */
+@media (max-width:600px) {
+  #s-dashboard { overflow:hidden; height:100dvh; display:flex; flex-direction:column; }
+  .dash-header { flex-shrink:0; }
+  .dash-body {
+    flex:1; min-height:0;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+  }
+  .dash-swipe-wrap {
+    flex:1; min-height:0;
+    display:flex; flex-direction:row;
+    overflow-x:scroll; overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .dash-swipe-wrap::-webkit-scrollbar { display:none; }
+  .dash-swipe-panel {
+    flex:0 0 100vw; width:100vw;
+    scroll-snap-align:start;
+    overflow-y:auto; overflow-x:hidden;
+    padding:16px 16px 8px;
+    position:relative; z-index:2;
+  }
+  .dash-panel-mosaic { display:flex; flex-direction:column; gap:10px; }
+  .dash-panel-tiles  { display:flex; flex-direction:column; gap:10px; }
+
+  /* Dot indicators */
+  .dash-dot-wrap {
+    display:flex; justify-content:center; align-items:center;
+    gap:6px; padding:7px 0 4px; flex-shrink:0; z-index:2; position:relative;
+  }
+  .dash-dot {
+    width:6px; height:6px; border-radius:3px;
+    background:var(--border);
+    transition:background .25s, width .25s var(--ease);
+  }
+  .dash-dot.active { background:var(--card); width:18px; }
+
+  /* Override old left/right stacking */
+  .dash-left, .dash-right { padding:0; border:none !important; overflow:visible; }
+  .dash-actions-row { flex-shrink:0; position:relative; z-index:2; }
+}
+
+/* ══ REDESIGN: DESKTOP LAYOUT REFINEMENT ══ */
+@media (min-width:601px) {
+  .dash-dot-wrap { display:none; }
+  /* Desktop: dash-body is flex column, swipe-wrap is the main grid */
+  .dash-body {
+    display:flex; flex-direction:column;
+    height:calc(100dvh - 88px);
+  }
+  .dash-swipe-wrap {
+    flex:1; min-height:0;
+    display:grid;
+    grid-template-columns:55% 45%;
+    overflow:hidden;
+  }
+  .dash-swipe-panel {
+    display:flex; flex-direction:column;
+    gap:10px; overflow-y:auto;
+    padding:16px 20px;
+  }
+  /* Tiles left, Mosaic right — swap order since HTML has mosaic first (for mobile) */
+  .dash-panel-mosaic { order:2; border-left:1px solid var(--border); }
+  .dash-panel-tiles  { order:1; }
+  .dash-actions-row {
+    flex-shrink:0;
+  }
+  /* Desktop blob positioning */
+  .dash-blob-1 { width:420px; height:380px; top:-120px; right:-100px; }
+  .dash-blob-2 { width:300px; height:320px; bottom:80px; left:-100px; }
+}
+
+/* ══ REDESIGN: ENHANCED MOSAIC ══ */
+.mosaic-wrap {
+  background:rgba(255,255,255,.6); backdrop-filter:blur(8px);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:16px; position:relative; z-index:2;
+}
+[data-theme="dark"] .mosaic-wrap { background:rgba(9,21,37,.7); }
+.mosaic-block.filled {
+  background:linear-gradient(135deg, var(--mosaic-fill) 0%, color-mix(in srgb, var(--mosaic-fill) 70%, var(--mosaic-drip)) 100%);
+  border-color:transparent;
+  box-shadow:0 1px 3px rgba(45,106,79,.25);
+}
+.mosaic-block:hover { transform:scale(1.5); box-shadow:0 2px 8px rgba(0,0,0,.2); }
+.mosaic-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:500; }
+@media (min-width:601px) {
+  .mosaic-block { width:13px; height:13px; border-radius:4px; }
+  .mosaic-count { font-size:28px; }
+  .mosaic-title { font-size:20px; }
+}
+
+/* ══ REDESIGN: TILE PERSONALITY ══ */
+.tab-card { position:relative; overflow:hidden; transition:transform .22s var(--ease), box-shadow .22s var(--ease); }
+/* Subtle rotations — alternating tiles feel alive */
+.tab-grid .tab-card:not(.profil-card):nth-child(4n+2) { transform:rotate(-1.5deg); }
+.tab-grid .tab-card:not(.profil-card):nth-child(4n+3) { transform:rotate(1deg); }
+.tab-grid .tab-card:not(.profil-card):nth-child(6n+5) { transform:rotate(-0.8deg); }
+.tab-card:not(.profil-card):hover { transform:rotate(0deg) translateY(-3px) scale(1.03) !important; box-shadow:0 8px 28px rgba(0,0,0,.18); }
+/* Frosted glass effect on tile overlay */
+.tab-card::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 60%);
+  pointer-events:none; z-index:1;
+}
+/* Profil card glass */
+.tab-card.profil-card { border-radius:var(--radius-lg); }
+
+/* Panel labels for mobile */
+.panel-eyebrow {
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--text3); margin-bottom:10px; font-family:'DM Sans',sans-serif;
+  position:relative; z-index:2;
+}
+
 .mode-badge { display:inline-flex; align-items:center; gap:5px; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text3); padding:3px 8px; border-radius:20px; border:1px solid var(--border); background:var(--bg2); cursor:pointer; transition:var(--transition); margin-top:4px; }
 .mode-badge:hover { border-color:var(--card); color:var(--card); }
 .mode-badge svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2; }
@@ -757,6 +902,13 @@ body {
 
 <!-- DASHBOARD -->
 <div id="s-dashboard" class="screen">
+  <!-- Atmospheric blobs -->
+  <div class="dash-blob dash-blob-1"></div>
+  <div class="dash-blob dash-blob-2"></div>
+  <div class="dash-blob dash-blob-3"></div>
+  <!-- Grain texture overlay -->
+  <div class="dash-grain"></div>
+
   <div class="dash-header">
     <div class="dash-header-row">
       <div>
@@ -774,36 +926,51 @@ body {
         <button class="btn-sm" onclick="openFeedback()" title="Kirim feedback">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </button>
-        
         <button class="btn-sm" onclick="authLogout()" title="Keluar">⇥</button>
       </div>
     </div>
   </div>
+
   <div class="dash-body">
-    <div class="dash-left">
-      <div class="tab-grid" id="tab-grid"></div>
-    </div>
-    <div class="dash-right">
-      <div class="partner-card" id="partner-card">
-        <div class="partner-card-header">
-          <div class="partner-card-title" id="partner-card-title">Pasangan</div>
-          <div class="partner-card-status" id="partner-card-status">Menunggu</div>
-        </div>
-        <div id="partner-card-body"></div>
-      </div>
-      <div class="mosaic-wrap">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
-          <div>
-            <div class="mosaic-title">Perjalananmu</div>
-            <div class="mosaic-sub">Ketuk blok untuk langsung ke pertanyaan</div>
+    <!-- Swipe wrapper: horizontal on mobile, grid on desktop -->
+    <div class="dash-swipe-wrap" id="dash-swipe-wrap">
+
+      <!-- PANEL 0: Mosaic / Perjalanan -->
+      <div class="dash-swipe-panel dash-panel-mosaic dash-right">
+        <div class="partner-card" id="partner-card">
+          <div class="partner-card-header">
+            <div class="partner-card-title" id="partner-card-title">Pasangan</div>
+            <div class="partner-card-status" id="partner-card-status">Menunggu</div>
           </div>
-          <div style="text-align:right;">
-            <div class="mosaic-count" id="mosaic-count">0 <span>/ 0 pertanyaan</span></div>
-          </div>
+          <div id="partner-card-body"></div>
         </div>
-        <div class="mosaic-grid" id="mosaic-grid"></div>
+        <div class="mosaic-wrap">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+            <div>
+              <div class="mosaic-title">Perjalananmu</div>
+              <div class="mosaic-sub">Ketuk blok untuk langsung ke pertanyaan</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="mosaic-count" id="mosaic-count">0 <span>/ 0 pertanyaan</span></div>
+            </div>
+          </div>
+          <div class="mosaic-grid" id="mosaic-grid"></div>
+        </div>
       </div>
+
+      <!-- PANEL 1: Navigation Tiles -->
+      <div class="dash-swipe-panel dash-panel-tiles dash-left">
+        <div class="tab-grid" id="tab-grid"></div>
+      </div>
+
+    </div><!-- /dash-swipe-wrap -->
+
+    <!-- Swipe dot indicator (mobile only) -->
+    <div class="dash-dot-wrap">
+      <div class="dash-dot active" id="dash-dot-0"></div>
+      <div class="dash-dot" id="dash-dot-1"></div>
     </div>
+
     <div class="dash-actions-row">
       <button class="btn-nara" onclick="openNara()">✦ Kata Nara</button>
       <button class="btn-pdf" onclick="downloadPDF()">Download PDF</button>
@@ -1690,7 +1857,24 @@ function renderDashboard() {
     renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderPartnerCard();
     const fc=document.getElementById('mosaic-count');
     if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`;
+    initSwipeDots();
   }, 16);
+}
+
+function initSwipeDots() {
+  const wrap = document.getElementById('dash-swipe-wrap');
+  if(!wrap) return;
+  // Only active on mobile
+  if(window.innerWidth > 600) return;
+  const dot0 = document.getElementById('dash-dot-0');
+  const dot1 = document.getElementById('dash-dot-1');
+  if(!dot0 || !dot1) return;
+  wrap.addEventListener('scroll', () => {
+    const ratio = wrap.scrollLeft / wrap.offsetWidth;
+    const isPanel1 = ratio > 0.5;
+    dot0.classList.toggle('active', !isPanel1);
+    dot1.classList.toggle('active', isPanel1);
+  }, { passive: true });
 }
 
 async function renderPartnerCard() {
