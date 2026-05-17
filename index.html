@@ -2088,11 +2088,13 @@ async function authLogout() {
   const _uid = currentUser?.id;
   currentUser = null; isGuest = false;
   answers = {}; userName = ''; partnerCode = null; linkedPartnerCode = null; appMode = 'solo';
-  // Remove both generic key and per-user key
-  localStorage.removeItem('apreez_v4');
-  if(_uid) localStorage.removeItem(`apreez_v4_${_uid}`);
-  localStorage.removeItem('apreez_v4_guest');
-  localStorage.removeItem('apreez_onboarding_seen');
+  naraChatHistory = []; naraAnswerSummary = '';
+  // Aggressively clear all apreez keys to prevent fast-path bleed on next login
+  try {
+    Object.keys(localStorage)
+      .filter(k => k.startsWith('apreez_'))
+      .forEach(k => localStorage.removeItem(k));
+  } catch(e) {}
   location.reload();
 }
 
@@ -3337,17 +3339,45 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   function showAuthScreen() { hideSplash(); document.getElementById('auth-screen').style.display='flex'; }
 
   // ── FAST PATH — Inarte pattern ──
-  // Returning user: if local cache exists, go straight to app. No waiting.
+  // Returning user: if local cache exists AND Supabase session matches, go straight to app.
+  // We verify the session first to prevent data bleed between accounts.
   const cachedUserId = _getCachedUserId();
-  if(cachedUserId) {
-    loadLocalState(cachedUserId);
-    if(userName && userName !== 'Tamu') {
-      currentUser = { id: cachedUserId };
-      hideSplash();
-      enterApp();
-      // Verify + sync in background — does not block UI
-      if(SB) _backgroundSessionSync();
-      return;
+  if(cachedUserId && SB) {
+    try {
+      const { data: { session } } = await SB.auth.getSession();
+      if(session?.user) {
+        if(session.user.id !== cachedUserId) {
+          // Different user logged in — clear stale cache and do full login
+          localStorage.removeItem(`apreez_v4_${cachedUserId}`);
+          localStorage.removeItem('apreez_v4');
+          await onLoginSuccess(session.user);
+          hideSplash();
+          return;
+        }
+        // Same user — safe to use fast path
+        loadLocalState(cachedUserId);
+        if(userName && userName !== 'Tamu') {
+          currentUser = session.user; // use real session object, not placeholder
+          hideSplash();
+          enterApp();
+          _backgroundSessionSync();
+          return;
+        }
+      } else {
+        // No active session — clear cache and show auth
+        localStorage.removeItem(`apreez_v4_${cachedUserId}`);
+        localStorage.removeItem('apreez_v4');
+      }
+    } catch(e) {
+      // Network error — fall back to cached data optimistically
+      loadLocalState(cachedUserId);
+      if(userName && userName !== 'Tamu') {
+        currentUser = { id: cachedUserId };
+        hideSplash();
+        enterApp();
+        if(SB) _backgroundSessionSync();
+        return;
+      }
     }
   }
 
