@@ -413,10 +413,10 @@ body {
 .nara-send-btn svg { width:16px; height:16px; stroke:white; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
 /* ── MODAL ── */
-.modal-overlay { position:fixed; inset:0; background:rgba(13,20,17,.32); backdrop-filter:blur(9px); z-index:200; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s var(--ease-smooth); }
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s var(--ease-smooth); }
 .modal-overlay.open { opacity:1; pointer-events:all; }
-.modal-sheet { background:var(--bg); border-radius:24px; width:min(680px, calc(100% - 28px)); max-height:84vh; display:flex; flex-direction:column; transform:translateY(8px) scale(.985); transition:transform .28s var(--ease-smooth); overflow:hidden; box-shadow:0 28px 72px rgba(0,0,0,.22); }
-.modal-overlay.open .modal-sheet { transform:translateY(0) scale(1); }
+.modal-sheet { background:var(--bg); border-radius:24px 24px 0 0; width:100%; max-width:640px; max-height:88vh; display:flex; flex-direction:column; transform:translateY(100%); transition:transform .35s var(--ease); overflow:hidden; }
+.modal-overlay.open .modal-sheet { transform:translateY(0); }
 .modal-handle { width:40px; height:4px; border-radius:2px; background:var(--border); margin:12px auto 0; flex-shrink:0; }
 .modal-header { padding:12px 20px 10px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); flex-shrink:0; }
 .modal-tab-label { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--pink); }
@@ -498,14 +498,6 @@ body {
 .nara-suggestions { display:flex; flex-wrap:wrap; gap:6px; padding:10px 16px 0; }
 .nara-suggestion-btn { font-size:11px; color:var(--card); background:var(--bg2); border:1px solid var(--card); border-radius:20px; padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:var(--transition); line-height:1.4; text-align:left; }
 .nara-suggestion-btn:hover { background:var(--card); color:white; }
-.nara-library { max-width:860px; margin:0 auto; width:100%; display:grid; gap:12px; }
-.nara-gate { background:rgba(255,255,255,.36); border:1px solid var(--border); border-radius:18px; padding:18px; color:var(--text2); line-height:1.7; }
-.nara-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-.nara-card { border:1px solid var(--border); border-radius:18px; padding:16px; background:linear-gradient(145deg, rgba(255,255,255,.45), rgba(244,241,232,.62)); cursor:pointer; }
-.nara-card h4 { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; color:var(--text); }
-.nara-entry { display:none; border:1px solid var(--border); border-radius:18px; padding:20px; background:rgba(255,255,255,.38); }
-.nara-entry.open { display:block; animation:fadeInSoft .35s var(--ease-smooth); }
-.nara-disclosure { font-size:11px; color:var(--text3); line-height:1.7; border-top:1px solid var(--border); padding-top:10px; margin-top:10px; }
 
 /* ── ONBOARDING ── */
 #s-onboarding { align-items:center; justify-content:center; background:var(--bg); }
@@ -711,11 +703,8 @@ body {
   backdrop-filter:blur(16px);
 }
 [data-theme="dark"] .home-progress-card,[data-theme="dark"] .home-nara-card,[data-theme="dark"] .journey-mosaic-card,[data-theme="dark"] .couple-status-card,[data-theme="dark"] .couple-partner-card { background:linear-gradient(145deg, rgba(37,45,37,.82), rgba(32,39,31,.62)); }
-.home-progress-card { padding:28px; max-width:680px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
-.home-context-card { border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.32); padding:14px 16px; font-size:13px; color:var(--text2); line-height:1.65; display:none; animation:fadeInSoft .7s var(--ease-smooth); }
-.home-context-card.visible { display:block; }
-.home-tiny-nara { font-size:13px; color:var(--text2); line-height:1.7; border-left:2px solid rgba(46,115,89,.26); padding-left:12px; }
-.home-progress-line { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:2px 0 6px; }
+.home-progress-card { padding:24px; }
+.home-progress-line { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:12px 0 18px; }
 .mode-badge { background:rgba(255,255,255,.36); border-color:var(--border); padding:8px 12px; margin-top:0; }
 .mosaic-wrap.home-mosaic-card { background:transparent; border:0; padding:0; border-radius:0; max-height:128px; overflow:hidden; position:relative; }
 .mosaic-wrap.home-mosaic-card::after { content:''; position:absolute; left:0; right:0; bottom:0; height:42px; background:linear-gradient(to bottom, rgba(251,248,241,0), var(--bg3)); pointer-events:none; }
@@ -730,13 +719,10 @@ body {
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
 }
 .mosaic-block.filled,.journey-mosaic-grid .mosaic-block.filled,.home-mosaic-card .mosaic-block.filled { background:var(--mosaic-fill) !important; opacity:1 !important; box-shadow:0 0 0 2px rgba(46,115,89,.10), 0 6px 14px rgba(46,115,89,.16); }
-.mosaic-block.half { background:linear-gradient(145deg, var(--mosaic-fill) 50%, var(--mosaic-empty) 50%); opacity:.78; }
-.journey-mosaic-grid .mosaic-block { transition:transform .25s var(--ease-smooth), box-shadow .3s var(--ease-smooth), opacity .25s var(--ease-smooth); }
-.journey-mosaic-grid .mosaic-block.tap-pulse { transform:scale(1.22); box-shadow:0 0 0 5px rgba(46,115,89,.12); }
 .mosaic-badge { border-radius:999px; background:var(--peach); }
 .home-cta {
   width:100%;
-  margin-top:2px;
+  margin-top:22px;
   padding:15px 18px;
   border:0;
   border-radius:999px;
@@ -748,14 +734,19 @@ body {
   cursor:pointer;
   box-shadow:0 14px 30px rgba(46,115,89,.20);
 }
-@keyframes fadeInSoft { from { opacity:0; transform:translateY(6px) scale(.995);} to {opacity:1; transform:translateY(0) scale(1);} }
+.home-secondary-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+.home-secondary-actions button { border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.34); color:var(--text2); padding:11px 12px; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; }
+.home-secondary-actions button:hover { color:var(--card); border-color:rgba(46,115,89,.24); }
+.home-nara-card { padding:24px; display:flex; flex-direction:column; justify-content:flex-end; min-height:260px; position:relative; overflow:hidden; }
+.home-nara-card::before { content:'✦'; position:absolute; right:24px; top:18px; color:var(--peach); font-size:34px; opacity:.7; }
+.home-nara-card p { font-family:'Cormorant Garamond',serif; font-size:clamp(23px,3vw,32px); line-height:1.25; margin:22px 0; color:var(--text); }
+.home-nara-card button { align-self:flex-start; border:1px solid var(--border); background:rgba(255,255,255,.35); color:var(--card); border-radius:999px; padding:10px 14px; font-family:'DM Sans',sans-serif; cursor:pointer; }
 .page-hero { max-width:760px; display:block; }
 .page-hero.centered { text-align:center; margin-left:auto; margin-right:auto; }
 .page-hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,7vw,68px); line-height:.98; font-weight:400; letter-spacing:-.04em; margin:10px 0 14px; }
 .page-hero p { color:var(--text2); font-size:15px; line-height:1.8; max-width:620px; }
 .page-hero.centered p { margin:0 auto; }
-.journey-mosaic-card { padding:clamp(22px,4vw,42px); max-width:860px; margin:0 auto; overflow:hidden; }
-.journey-canvas-wrap { position:relative; border-radius:18px; padding:10px; background:linear-gradient(145deg, rgba(255,255,255,.26), rgba(244,241,232,.18)); border:1px solid var(--border); }
+.journey-mosaic-card { padding:clamp(22px,4vw,42px); max-width:860px; margin:0 auto; }
 .journey-stat { text-align:center; margin-bottom:22px; }
 .journey-stat strong { font-family:'Cormorant Garamond',serif; font-size:48px; color:var(--card); font-weight:500; }
 .journey-stat span { color:var(--text3); margin-left:6px; }
@@ -766,42 +757,36 @@ body {
 .milestone-card { background:rgba(255,255,255,.34); border:1px solid var(--border); border-radius:22px; padding:16px; color:var(--text2); }
 .milestone-card strong { display:block; font-family:'Cormorant Garamond',serif; color:var(--text); font-size:20px; margin-bottom:4px; }
 .themes-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; align-items:stretch; }
-.theme-section-title { font-size:11px; letter-spacing:2.6px; text-transform:uppercase; color:var(--text3); margin:18px 0 10px; }
-.continue-themes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:8px; }
-.continue-item { border:1px solid var(--border); border-radius:14px; padding:12px 14px; background:rgba(255,255,255,.28); color:var(--text2); cursor:pointer; }
-.continue-item strong { display:block; color:var(--text); font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; }
-.continue-item span { font-size:12px; color:var(--text3); }
-.themes-grid .theme-card { min-height:108px; border:1px solid var(--border); border-radius:20px; padding:18px; background:linear-gradient(145deg, rgba(255,255,255,.52), rgba(244,241,232,.68)); box-shadow:var(--soft-shadow-sm); transition:transform .28s var(--ease-smooth), box-shadow .3s var(--ease-smooth); }
-.themes-grid .theme-card.growth-1 { background:linear-gradient(145deg, rgba(255,255,255,.58), rgba(242,236,220,.76)); }
-.themes-grid .theme-card.growth-2 { background:linear-gradient(145deg, rgba(252,247,235,.68), rgba(240,228,198,.70)); }
-.themes-grid .theme-card:hover { transform:translateY(-1px); }
-.theme-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; cursor:pointer; }
-.theme-title { font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--text); line-height:1.05; }
-.theme-subtle { font-size:12px; color:var(--text3); margin-top:4px; }
-.theme-open { border:1px solid var(--border); border-radius:999px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:var(--text2); }
-.theme-subthemes { display:none; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); gap:9px; }
-.theme-card.expanded .theme-subthemes { display:grid; animation:fadeInSoft .35s var(--ease-smooth); }
-.theme-subtheme { border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.34); padding:12px 13px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
-.theme-subtheme small { color:var(--text3); font-size:11px; }
-.utility-chip { border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.28); color:var(--text2); padding:8px 12px; font-size:11px; cursor:pointer; }
-.couple-status-card { padding:22px; max-width:980px; margin:0 auto 18px; }
-.couple-split { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.couple-pane { border:1px solid var(--border); border-radius:16px; padding:14px; background:rgba(255,255,255,.26); }
-.couple-pane.you { background:linear-gradient(145deg, rgba(245,235,220,.42), rgba(255,255,255,.26)); }
-.couple-pane.partner { background:linear-gradient(145deg, rgba(225,238,240,.34), rgba(255,255,255,.2)); }
+.themes-grid .tab-card {
+  min-height:104px;
+  background:linear-gradient(145deg, rgba(255,255,255,.56), rgba(244,241,232,.72));
+  border:1px solid var(--border);
+  box-shadow:var(--soft-shadow-sm);
+  color:var(--text);
+  padding:18px 20px;
+  flex-direction:row;
+  align-items:center;
+  justify-content:flex-start;
+  gap:16px;
+}
+.themes-grid .tab-card.alt1,.themes-grid .tab-card.alt2 { background:linear-gradient(145deg, rgba(255,255,255,.56), rgba(244,241,232,.72)); }
+.themes-grid .tab-name-tooltip { display:none; }
+.themes-grid .tab-icon { color:var(--card); width:30px; height:30px; margin:0; }
+.themes-grid .tab-name { display:block; color:var(--text); font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; }
+.themes-grid .tab-pct { color:var(--text3); font-size:12px; margin-left:auto; }
+.themes-grid .tab-card.profil-card { min-height:104px; }
+.themes-grid .tab-card.wedding-card .tab-icon { color:var(--pink); }
+.couple-status-card { padding:22px; max-width:680px; margin:0 auto 18px; }
 .couple-avatars { display:flex; align-items:center; justify-content:center; gap:18px; color:var(--text2); margin-bottom:18px; }
 .couple-avatar { width:92px; height:92px; border-radius:50%; background:linear-gradient(145deg,var(--bg3),var(--bg2)); display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--soft-shadow-sm); border:1px solid var(--border); }
 .couple-avatar strong { font-family:'Cormorant Garamond',serif; font-size:26px; line-height:1; color:var(--card); }
 .couple-avatar span { font-size:11px; color:var(--text3); margin-top:6px; }
 .couple-avatars i { color:var(--pink); font-style:normal; }
 .couple-note { margin-top:14px; color:var(--text3); font-size:12px; line-height:1.7; text-align:center; }
-.couple-presence { margin-top:10px; text-align:center; font-size:12px; color:var(--text3); }
 .couple-bars { display:grid; gap:10px; }
 .couple-bar-row { display:grid; grid-template-columns:90px 1fr auto; gap:10px; align-items:center; font-size:12px; color:var(--text2); }
 .couple-bar-track { height:8px; border-radius:999px; background:var(--mosaic-empty); overflow:hidden; }
 .couple-bar-fill { height:100%; border-radius:999px; background:var(--card); }
-.couple-soft-cta { margin-top:12px; text-align:center; }
-.couple-soft-cta button { border:1px solid var(--border); background:rgba(255,255,255,.3); color:var(--text2); padding:9px 14px; border-radius:999px; cursor:pointer; }
 .couple-partner-card { display:block; max-width:860px; margin:0 auto; padding:18px; }
 .app-bottom-nav {
   position:fixed;
@@ -869,14 +854,17 @@ body {
   .home-hero { display:block; }
   .home-actions { position:absolute; top:calc(16px + var(--safe-top)); right:16px; }
   .home-composition { grid-template-columns:minmax(0,1fr); gap:16px; }
-  .home-progress-card { width:100%; min-width:0; padding:18px; overflow:hidden; }
+  .home-progress-card,.home-nara-card { width:100%; min-width:0; padding:18px; overflow:hidden; }
   .home-progress-line { align-items:flex-start; flex-direction:column; gap:10px; }
   .mosaic-wrap.home-mosaic-card { width:100%; max-width:100%; max-height:112px; overflow:hidden; }
   .home-mosaic-card .mosaic-grid { width:100%; max-width:100%; max-height:104px; overflow:hidden; }
   .home-mosaic-card .mosaic-row { gap:3px; max-width:100%; }
   .home-mosaic-card .mosaic-block { width:7px; height:7px; }
   .home-cta { width:100%; max-width:100%; }
-  .home-context-card { font-size:12px; padding:12px 13px; }
+  .home-secondary-actions { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .home-secondary-actions button { min-width:0; padding:10px 8px; font-size:11px; }
+  .home-nara-card { min-height:auto; padding-bottom:24px; }
+  .home-nara-card p { font-size:clamp(28px,10vw,42px); line-height:1.22; }
   .journey-mosaic-card { margin-left:0; margin-right:0; padding:18px 12px; overflow:hidden; }
   .journey-mosaic-grid { align-items:flex-start; overflow-x:auto; overflow-y:hidden; width:100%; gap:3px; padding:8px 2px 12px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
   .journey-mosaic-grid::-webkit-scrollbar { display:none; }
@@ -886,11 +874,10 @@ body {
   .journey-stat strong { font-size:34px; }
   .journey-stat span { display:block; margin:2px 0 0; font-size:12px; }
   .journey-milestones { grid-template-columns:1fr; gap:10px; }
-  .themes-grid,.continue-themes { grid-template-columns:1fr; gap:12px; }
-  .theme-title { font-size:24px; }
-  .nara-cards { grid-template-columns:1fr; }
+  .themes-grid { grid-template-columns:1fr; gap:12px; }
+  .themes-grid .tab-card { min-height:104px; }
+  .themes-grid .tab-name { font-size:22px; }
   .couple-bar-row { grid-template-columns:74px 1fr auto; }
-  .couple-split { grid-template-columns:1fr; }
   .dash-greeting {
     padding-right:92px;
     font-size:clamp(34px,10.5vw,42px);
@@ -1074,8 +1061,7 @@ body {
 
     <main class="home-composition">
       <section class="home-progress-card">
-        <div class="home-card-kicker" id="home-quote">Tidak semua jawaban harus ditemukan hari ini.</div>
-        <button class="home-cta" id="home-cta" onclick="continueReflection()">Mulai dari mana saja</button>
+        <div class="home-card-kicker">Perjalanan refleksimu</div>
         <div class="home-progress-line">
           <div class="mosaic-count" id="mosaic-count">0 <span>/ 0 pertanyaan</span></div>
           <button class="mode-badge" id="mode-badge" onclick="showModeSettings()">
@@ -1084,12 +1070,21 @@ body {
             <span class="sync-dot" id="sync-dot" title="Status sinkronisasi"></span>
           </button>
         </div>
-        <div class="mosaic-wrap home-mosaic-card" onclick="goTo('s-journey')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')goTo('s-journey')">
+        <div class="mosaic-wrap home-mosaic-card">
           <div class="mosaic-grid" id="mosaic-grid"></div>
         </div>
-        <div class="home-context-card" id="home-context-card"></div>
-        <div class="home-tiny-nara" id="home-nara-insight">Perjalananmu bisa dimulai dari mana saja.</div>
+        <button class="home-cta" onclick="continueReflection()">Lanjutkan refleksi →</button>
+        <div class="home-secondary-actions">
+          <button onclick="goTo('s-wedding')">Rencana pernikahan</button>
+          <button onclick="downloadPDF()">Unduh PDF</button>
+        </div>
       </section>
+
+      <aside class="home-nara-card">
+        <div class="home-card-kicker">Pesan dari Nara</div>
+        <p id="home-nara-insight">Setiap jawaban kecil adalah latihan mengenal diri dengan lebih jujur.</p>
+        <button onclick="openNara()">Dengar perspektif Nara</button>
+      </aside>
     </main>
   </div>
 </div>
@@ -1101,10 +1096,10 @@ body {
       <div class="page-kicker">Perjalanan Refleksimu</div>
       <h1>Mosaik yang tumbuh bersama jawabanmu</h1>
       <p>Ketuk titik mana pun untuk membuka pertanyaan. Mosaik ini adalah peta, navigasi, dan jejak perjalanan pra-nikahmu.</p>
-      <button class="utility-chip" onclick="openProfileUtility()">Profile & Archive</button>
     </header>
+    <section class="journey-mosaic-card">
       <div class="journey-stat"><strong id="journey-filled">0</strong><span id="journey-total">/ 0 pertanyaan dijawab</span></div>
-      <div class="journey-canvas-wrap"><div class="journey-mosaic-grid" id="journey-mosaic-grid"></div></div>
+      <div class="journey-mosaic-grid" id="journey-mosaic-grid"></div>
     </section>
     <section class="journey-milestones" id="journey-milestones"></section>
   </div>
@@ -1117,8 +1112,8 @@ body {
       <div class="page-kicker">Tema refleksi</div>
       <h1>Pilih ruang yang ingin kamu masuki hari ini</h1>
       <p>Tema-tema ini tidak perlu dikejar sekaligus. Datangi pelan-pelan, sesuai kesiapan hatimu.</p>
-      <button class="utility-chip" onclick="openProfileUtility()">Profile & Archive</button>
-    </header>Continue Exploring</div><div class="continue-themes" id="continue-themes"></div><div class="theme-section-title">All Themes</div><div class="tab-grid themes-grid" id="tab-grid"></div>
+    </header>
+    <div class="tab-grid themes-grid" id="tab-grid"></div>
   </div>
 </div>
 
@@ -1137,9 +1132,7 @@ body {
         <div class="couple-avatar"><strong id="couple-partner-initial">?</strong><span id="couple-partner-label">Pasangan</span></div>
       </div>
       <div class="couple-bars" id="couple-bars"></div>
-      <div class="couple-presence" id="couple-presence">Kehadiran kalian terbaca dengan ritme yang berbeda, dan itu wajar.</div>
-      <div class="couple-note">Ruang ini menampilkan jejak kehadiran, bukan penilaian hubungan.</div>
-      <div class="couple-soft-cta" id="couple-soft-cta"></div>
+      <div class="couple-note">Apreez membaca pola jawaban dan ritme refleksi kalian; tidak perlu menebak gender untuk membuat perbandingan terasa personal.</div>
     </section>
     <div class="partner-card couple-partner-card" id="partner-card">
       <div class="partner-card-header">
@@ -1206,13 +1199,20 @@ body {
     <div class="sub-header-info"><div class="sub-header-name" style="font-family:'Cormorant Garamond',serif;font-style:italic;">Nara</div><div class="nara-header-sub">AI Companion · Part of Inarte</div></div>
     
   </div>
-  <div class="nara-chat-area">
-    <div class="nara-library">
-      <div class="nara-gate" id="nara-gate"></div>
-      <div class="nara-cards" id="nara-cards"></div>
-      <div class="nara-entry" id="nara-entry"></div>
-      <div class="nara-disclosure">Nara adalah AI pendamping refleksi, bukan pengganti profesional. Jika ada hal yang terasa berat atau membutuhkan bantuan lebih lanjut, jangan ragu mencari dukungan dari profesional terpercaya.</div>
+  <div class="nara-chat-area" id="nara-chat-area">
+    <div class="nara-intro-bubble">
+      <div class="nara-intro-name">Nara</div>
+      <div class="nara-intro-text">Hei! Aku Nara, teman refleksimu di Apreez. Aku di sini untuk membaca jawabanmu, memberi perspektif, dan menemanimu memahami diri sendiri — sebelum kamu melangkah ke jenjang berikutnya.</div>
+      <div class="nara-threshold-note" id="nara-threshold-note"></div>
     </div>
+  </div>
+  <div id="nara-usage-info" style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;letter-spacing:.3px;"></div>
+  <div class="nara-suggestions" id="nara-suggestions"></div>
+  <div class="nara-input-row">
+    <textarea class="nara-input" id="nara-input" placeholder="Tanya Nara sesuatu..." rows="1" onkeydown="handleNaraKey(event)" oninput="autoResizeNaraInput(this)"></textarea>
+    <button class="nara-send-btn" id="nara-send-btn" onclick="sendNaraMessage()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+    </button>
   </div>
 </div>
 
@@ -1227,7 +1227,7 @@ body {
     <div class="modal-progress-bar"><div class="modal-progress-fill" id="modal-prog-fill"></div></div>
     <div class="modal-body" id="modal-body">
       <div class="modal-question" id="modal-question"></div>
-      <textarea class="modal-textarea" id="modal-ta" placeholder="Tulis jawabanmu dengan jujur..." rows="5" oninput="autoResizeModalTextarea()"></textarea>
+      <textarea class="modal-textarea" id="modal-ta" placeholder="Tulis jawabanmu dengan jujur..." rows="5"></textarea>
     </div>
     <div class="modal-actions">
       <div class="modal-nav">
@@ -1332,7 +1332,6 @@ let partnerCode = null, linkedPartnerCode = null;
 let currentTabIdx = 0, currentSubIdx = 0, currentQIdx = 0;
 let isDark = false, saveTimer = null, isGuest = false;
 let openedFromMosaic = false; // ← NEW: flag for mosaic single-question mode
-let openedQuestions = {}; // track opened-but-not-answered journey dots
 
 function _lsKey() {
   // Isolate per-user so switching accounts never bleeds data
@@ -1354,19 +1353,18 @@ function loadLocalState(userId = null) {
       partnerCode = typeof d.partnerCode === 'string' ? d.partnerCode : null;
       linkedPartnerCode = typeof d.linkedPartnerCode === 'string' ? d.linkedPartnerCode : null;
       isGuest = typeof d.isGuest === 'boolean' ? d.isGuest : false;
-      openedQuestions = (d.openedQuestions && typeof d.openedQuestions==='object' && !Array.isArray(d.openedQuestions)) ? d.openedQuestions : {};
     } else {
-      answers={}; userName=''; appMode='solo'; partnerCode=null; linkedPartnerCode=null; openedQuestions={};
+      answers={}; userName=''; appMode='solo'; partnerCode=null; linkedPartnerCode=null;
     }
   } catch(e) {
     // Corrupt localStorage entry — reset to safe defaults
     console.warn('[Apreez] Corrupt local state, resetting.', e.message);
-    answers={}; userName=''; appMode='solo'; partnerCode=null; linkedPartnerCode=null; openedQuestions={};
+    answers={}; userName=''; appMode='solo'; partnerCode=null; linkedPartnerCode=null;
     try { localStorage.removeItem(userId ? `apreez_v4_${userId}` : _lsKey()); } catch(_) {}
   }
 }
 function saveLocalState() {
-  try { localStorage.setItem(_lsKey(), JSON.stringify({answers,userName,isDark,appMode,partnerCode,linkedPartnerCode,isGuest,openedQuestions})); } catch(e) {}
+  try { localStorage.setItem(_lsKey(), JSON.stringify({answers,userName,isDark,appMode,partnerCode,linkedPartnerCode,isGuest})); } catch(e) {}
 }
 function saveState() {
   saveLocalState();
@@ -1989,33 +1987,12 @@ function getEmpathyPhrase(filled, total) {
   if(total===0) return 'Selamat datang di Apreez';
   const p=filled/total;
   if(filled===0) return 'Ruang ini menunggumu — tidak ada terburu-buru.';
-  if(p<=.15) return `${filled} dari ${total} jejak — cap cip cup boleh dimulai dari mana saja.`;
-  if(p<=.35) return `${filled} dari ${total} jejak — pelan-pelan, ritmemu sudah terasa.`;
-  if(p<=.55) return `${filled} dari ${total} jejak — kamu boleh lanjut kapan pun terasa pas.`;
-  if(p<=.75) return `${filled} dari ${total} jejak — ruang refleksimu makin hidup.`;
-  if(p<1) return `${filled} dari ${total} jejak — pilih titik berikutnya dengan santai, ${userName}.`;
-  return `${total} dari ${total} jejak — kamu sudah menenun semuanya, ${userName}.`;
-}
-
-
-function getHomeState() {
-  const filled = getFilledQ();
-  const completed = getCompletedThemes();
-  if(appMode === 'couple' && linkedPartnerCode) return 'couple_active';
-  if(completed >= 1) return 'theme_completion';
-  if(filled === 0) return 'new_user';
-  if(filled <= 4) return 'returning_user';
-  return 'active_user';
-}
-function getHomeCopyByState() {
-  const map = {
-    new_user: { greeting:'Selamat datang di Apreez.', quote:'Perjalananmu bisa dimulai dari mana saja.', cta:'Mulai dari mana saja', context:'Tidak perlu urut. Coba cap cip cup di mosaik, lalu mulai dari titik yang paling terasa dekat hari ini.', insight:'Tidak semua jawaban harus ditemukan hari ini.' },
-    active_user: { greeting:'Senang melihatmu kembali.', quote:'Beberapa perjalanan memang perlu jeda.', cta:'Temukan refleksi hari ini', context:'Kalau bingung mulai dari mana, cap cip cup dulu di mosaik. Lanjutkan saat hatimu siap.', insight:'Ada ketenangan yang konsisten dalam cara kamu menulis akhir-akhir ini.' },
-    returning_user: { greeting:'Senang melihatmu kembali.', quote:'Kamu boleh melanjutkan kapan saja, tanpa terburu-buru.', cta:'Buka pertanyaan acak', context:'Ritmemu tetap valid. Tidak ada langkah yang terlambat di ruang ini.', insight:'Kamu kembali dengan ritme yang lebih pelan, dan itu tidak apa-apa.' },
-    couple_active: { greeting:'Senang melihatmu kembali.', quote:'Percakapan baik tumbuh dari ruang yang tenang.', cta:'Temukan refleksi hari ini', context:'Kamu dan pasanganmu sedang membangun ruang dengar yang sama. Tidak perlu seragam untuk bisa saling memahami.', insight:'Kamu sering menyebut rasa tenang saat berbicara tentang pasanganmu.' },
-    theme_completion: { greeting:'Perjalananmu perlahan mulai membentuk pola.', quote:'Satu tema selesai, namun ruang refleksi tetap terbuka.', cta:'Temukan refleksi hari ini', context:'Terima kasih sudah hadir dengan jujur. Langkah berikutnya bisa diambil pelan-pelan.', insight:'Cara kamu menyelesaikan satu tema menunjukkan konsistensi yang lembut.' }
-  };
-  return map[getHomeState()] || map.active_user;
+  if(p<=.15) return `${filled} dari ${total} pertanyaan — setiap kata yang kamu tulis berarti.`;
+  if(p<=.35) return `${filled} dari ${total} pertanyaan — kamu sudah berani membuka diri.`;
+  if(p<=.55) return `${filled} dari ${total} pertanyaan — separuh perjalanan, dan kamu masih di sini.`;
+  if(p<=.75) return `${filled} dari ${total} pertanyaan — kejujuranmu luar biasa.`;
+  if(p<1) return `${filled} dari ${total} pertanyaan — sebentar lagi, ${userName}.`;
+  return `${total} dari ${total} pertanyaan — kamu sudah sampai, ${userName}.`;
 }
 
 // ══ NAVIGATION ══
@@ -2042,10 +2019,9 @@ function renderDashboard() {
     if(greet) {
       const displayName = userName && userName.split(' ')[0].length > 0 && userName.length > 13
         ? userName.split(' ')[0] : userName;
-      const homeCopy = getHomeCopyByState();
-      greet.innerHTML=`${homeCopy.greeting} <em>${displayName}</em> <button class="edit-pencil" onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:0 4px;color:var(--text3);font-size:16px;vertical-align:middle;opacity:.5;transition:opacity .2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.5">✎</button>`;
+      greet.innerHTML=`${getGreeting()}, <em>${displayName}!</em> <button class="edit-pencil" onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:0 4px;color:var(--text3);font-size:16px;vertical-align:middle;opacity:.5;transition:opacity .2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.5">✎</button>`;
     }
-    renderTabGrid(); renderMosaic(); renderHomeStateSystem(); renderCouplePage();
+    renderTabGrid(); renderMosaic(); updateEmpathyPhrase(); renderHomeInsight(); renderCouplePage();
     const fc=document.getElementById('mosaic-count');
     if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`;
   }, 16);
@@ -2081,7 +2057,7 @@ async function renderPartnerCard() {
 
   try {
     const {data, error} = await SB.from('apreez_sessions')
-      .select('answers, user_name, updated_at')
+      .select('answers, user_name')
       .eq('partner_code', linkedPartnerCode)
       .maybeSingle();
 
@@ -2108,13 +2084,42 @@ async function renderPartnerCard() {
     const pFilled = Object.values(pAnswers).filter(v=>v&&v.trim()).length;
     const pTotal = getTotalQ();
     const pPct = pTotal > 0 ? Math.round(pFilled/pTotal*100) : 0;
-    const recentLabel = data.updated_at ? getLastActiveLabel(data.updated_at) : 'baru saja hadir';
-    partnerPresenceLabel = recentLabel;
 
     titleEl.innerHTML = `<em>${pName}</em>`;
-    statusEl.textContent = `Terhubung`;
+    statusEl.textContent = `${pPct}% selesai`;
     statusEl.className = 'partner-card-status connected';
-    bodyEl.innerHTML = `<div class="partner-card-waiting"><strong>Kehadiran pasanganmu terasa</strong>${pName} sudah mengisi sebagian ruang refleksi. Kamu bisa lanjut dengan ritmemu sendiri, tanpa perlu menyamakan kecepatan.<div class="partner-card-meta">Jejak refleksi: ${pPct}% · ${recentLabel}</div></div>`;
+
+    // Render mosaic pasangan
+    let mosaicHtml = '<div class="partner-mosaic-wrap">';
+    TABS.forEach(tab => {
+      mosaicHtml += '<div class="partner-mosaic-row">';
+      if(tab.isProfil) {
+        tab.fields.forEach((f,i) => {
+          const filled = !!pAnswers[`profil__field__${i}`]?.trim();
+          mosaicHtml += `<div class="partner-mosaic-block${filled?' filled':''}"></div>`;
+        });
+      } else {
+        tab.subtabs?.forEach((st,si) => st.questions.forEach((_,qi) => {
+          const key = `${tab.id}__${si}__${qi}`;
+          const filled = !!pAnswers[key]?.trim();
+          mosaicHtml += `<div class="partner-mosaic-block${filled?' filled':''}"></div>`;
+        }));
+      }
+      mosaicHtml += '</div>';
+    });
+    if(typeof WEDDING_TAB !== 'undefined') {
+      mosaicHtml += '<div class="partner-mosaic-row partner-wedding-row">';
+      WEDDING_TAB.subtabs.forEach((st, si) => {
+        st.questions.forEach((_, qi) => {
+          const filled = !!pAnswers[getWeddingQId(si, qi)]?.trim();
+          mosaicHtml += `<div class="partner-mosaic-block${filled?' filled':''}"></div>`;
+        });
+      });
+      mosaicHtml += '</div>';
+    }
+    mosaicHtml += '</div>';
+    mosaicHtml += `<div class="partner-card-meta">${pFilled} dari ${pTotal} pertanyaan dijawab · Diperbarui saat kamu buka Nara</div>`;
+    bodyEl.innerHTML = mosaicHtml;
     renderCouplePage();
 
   } catch(e) {
@@ -2131,21 +2136,14 @@ function getProgressPct() {
   const total = getTotalQ();
   return total > 0 ? Math.round(getFilledQ() / total * 100) : 0;
 }
-function renderHomeStateSystem() {
-  const copy = getHomeCopyByState();
-  const sub = document.getElementById('dash-sub');
-  const quote = document.getElementById('home-quote');
-  const cta = document.getElementById('home-cta');
-  const context = document.getElementById('home-context-card');
-  const insight = document.getElementById('home-nara-insight');
-  if(sub) sub.textContent = copy.quote;
-  if(quote) quote.textContent = copy.quote;
-  if(cta) cta.textContent = copy.cta;
-  if(context) {
-    context.textContent = copy.context;
-    context.classList.toggle('visible', !!copy.context);
-  }
-  if(insight) insight.textContent = copy.insight;
+function renderHomeInsight() {
+  const el = document.getElementById('home-nara-insight');
+  if(!el) return;
+  const filled = getFilledQ();
+  if(filled === 0) el.textContent = 'Mulailah dari satu pertanyaan yang terasa paling mudah. Refleksi yang aman tidak perlu terburu-buru.';
+  else if(getProgressPct() < 20) el.textContent = 'Kamu sedang membangun bahasa untuk memahami dirimu sendiri. Pelan-pelan, setiap jawaban punya bobot.';
+  else if(appMode === 'couple') el.textContent = 'Saat kalian siap, perbedaan jawaban bisa menjadi undangan untuk saling mendengar, bukan saling menilai.';
+  else el.textContent = 'Ada pola yang mulai terlihat dari jawabanmu. Datang ke Nara saat kamu ingin membacanya dengan lebih lembut.';
 }
 function continueReflection() {
   for(let ti=0; ti<TABS.length; ti++) {
@@ -2181,14 +2179,6 @@ function renderJourneyMilestones() {
     `<div class="milestone-card"><strong>${nextGroup ? nextGroup.name : 'Lengkap'}</strong>${nextGroup ? 'Tema berikutnya yang menunggu.' : 'Perjalanan utama sudah selesai.'}</div>`
   ].join('');
 }
-function getLastActiveLabel(iso) {
-  try {
-    const d = Math.floor((Date.now() - new Date(iso).getTime()) / (1000*60*60*24));
-    if(d <= 1) return 'baru saja hadir';
-    if(d <= 4) return 'hadir beberapa hari lalu';
-    return 'hadir beberapa waktu lalu';
-  } catch(_) { return 'baru saja hadir'; }
-}
 function renderCouplePage() {
   const el=document.getElementById('couple-bars');
   if(!el) return;
@@ -2202,11 +2192,10 @@ function renderCouplePage() {
   const yi=document.getElementById('couple-you-initial'), yl=document.getElementById('couple-you-label'), pi=document.getElementById('couple-partner-initial'), pl=document.getElementById('couple-partner-label');
   if(yi) yi.textContent=youInitial; if(yl) yl.textContent=youLabel;
   if(pi) pi.textContent=partnerInitial; if(pl) pl.textContent=partnerAnswers?partnerLabel:'Pasangan';
-  const pr=document.getElementById('couple-presence');
-  if(pr) pr.textContent = partnerAnswers ? `${partnerLabel} ${partnerPresenceLabel}. Kalian boleh berjalan dengan ritme masing-masing.` : 'Belum terhubung. Kamu bisa mengundang pasangan kapan pun saat siap.';
-  const cta=document.getElementById('couple-soft-cta');
-  if(cta) cta.innerHTML = linkedPartnerCode ? '' : '<button onclick="showModeSettings()">Hubungkan pasangan</button>';
-  el.innerHTML = `<div class="couple-split"><div class="couple-pane you"><div class="couple-bar-row"><span>${youLabel}</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${minePct}%"></div></div><span>${mine}/${total}</span></div></div><div class="couple-pane partner"><div class="couple-bar-row"><span>${partnerAnswers?partnerLabel:'Pasangan'}</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${partnerPct}%;background:var(--pink)"></div></div><span>${partnerAnswers?`${partnerCount}/${total}`:'menunggu'}</span></div></div></div>`;
+  el.innerHTML = `
+    <div class="couple-bar-row"><span>${youLabel}</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${minePct}%"></div></div><span>${mine}/${total}</span></div>
+    <div class="couple-bar-row"><span>${partnerAnswers?partnerLabel:'Pasangan'}</span><div class="couple-bar-track"><div class="couple-bar-fill" style="width:${partnerPct}%;background:var(--pink)"></div></div><span>${partnerAnswers?`${partnerCount}/${total}`:'menunggu'}</span></div>
+  `;
 }
 function renderBottomNav(activeId='s-dashboard') {
   const screens = new Set(['s-dashboard','s-journey','s-themes','s-couple','s-nara']);
@@ -2274,14 +2263,9 @@ function renderMosaicInto(grid, {preview=false}={}) {
     group.questions.forEach(q=>{
       const block=document.createElement('div'); block.className='mosaic-block';
       const filled = q.isWedding ? isWeddingAnswered(q.subIdx,q.qIdx) : (q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx,q.subIdx,q.qIdx));
-      const opened = wasQuestionOpened(q);
       if(filled) block.classList.add('filled');
-      else if(opened && !preview) block.classList.add('half');
       block.title=group.name;
       block.onclick=()=>{
-        block.classList.add('tap-pulse'); setTimeout(()=>block.classList.remove('tap-pulse'), 220);
-        try { navigator.vibrate && navigator.vibrate(8); } catch(_) {}
-        if(!filled) markQuestionOpened(q);
         if(q.isWedding) {
           openWeddingQuestion(q.subIdx,q.qIdx);
           openedFromMosaic = true;
@@ -2319,52 +2303,38 @@ function renderMosaicBadge(row,groupOrTi) {
 // ══ TAB GRID ══
 function renderTabGrid() {
   const grid=document.getElementById('tab-grid'); if(!grid) return; grid.innerHTML='';
-  const continueEl=document.getElementById('continue-themes');
-  if(continueEl){
-    const ranked=TABS.map((t,ti)=>({ti,name:t.name,filled:getTabFilled(ti),total:getTabTotal(ti)})).filter(t=>!TABS[t.ti].isProfil && t.filled>0).sort((a,b)=>b.filled-a.filled).slice(0,2);
-    continueEl.innerHTML = ranked.length ? ranked.map(r=>`<div class="continue-item" onclick="openTab(${r.ti})"><strong>${r.name}</strong><span>Lanjutkan dengan ritmemu sendiri</span></div>`).join('') : `<div class="continue-item" style="grid-column:1/-1;"><strong>Mulai dari tema mana saja</strong><span>Tidak perlu urut. Pilih ruang refleksi yang terasa dekat hari ini.</span></div>`;
-  }
-
+  const colors=['','alt1','alt2'];
   TABS.forEach((tab,ti)=>{
-    if(tab.isProfil) return;
-    const total=getTabTotal(ti), filled=getTabFilled(ti);
-    const growthClass = filled===0 ? '' : (filled<Math.ceil(total*0.5) ? 'growth-1' : 'growth-2');
-    const card=document.createElement('div');
-    card.className=`theme-card ${growthClass}`;
-    card.innerHTML=`<div class="theme-head" onclick="toggleThemeCard(this)"><div><div class="theme-title">${tab.name}</div><div class="theme-subtle">${tab.desc}</div></div><div class="theme-open">⌄</div></div><div class="theme-subthemes">${tab.subtabs.map((st,si)=>{ const sf=st.questions.filter((_,qi)=>isAnswered(ti,si,qi)).length; const completed = sf===st.questions.length && st.questions.length>0; return `<div class="theme-subtheme" onclick="openQList(${ti},${si})"><div><div>${st.name}</div><small>${completed?'Selesai dengan tenang':'Buka bab refleksi ini'}</small></div><small>${st.questions.length} refleksi</small></div>`; }).join('')}</div>`;
+    const card=document.createElement('div'); const ci=ti%3;
+    card.className='tab-card'+(tab.isProfil?' profil-card':` ${colors[ci]}`);
+    const total=getTabTotal(ti), filled=getTabFilled(ti), pct=total>0?Math.round(filled/total*100):0;
+    const icon=ICONS[tab.icon]||'';
+    if(tab.isProfil) { card.innerHTML=`<span class="tab-name" style="display:flex;align-items:center;gap:8px;"><span class="tab-icon" style="width:16px;height:16px;margin-bottom:0;flex-shrink:0;">${icon}</span>${tab.name}</span><span class="tab-pct">${pct}%</span>`; }
+    else {
+      card.innerHTML=`<div class="tab-name-tooltip">${tab.name}</div><div class="tab-icon">${icon}</div><div><div class="tab-name">${tab.name}</div><div class="tab-pct">${filled}/${total} terjawab</div></div>`;
+    }
+    let _tapped=false, _tapTimer=null;
+    card.onclick=(e)=>{
+      if(window.innerWidth<=600 && !tab.isProfil) {
+        if(!_tapped) {
+          _tapped=true; card.classList.add('tapped');
+          _tapTimer=setTimeout(()=>{ _tapped=false; card.classList.remove('tapped'); }, 1500);
+          return;
+        }
+        clearTimeout(_tapTimer); _tapped=false; card.classList.remove('tapped');
+      }
+      openTab(ti);
+    };
     grid.appendChild(card);
   });
-}
-function toggleThemeCard(el){
-  const card = el.closest('.theme-card');
-  if(!card) return;
-  card.classList.toggle('expanded');
-}
-
-
-function getJourneyQuestionKey(q) {
-  if(q.isWedding) return `w__${q.subIdx}__${q.qIdx}`;
-  if(q.isField) return `f__${q.fieldIdx}`;
-  return `q__${q.tabIdx}__${q.subIdx}__${q.qIdx}`;
-}
-function markQuestionOpened(q) { openedQuestions[getJourneyQuestionKey(q)] = true; saveLocalState(); }
-function wasQuestionOpened(q) { return !!openedQuestions[getJourneyQuestionKey(q)]; }
-function autoResizeModalTextarea() {
-  const ta = document.getElementById('modal-ta'); if(!ta) return;
-  ta.style.height='auto'; ta.style.height=Math.max(136, ta.scrollHeight) + 'px';
-}
-
-
-function getJourneyQuestionKey(q) {
-  if(q.isWedding) return `w__${q.subIdx}__${q.qIdx}`;
-  if(q.isField) return `f__${q.fieldIdx}`;
-  return `q__${q.tabIdx}__${q.subIdx}__${q.qIdx}`;
-}
-function markQuestionOpened(q) { openedQuestions[getJourneyQuestionKey(q)] = true; saveLocalState(); }
-function wasQuestionOpened(q) { return !!openedQuestions[getJourneyQuestionKey(q)]; }
-function autoResizeModalTextarea() {
-  const ta = document.getElementById('modal-ta'); if(!ta) return;
-  ta.style.height='auto'; ta.style.height=Math.max(136, ta.scrollHeight) + 'px';
+  if(typeof WEDDING_TAB!=='undefined') {
+    const total=getWeddingTotal(), filled=getWeddingFilled(), pct=total>0?Math.round(filled/total*100):0;
+    const card=document.createElement('div');
+    card.className='tab-card wedding-card';
+    card.innerHTML=`<div class="tab-name-tooltip">${WEDDING_TAB.name}</div><div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="tab-name">${WEDDING_TAB.name}</div><div class="tab-pct">${filled}/${total} terjawab</div></div>`;
+    card.onclick=()=>goTo('s-wedding');
+    grid.appendChild(card);
+  }
 }
 
 // ══ MOSAIC SINGLE QUESTION (new) ══
@@ -2384,10 +2354,8 @@ function openMosaicQuestion(ti, si, qi) {
   document.getElementById('modal-ta').value = answers[key] || '';
   document.getElementById('modal-prev').disabled = true;
   document.getElementById('modal-next').disabled = true;
-  document.getElementById('modal-save').textContent = 'Save';
-  markQuestionOpened({tabIdx:ti,subIdx:si,qIdx:qi});
   document.getElementById('modal-overlay').classList.add('open', 'mosaic-mode');
-  setTimeout(()=>autoResizeModalTextarea(), 120);
+  setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 
 // ══ TAB SCREEN ══
@@ -2449,7 +2417,7 @@ function openProfilFieldModal(startFieldIdx) {
   let startIdx=0; modalQ.forEach((q,i)=>{ if(q.fieldIdx===startFieldIdx) startIdx=i; });
   currentQIdx=startIdx; renderProfilModal();
   document.getElementById('modal-overlay').classList.add('open');
-  setTimeout(()=>autoResizeModalTextarea(), 120);
+  setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderProfilModal() {
   const q=modalQ[currentQIdx]; if(!q) return;
@@ -2472,7 +2440,7 @@ function openModal(ti,si,qi) {
   let startIdx=0; modalQ.forEach((q,i)=>{ if(q.subIdx===si&&q.qIdx===qi) startIdx=i; });
   currentQIdx=startIdx; renderModal();
   document.getElementById('modal-overlay').classList.add('open');
-  setTimeout(()=>autoResizeModalTextarea(), 120);
+  setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderModal() {
   const q=modalQ[currentQIdx]; if(!q) return;
@@ -2485,7 +2453,6 @@ function renderModal() {
   document.getElementById('modal-prog-fill').style.width=Math.round((currentQIdx+1)/total*100)+'%';
   document.getElementById('modal-pos').textContent=`${currentQIdx+1} / ${total}`;
   document.getElementById('modal-ta').value=val;
-  autoResizeModalTextarea();
   const body=document.getElementById('modal-body'); body.style.animation='none'; body.offsetHeight; body.style.animation='';
   document.getElementById('modal-prev').disabled=currentQIdx===0;
   document.getElementById('modal-next').disabled=currentQIdx===total-1;
@@ -2518,8 +2485,10 @@ function modalSave() {
   }
 
   // if opened from mosaic, close after saving — don't advance
-  closeModal();
-  if(isWedding) { renderWedding(); }
+  if(openedFromMosaic) { closeModal(); return; }
+
+  if(currentQIdx<modalQ.length-1) { currentQIdx++; if(isWedding) renderWeddingModal(); else renderModal(); }
+  else { closeModal(); if(isWedding) { renderWedding(); goTo('s-wedding'); } }
 }
 function modalPrev() {
   const q=modalQ[currentQIdx], val=document.getElementById('modal-ta').value;
@@ -2547,7 +2516,7 @@ function closeModal() {
   }
   document.getElementById('modal-overlay').classList.remove('open','mosaic-mode');
   openedFromMosaic = false;
-  renderMosaic(); renderJourneyMosaic(); renderTabGrid(); updateMosaicCounts(); renderHomeStateSystem(); renderJourneyMilestones(); renderCouplePage();
+  renderMosaic(); renderJourneyMosaic(); renderTabGrid(); updateMosaicCounts(); renderHomeInsight(); renderJourneyMilestones(); renderCouplePage();
 }
 function handleModalOverlayClick(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
 function animateMosaicBlock(ti,si,qi,filled) {
@@ -2555,22 +2524,16 @@ function animateMosaicBlock(ti,si,qi,filled) {
   const blocks=rows[ti].querySelectorAll('.mosaic-block'); let flatIdx=0; let found=false;
   TABS[ti].subtabs?.forEach((st,stIdx)=>st.questions.forEach((_,qIdx)=>{ if(stIdx===si&&qIdx===qi) found=true; if(!found) flatIdx++; }));
   const block=blocks[flatIdx]; if(!block) return;
-  if(filled) {
-    block.classList.add('filled');
-    block.classList.remove('half');
-  } else {
-    block.classList.remove('filled');
-    block.classList.add('half');
-  }
+  if(filled) block.classList.add('filled'); else block.classList.remove('filled');
   block.classList.remove('just-filled'); block.offsetHeight; block.classList.add('just-filled');
   setTimeout(()=>block.classList.remove('just-filled'), 400);
 }
 function openQuestion(ti,si,qi) { openModal(ti,si,qi); }
 
 // ══ LIVE UPDATES ══
-function updateMosaicBlock() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderMosaic(); renderJourneyMosaic(); renderHomeStateSystem(); renderJourneyMilestones(); renderCouplePage(); }
-function updateMosaicCounts() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderHomeStateSystem(); }
-function updateTabCard(ti) { renderTabGrid(); }
+function updateMosaicBlock() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderMosaic(); renderJourneyMosaic(); renderHomeInsight(); renderJourneyMilestones(); renderCouplePage(); }
+function updateMosaicCounts() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderHomeInsight(); }
+function updateTabCard(ti) { const cards=document.querySelectorAll('#tab-grid .tab-card'); if(cards[ti]) { const pct=getTabTotal(ti)>0?Math.round(getTabFilled(ti)/getTabTotal(ti)*100):0; const pe=cards[ti].querySelector('.tab-pct'); if(pe) pe.textContent=pct+'%'; } }
 
 // ══ KATA NARA ══
 let naraChatHistory=[], naraAnswerSummary='', naraIsTyping=false;
@@ -2617,7 +2580,7 @@ function loadNaraHistory() {
     naraChatHistory=d.history||[]; return naraChatHistory.length>0;
   } catch(e){return false;}
 }
-let partnerAnswers=null, partnerName='', partnerPresenceLabel='baru saja hadir';
+let partnerAnswers=null, partnerName='';
 function getCompletedThemes() { let c=0; TABS.forEach((tab,ti)=>{ if(tab.isProfil) return; if(getTabFilled(ti)>=getTabTotal(ti)&&getTabTotal(ti)>0) c++; }); return c; }
 function buildAnswerSummary(targetAnswers=answers, targetName=userName) {
   let s=`Nama: ${targetName}\nMode: ${appMode==='couple'?'Couple':'Solo'}\n\n`;
@@ -2677,86 +2640,204 @@ async function loadPartnerAnswers() {
   } catch(e) { console.warn('[Apreez] Load partner failed:', e); return false; }
 }
 async function initNaraScreen() {
-  const gate = document.getElementById('nara-gate');
-  const cards = document.getElementById('nara-cards');
-  const entry = document.getElementById('nara-entry');
-  if(!gate || !cards || !entry) return;
-  const completedThemes=getCompletedThemes();
+  const completedThemes=getCompletedThemes(), totalThemes=TABS.filter(t=>!t.isProfil).length, filled=getFilledQ(), total=getTotalQ();
+  const noteEl=document.getElementById('nara-threshold-note');
   naraAnswerSummary=buildAnswerSummary();
-  entry.classList.remove('open');
-  entry.innerHTML='';
 
-  if(completedThemes < 3) {
-    gate.innerHTML = `Nara bekerja paling baik setelah minimal tiga tema selesai. Saat ini kamu baru menuntaskan <strong>${completedThemes}</strong> tema. Lanjutkan pelan-pelan, lalu kembali ke sini saat konteks refleksimu lebih utuh.`;
-    cards.innerHTML = '';
+  const pct = total>0 ? Math.round(filled/total*100) : 0;
+  const progressBar = `<div class="nara-progress-wrap">
+    <div class="nara-progress-label"><span>Progres refleksimu</span><span>${filled} / ${total} pertanyaan</span></div>
+    <div class="nara-progress-bar"><div class="nara-progress-fill" style="width:${pct}%"></div></div>
+  </div>`;
+
+  // Load partner kalau couple mode
+  let partnerLoaded = false;
+  if(appMode==='couple' && linkedPartnerCode && SB && !isGuest) {
+    partnerLoaded = await loadPartnerAnswers();
+  }
+
+  if(filled===0) {
+    noteEl.innerHTML=`Belum ada jawaban yang bisa aku baca. Isi dulu beberapa pertanyaan, lalu kembali ke sini.${progressBar}`;
+    document.getElementById('nara-input').disabled=true; document.getElementById('nara-send-btn').disabled=true;
+  } else if(appMode==='couple') {
+    if(partnerLoaded) {
+      noteEl.innerHTML=`Mode couple aktif — aku sudah bisa membaca jawaban kamu dan <strong>${partnerName}</strong>. Minta aku membandingkan topik tertentu, atau tanya apa saja.${progressBar}`;
+    } else {
+      noteEl.innerHTML=`Mode couple aktif, tapi jawaban pasanganmu belum tersedia. Mungkin mereka belum mengisi Apreez, atau kode belum terhubung. Untuk sekarang aku hanya bisa refleksi dari jawabanmu saja.${progressBar}`;
+    }
+    document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
+  } else if(completedThemes<2) {
+    const themesLeft = 2 - completedThemes;
+    noteEl.innerHTML=`Aku sudah bisa membaca apa yang kamu tulis — tapi refleksiku akan jauh lebih bermakna kalau kamu menyelesaikan <strong>minimal 2 tema penuh</strong>. Sekarang baru <strong>${completedThemes} dari ${totalThemes} tema</strong> yang tuntas. Selesaikan <strong>${themesLeft} tema lagi</strong>, lalu kita ngobrol lebih dalam. Kalau mau tanya dulu, boleh.${progressBar}`;
+    document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
+  } else {
+    noteEl.innerHTML=`<strong>${completedThemes} dari ${totalThemes} tema</strong> sudah selesai — aku sudah bisa memberi refleksi yang bermakna. Tanya aku apa saja tentang perjalananmu.${progressBar}`;
+    document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
+  }
+  // Restore previous chat history from localStorage
+  const area = document.getElementById('nara-chat-area');
+  const hadHistory = loadNaraHistory();
+  if(hadHistory && naraChatHistory.length > 0) {
+    if(area) area.innerHTML = '';
+    naraChatHistory.forEach(msg => {
+      if(msg.role==='user') addChatBubble('user', msg.content);
+      else if(msg.role==='assistant') addChatBubble('nara', msg.content);
+    });
+    if(area) area.scrollTop = area.scrollHeight;
+    hideNaraSuggestions();
+  } else {
+    // No history — maybe auto-reflect for new session
+    if(naraChatHistory.length===0 && completedThemes>=2) setTimeout(()=>autoNaraReflection(), 400);
+    renderNaraSuggestions(appMode==='couple' && partnerLoaded);
+  }
+}
+
+function renderNaraSuggestions(isCouple) {
+  const el = document.getElementById('nara-suggestions');
+  if(!el) return;
+  const solo = [
+    'Apa pola yang kamu lihat dari jawabanku?',
+    'Hal apa yang paling menarik perhatianmu?',
+    'Di area mana aku perlu refleksi lebih dalam?',
+    'Ceritakan tentang nilai-nilaiku dari jawabanku',
+    'Apa kekuatan terbesarku sebagai calon pasangan?',
+  ];
+  const couple = [
+    `Bandingkan jawaban kami soal keuangan`,
+    `Di mana kami paling sejalan?`,
+    `Di mana kami paling berbeda?`,
+    `Topik apa yang perlu kami diskusikan lebih dalam?`,
+    `Bagaimana kami melengkapi satu sama lain?`,
+  ];
+  const suggestions = isCouple ? couple : solo;
+  el.innerHTML = `<div id="nara-suggest-header" onclick="toggleNaraSuggestions()" style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 0 8px;font-size:11px;color:var(--text3);letter-spacing:.5px;user-select:none;"><span id="nara-suggest-arrow" style="display:inline-block;transition:transform .2s;">▾</span><span>Pertanyaan untuk Nara</span></div><div id="nara-suggest-chips" style="display:flex;flex-wrap:wrap;gap:6px;">${suggestions.map(s=>`<button class="nara-suggestion-btn" onclick="useSuggestion(this)">${s}</button>`).join('')}</div>`;
+}
+
+function toggleNaraSuggestions() {
+  const chips=document.getElementById('nara-suggest-chips');
+  const arrow=document.getElementById('nara-suggest-arrow');
+  if(!chips) return;
+  const isOpen=chips.style.display!=='none';
+  chips.style.display=isOpen?'none':'flex';
+  if(arrow) arrow.style.transform=isOpen?'rotate(-90deg)':'rotate(0deg)';
+}
+
+function hideNaraSuggestions() {
+  const el=document.getElementById('nara-suggestions');
+  if(el) { el.style.opacity='0'; setTimeout(()=>{el.style.display='none';},300); }
+}
+
+function useSuggestion(btn) {
+  const input=document.getElementById('nara-input');
+  if(!input) return;
+  input.value=btn.textContent;
+  input.focus();
+  hideNaraSuggestions();
+}
+async function autoNaraReflection() {
+  if(naraChatHistory.length > 0) return; // skip if already has history
+  const isCouple = appMode==='couple' && partnerAnswers;
+  const prompt = isCouple
+    ? `Berikan refleksi awal yang hangat berdasarkan jawaban refleksi pra-nikah dari ${userName} dan ${partnerName}. Temukan satu atau dua hal yang menarik — bisa keselarasan atau perbedaan yang worth didiskusikan. Maksimal 4 paragraf pendek.`
+    : `Berikan refleksi awal yang personal dan hangat berdasarkan jawaban refleksi pra-nikah yang sudah aku isi. Fokus pada pola yang kamu lihat dan satu atau dua hal yang menarik perhatianmu. Maksimal 4 paragraf pendek.`;
+  await sendToNara(prompt, false);
+}
+function addNaraFollowUp() {
+  const followUps = appMode==='couple' ? [
+    'Mau kita bahas lebih dalam bagian mana dari tadi?',
+    'Ada hal dari jawaban pasanganmu yang ingin kamu tanyakan lebih lanjut?',
+    'Apakah ada yang tadi aku sebutkan yang terasa mengejutkan?',
+  ] : [
+    'Mau kita eksplorasi lebih dalam bagian mana dari tadi?',
+    'Ada pertanyaan yang tadi membuatmu berpikir lebih lama?',
+    'Apakah ada hal yang ingin kamu ceritakan lebih banyak?',
+  ];
+  const q=followUps[Math.floor(Math.random()*followUps.length)];
+  const area=document.getElementById('nara-chat-area'); if(!area) return;
+  const wrap=document.createElement('div'); wrap.style.cssText='display:flex;justify-content:flex-start;margin-top:-4px;';
+  const bubble=document.createElement('div');
+  bubble.style.cssText='background:transparent;border:1.5px dashed var(--border);border-radius:12px 12px 12px 4px;padding:9px 14px;max-width:82%;font-size:12px;color:var(--text3);line-height:1.6;font-style:italic;cursor:pointer;transition:border-color .2s,color .2s;';
+  bubble.textContent=q;
+  bubble.onmouseenter=()=>{bubble.style.borderColor='var(--card)';bubble.style.color='var(--text2)';};
+  bubble.onmouseleave=()=>{bubble.style.borderColor='var(--border)';bubble.style.color='var(--text3)';};
+  bubble.onclick=()=>{
+    const inp=document.getElementById('nara-input'); if(!inp) return;
+    inp.value=q; inp.focus(); wrap.remove();
+  };
+  wrap.appendChild(bubble); area.appendChild(wrap);
+  area.scrollTop=area.scrollHeight;
+}
+
+function stripMarkdown(text) {
+  return text
+    .replace(/\*\*\*(.+?)\*\*\*/g, '$1')  // ***bold italic***
+    .replace(/\*\*(.+?)\*\*/g, '$1')       // **bold**
+    .replace(/\*(.+?)\*/g, '$1')           // *italic*
+    .replace(/__(.+?)__/g, '$1')           // __bold__
+    .replace(/_(.+?)_/g, '$1')             // _italic_
+    .replace(/`(.+?)`/g, '$1')             // `code`
+    .replace(/^#{1,6}\s+/gm, '')           // # headers
+    .replace(/^\s*[-*+]\s+/gm, '• ')       // - bullet → •
+    .replace(/\n{3,}/g, '\n\n')            // collapse excess newlines
+    .trim();
+}
+
+function addChatBubble(role,text) {
+  const area=document.getElementById('nara-chat-area'), wrap=document.createElement('div'); wrap.className=`chat-bubble-wrap ${role}`;
+  if(role==='nara') { const s=document.createElement('div'); s.className='chat-sender'; s.textContent='NARA'; wrap.appendChild(s); }
+  const bubble=document.createElement('div'); bubble.className=`chat-bubble ${role}`;
+  bubble.textContent = role==='nara' ? stripMarkdown(text) : text;
+  wrap.appendChild(bubble);
+  if(role==='nara') {
+    const disc=document.createElement('div');
+    disc.style.cssText='font-size:9px;color:var(--text3);margin-top:4px;margin-left:4px;line-height:1.5;opacity:.65;max-width:85%;';
+    disc.textContent='Nara adalah AI, bukan pengganti konselor profesional. Pertimbangkan berkonsultasi dengan psikolog atau konselor pernikahan untuk eksplorasi lebih dalam.';
+    wrap.appendChild(disc);
+  }
+  area.appendChild(wrap); area.scrollTop=area.scrollHeight;
+}
+function showTypingIndicator() {
+  const area=document.getElementById('nara-chat-area'), t=document.createElement('div');
+  t.className='nara-typing'; t.id='nara-typing'; t.innerHTML='<span></span><span></span><span></span>'; area.appendChild(t); area.scrollTop=area.scrollHeight;
+}
+function removeTypingIndicator() { document.getElementById('nara-typing')?.remove(); }
+async function sendToNara(userMessage, showUserBubble=true) {
+  if(naraIsTyping) return; naraIsTyping=true;
+  if(showUserBubble) addChatBubble('user', userMessage);
+  naraChatHistory.push({role:'user',content:userMessage}); saveNaraHistory(); incrementNaraUsage(); showTypingIndicator();
+  document.getElementById('nara-send-btn').disabled=true;
+  try {
+    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:700})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
+    removeTypingIndicator(); addChatBubble('nara', reply); naraChatHistory.push({role:'assistant',content:reply});
+    if(naraChatHistory.length>40) naraChatHistory=naraChatHistory.slice(-30);
+    saveNaraHistory();
+    if(naraChatHistory.length>=2) hideNaraSuggestions();
+    const _nrc=naraChatHistory.filter(m=>m.role==='assistant').length;
+    if(_nrc>=1 && _nrc%2===1) setTimeout(()=>addNaraFollowUp(), 2000);
+  } catch(e) { removeTypingIndicator(); addChatBubble('nara','Koneksiku terputus sejenak. Coba kirim lagi ya.'); }
+  naraIsTyping=false; document.getElementById('nara-send-btn').disabled=false;
+}
+async function sendNaraMessage() {
+  const input=document.getElementById('nara-input'), msg=input.value.trim();
+  if(!msg||naraIsTyping||getFilledQ()===0) return;
+
+  // Check rate limit
+  const limitCheck = checkNaraLimit();
+  if(!limitCheck.allowed) {
+    addChatBubble('nara', `Percakapan kita hari ini sudah mencapai batas harian (${limitCheck.limit} pesan). Ini bukan karena aku tidak mau lanjut — aku ingin kamu punya waktu untuk meresapi apa yang sudah kita bahas. Kita bisa lanjut lagi besok ya.`);
     return;
   }
-
-  gate.innerHTML = 'Pilih satu tema untuk membaca refleksi singkat. Nara akan memberi observasi ringkas, pola yang terlihat, dan satu area diskusi lanjutan.';
-
-  const doneThemes = TABS.map((t,ti)=>({t,ti,filled:getTabFilled(ti),total:getTabTotal(ti)})).filter(x=>!x.t.isProfil && x.filled>0);
-  cards.innerHTML = doneThemes.map(x=>`<article class="nara-card" onclick="openNaraTheme(${x.ti})"><h4>${x.t.name}</h4></article>`).join('');
-}
-
-async function openNaraTheme(ti) {
-  const entry = document.getElementById('nara-entry');
-  if(!entry) return;
-  const tab = TABS[ti];
-  const localObs = `Di tema ${tab.name}, kamu menunjukkan pola refleksi yang cukup konsisten. Ada nilai yang berulang dan bisa jadi fondasi percakapan yang lebih jujur.`;
-  const localPrompt = `Berdasarkan jawaban user pada tema "${tab.name}", berikan refleksi ringkas dalam bahasa Indonesia: 1 observasi, 1 pola, 1 pertanyaan lanjutan. Maksimal 3 paragraf pendek. Jangan menghakimi.`;
-  entry.classList.add('open');
-  entry.innerHTML = `<div class="nara-intro-name">${tab.name}</div><div class="nara-intro-text">Memuat refleksi...</div>`;
-  try {
-    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:[{role:'user',content:localPrompt}],max_tokens:420})});
-    const data=await res.json();
-    const txt = data.content?.[0]?.text || localObs;
-    entry.innerHTML = `<div class="nara-intro-name">${tab.name}</div><div class="nara-intro-text">${stripMarkdown(txt)}</div><div class="nara-threshold-note">Area eksplorasi lanjutan: kembali ke tema ini dan pilih satu subtema yang paling mengundang percakapan.</div>`;
-  } catch(e) {
-    entry.innerHTML = `<div class="nara-intro-name">${tab.name}</div><div class="nara-intro-text">${localObs}</div><div class="nara-threshold-note">Koneksi sedang tidak stabil. Kamu tetap bisa melanjutkan refleksi secara mandiri untuk sementara.</div>`;
+  // Show remaining warning when close to limit
+  if(limitCheck.remaining <= 5 && limitCheck.remaining > 0) {
+    // Will show warning after this message
   }
+  input.value=''; input.style.height='auto'; await sendToNara(msg,true);
 }
-
-
+function handleNaraKey(e) { if(e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendNaraMessage(); } }
+function autoResizeNaraInput(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
 function openNara() { goTo('s-nara'); setTimeout(()=>initNaraScreen(), 50); }
-
-function getArchiveItems() {
-  const items = [];
-  TABS.forEach((tab, ti) => {
-    if(tab.isProfil) return;
-    tab.subtabs?.forEach((st, si) => st.questions.forEach((q, qi) => {
-      const a = answers[getQId(ti,si,qi)];
-      if(a && a.trim()) items.push({theme:tab.name, subtheme:st.name, q, a});
-    }));
-  });
-  return items;
-}
-function renderArchiveResults() {
-  const q = (document.getElementById('archive-search')?.value || '').trim().toLowerCase();
-  const out = document.getElementById('archive-results');
-  if(!out) return;
-  const data = getArchiveItems().filter(x => !q || `${x.theme} ${x.subtheme} ${x.q} ${x.a}`.toLowerCase().includes(q)).slice(0,50);
-  if(!data.length) { out.innerHTML = `<div style="color:var(--text3);font-size:12px;">Belum ada catatan yang cocok. Ruang ini tetap ada kapan pun kamu kembali.</div>`; return; }
-  out.innerHTML = data.map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);"><div style="font-size:10px;letter-spacing:1px;color:var(--text3);">${x.theme} · ${x.subtheme}</div><div style="font-size:12px;color:var(--text2);margin:6px 0;">${x.q}</div><div style="font-size:13px;color:var(--text);line-height:1.7;">${x.a}</div></div>`).join('');
-}
-function openProfileUtility() {
-  const modal = document.getElementById('modal-sheet');
-  if(!modal) return;
-  modal.innerHTML = `<div class="modal-handle"></div>
-    <div class="modal-header"><div class="modal-tab-label">Profile & Archive</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div class="modal-settings-body">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--text);">${userName||'Kamu'}</div>
-      <div style="font-size:12px;color:var(--text3);line-height:1.7;">Personal cozy corner — ruang utility ringan tanpa mengganggu ritme refleksimu.</div>
-      <div style="margin-top:8px;">
-        <button class="utility-chip" onclick="downloadPDF()">Export PDF</button>
-        <button class="utility-chip" onclick="openFeedback()" style="margin-left:6px;">Feedback</button>
-      </div>
-      <div style="margin-top:16px;font-size:11px;letter-spacing:1px;color:var(--text3);">Archive like diary</div>
-      <input id="archive-search" class="auth-input" placeholder="Search catatan..." oninput="renderArchiveResults()"/>
-      <div id="archive-results" style="max-height:42vh;overflow:auto;padding-right:2px;"></div>
-    </div>`;
-  document.getElementById('modal-overlay').classList.add('open');
-  setTimeout(renderArchiveResults, 40);
-}
 
 // ══ FEEDBACK ══
 let fbType = 'bug';
@@ -2983,7 +3064,7 @@ function openWeddingQuestion(si,qi) {
   if(!overlay){console.warn('[Apreez] modal-overlay missing');return;}
   renderWeddingModal();
   overlay.classList.add('open');
-  setTimeout(()=>autoResizeModalTextarea(), 120);
+  setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderWeddingModal() {
   const q=modalQ[currentQIdx]; if(!q) return;
