@@ -1225,7 +1225,7 @@ body {
       </div>
       <div class="onboard-step">
         <div class="onboard-step-num">4</div>
-        <div class="onboard-step-text"><strong>Setelah 2 tema selesai</strong>, Nara — AI companion-mu — siap menemani refleksi lebih dalam.</div>
+        <div class="onboard-step-text"><strong>Setelah 3 tema selesai</strong>, Nara — AI companion-mu — siap menemani refleksi lebih dalam.</div>
       </div>
     </div>
     <button class="onboard-cta" onclick="finishOnboarding()">Ayo Mulai →</button>
@@ -2865,13 +2865,13 @@ async function initNaraScreen() {
       </div>${progressBar}`;
     }
     document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
-  } else if(completedThemes<2) {
-    const themesLeft = 2 - completedThemes;
+  } else if(completedThemes<3) {
+    const themesLeft = 3 - completedThemes;
     noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:var(--peach-dim);border:1px solid rgba(224,122,95,.25);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
-      <div style="font-weight:600;color:var(--pink);margin-bottom:4px;letter-spacing:.3px;">Selesaikan ${themesLeft} tema lagi untuk membuka refleksi penuh</div>
-      Refleksiku akan jauh lebih bermakna kalau kamu menyelesaikan minimal <strong>2 tema penuh</strong>. Sekarang baru <strong>${completedThemes} dari ${totalThemes} tema</strong> yang tuntas. Kamu tetap bisa tanya, tapi jawabanku masih terbatas.
+      <div style="font-weight:600;color:var(--pink);margin-bottom:4px;letter-spacing:.3px;">Selesaikan ${themesLeft} tema lagi untuk membuka Nara</div>
+      Nara baru bisa memberikan refleksi yang bermakna setelah kamu menyelesaikan <strong>minimal 3 tema penuh</strong>. Sekarang baru <strong>${completedThemes} dari ${totalThemes} tema</strong> yang tuntas. Selesaikan ${themesLeft} tema lagi, lalu Nara siap menemanimu.
     </div>${progressBar}`;
-    document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
+    document.getElementById('nara-input').disabled=true; document.getElementById('nara-send-btn').disabled=true;
   } else {
     noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:rgba(46,115,89,.08);border:1px solid rgba(46,115,89,.2);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
       <div style="font-weight:600;color:var(--card);margin-bottom:4px;letter-spacing:.3px;">✓ ${completedThemes} dari ${totalThemes} tema selesai — Nara siap</div>
@@ -2892,7 +2892,7 @@ async function initNaraScreen() {
     hideNaraSuggestions();
   } else {
     // No history — maybe auto-reflect for new session
-    if(naraChatHistory.length===0 && completedThemes>=2) setTimeout(()=>autoNaraReflection(), 400);
+    if(naraChatHistory.length===0 && completedThemes>=3) setTimeout(()=>autoNaraReflection(), 400);
     renderNaraSuggestions(appMode==='couple' && partnerLoaded);
   }
 }
