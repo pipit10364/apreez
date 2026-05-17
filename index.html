@@ -1407,10 +1407,10 @@ body {
     
   </div>
   <div class="nara-chat-area" id="nara-chat-area">
-    <div class="nara-intro-bubble">
-      <div class="nara-intro-name">Nara</div>
-      <div class="nara-intro-text">Hei! Aku Nara, teman refleksimu di Apreez. Aku di sini untuk membaca jawabanmu, memberi perspektif, dan menemanimu memahami diri sendiri — sebelum kamu melangkah ke jenjang berikutnya.</div>
-      <div class="nara-threshold-note" id="nara-threshold-note"></div>
+    <div class="nara-bubble-card" style="margin-bottom:4px;">
+      <div class="chat-sender">NARA</div>
+      <div class="chat-bubble nara">Hei! Aku Nara, teman refleksimu di Apreez. Aku di sini untuk membaca jawabanmu, memberi perspektif, dan menemanimu memahami diri sendiri — sebelum kamu melangkah ke jenjang berikutnya.</div>
+      <div class="nara-threshold-note" id="nara-threshold-note" style="margin-top:14px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.75;font-weight:300;"></div>
     </div>
   </div>
   <div id="nara-usage-info" style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;letter-spacing:.3px;"></div>
@@ -2962,17 +2962,33 @@ function addNaraFollowUp() {
 }
 
 function stripMarkdown(text) {
+  // Keep for backward compat — calls renderNaraText internally
   return text
-    .replace(/\*\*\*(.+?)\*\*\*/g, '$1')  // ***bold italic***
-    .replace(/\*\*(.+?)\*\*/g, '$1')       // **bold**
-    .replace(/\*(.+?)\*/g, '$1')           // *italic*
-    .replace(/__(.+?)__/g, '$1')           // __bold__
-    .replace(/_(.+?)_/g, '$1')             // _italic_
-    .replace(/`(.+?)`/g, '$1')             // `code`
-    .replace(/^#{1,6}\s+/gm, '')           // # headers
-    .replace(/^\s*[-*+]\s+/gm, '• ')       // - bullet → •
-    .replace(/\n{3,}/g, '\n\n')            // collapse excess newlines
+    .replace(/\*\*\*(.+?)\*\*\*/g, '$1')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/__(.+?)__/g, '$1')
+    .replace(/_(.+?)_/g, '$1')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^\s*[-*+]\s+/gm, '• ')
+    .replace(/\n{3,}/g, '\n\n')
     .trim();
+}
+function renderNaraText(text) {
+  // Strip markdown symbols but preserve structure as HTML
+  let t = text
+    .replace(/\*\*\*(.+?)\*\*\*/g, '<em>$1</em>')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/__(.+?)__/g, '$1')
+    .replace(/_(.+?)_/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^\s*[-*+]\s+/gm, '• ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  return t.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
 }
 
 function addChatBubble(role,text) {
@@ -2991,7 +3007,7 @@ function addChatBubble(role,text) {
 
     const bubble = document.createElement('div');
     bubble.className = 'chat-bubble nara';
-    bubble.textContent = stripMarkdown(text);
+    bubble.innerHTML = renderNaraText(text);
 
     card.appendChild(sender);
     card.appendChild(bubble);
