@@ -2834,11 +2834,8 @@ async function loadPartnerAnswers() {
 async function initNaraScreen() {
   const completedThemes=getCompletedThemes(), totalThemes=TABS.filter(t=>!t.isProfil).length, filled=getFilledQ(), total=getTotalQ();
   const noteEl=document.getElementById('nara-threshold-note');
+  if(!noteEl) return; // DOM not ready yet, skip
   naraAnswerSummary=buildAnswerSummary();
-
-  // Always clear chat area first — prevents stale messages from previous user bleeding in
-  const areaEarly = document.getElementById('nara-chat-area');
-  if(areaEarly) areaEarly.innerHTML = '';
 
   const pct = total>0 ? Math.round(filled/total*100) : 0;
   const progressBar = `<div class="nara-progress-wrap">
