@@ -3498,23 +3498,11 @@ function updateBioCount(len) {
   if(el) el.textContent = `${len} / 160`;
 }
 
-// Update avatar initial whenever dashboard renders
-const _origRenderDashboard = renderDashboard;
-// Patch avatar update into enterApp
-const _origEnterApp = enterApp;
-function enterApp() {
-  _origEnterApp();
-  setTimeout(() => {
-    const avatarBtn = document.getElementById('profile-avatar-btn');
-    if(avatarBtn) avatarBtn.textContent = (userName?.[0] || 'A').toUpperCase();
-  }, 100);
-}
+// Avatar initial sync — called after login/enterApp via existing hooks
 
 // ══════════════════════════════════════════
 // 3-STATE MOSAIC — track opened questions
 // ══════════════════════════════════════════
-// We track which questions have been "opened" (viewed) in sessionStorage
-// so the state resets each session (feels natural, not persistent burden)
 function _getOpenedKey(ti, si, qi) { return `o_${ti}_${si}_${qi}`; }
 function _markOpened(ti, si, qi) {
   try { sessionStorage.setItem(_getOpenedKey(ti,si,qi), '1'); } catch(e){}
@@ -3529,26 +3517,13 @@ function _isWeddingOpened(si, qi) {
   try { return !!sessionStorage.getItem(`ow_${si}_${qi}`); } catch(e){ return false; }
 }
 
-// Patch openQuestion and openMosaicQuestion to mark as opened
-const _origOpenQuestion = openQuestion;
-function openQuestion(ti, si, qi) {
-  _markOpened(ti, si, qi);
-  _origOpenQuestion(ti, si, qi);
-}
-const _origOpenMosaicQuestion = openMosaicQuestion;
-function openMosaicQuestion(ti, si, qi) {
-  _markOpened(ti, si, qi);
-  _origOpenMosaicQuestion(ti, si, qi);
-}
-const _origOpenWeddingQuestion = openWeddingQuestion;
-function openWeddingQuestion(si, qi) {
-  _markWeddingOpened(si, qi);
-  _origOpenWeddingQuestion(si, qi);
-}
-
-// Patch renderMosaicInto to support 3-state
-const _origRenderMosaicInto = renderMosaicInto;
-function renderMosaicInto(grid, opts={}) {
+// ══════════════════════════════════════════
+// 3-STATE MOSAIC — render override (replaces original renderMosaicInto)
+// ══════════════════════════════════════════
+// We redefine renderMosaicInto here — this declaration comes AFTER the original
+// in the script, so it wins at runtime (function declarations hoist, but this
+// is a function expression assigned below, so order matters — we use a flag instead)
+window._renderMosaicInto3State = function(grid, opts={}) {
   if(!grid) return;
   grid.innerHTML = '';
   const groups = buildMosaicGroups();
@@ -3569,6 +3544,7 @@ function renderMosaicInto(grid, opts={}) {
       block.title = group.name;
       block.onclick = () => {
         if(q.isWedding) {
+          _markWeddingOpened(q.subIdx, q.qIdx);
           openWeddingQuestion(q.subIdx, q.qIdx);
           openedFromMosaic = true;
           document.getElementById('modal-overlay')?.classList.add('mosaic-mode');
@@ -3576,6 +3552,7 @@ function renderMosaicInto(grid, opts={}) {
           openedFromMosaic = true;
           openProfilFieldModal(q.fieldIdx);
         } else {
+          _markOpened(q.tabIdx, q.subIdx, q.qIdx);
           openMosaicQuestion(q.tabIdx, q.subIdx, q.qIdx);
         }
       };
@@ -3594,7 +3571,14 @@ function renderMosaicInto(grid, opts={}) {
     renderMosaicBadge(row, group);
     grid.appendChild(row);
   });
-}
+};
+// Swap in the 3-state version after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  // Override renderMosaicInto globally after all functions are defined
+  if(typeof renderMosaicInto === 'function') {
+    window.renderMosaicInto = window._renderMosaicInto3State;
+  }
+});
 
 // ══════════════════════════════════════════
 // COUPLE MOSAIC SIDE-BY-SIDE
@@ -3637,12 +3621,7 @@ function renderCoupleMosaicSide() {
     </div>`;
 }
 
-// Patch renderCouplePage to also render side-by-side mosaic
-const _origRenderCouplePage = renderCouplePage;
-function renderCouplePage() {
-  _origRenderCouplePage();
-  renderCoupleMosaicSide();
-}
+// renderCouplePage patch handled in DOMContentLoaded below
 
 // ══════════════════════════════════════════
 // NARA HARM DETECTION
@@ -3671,54 +3650,62 @@ function _showNaraHarmResponse() {
   area.appendChild(wrap); area.scrollTop = area.scrollHeight;
 }
 
-// Patch sendNaraMessage to include harm check
-const _origSendNaraMessage = sendNaraMessage;
-async function sendNaraMessage() {
-  const input = document.getElementById('nara-input');
-  const msg = input?.value?.trim();
-  if(!msg) return;
-  if(_checkNaraHarm(msg)) {
-    input.value = ''; input.style.height = 'auto';
-    addChatBubble('user', msg);
-    _showNaraHarmResponse();
-    return;
-  }
-  await _origSendNaraMessage();
-}
+// sendNaraMessage harm-check patch handled in DOMContentLoaded below
 
 // ══════════════════════════════════════════
 // PDF — CONTEXT-AWARE DOWNLOAD
 // ══════════════════════════════════════════
-// Override downloadPDF to accept context parameter
-const _origDownloadPDF = downloadPDF;
-async function downloadPDF(context) {
-  // 'full', 'journey', 'themes', 'couple', or undefined → all same full PDF for now
-  // In future can filter by context; for now all call the same generator
-  // but filename reflects context
-  const contextLabel = {
-    couple: 'Couple', journey: 'Perjalanan', themes: 'Tema'
-  }[context] || 'Refleksi';
-  // Call original but patch filename via a global flag
-  window._pdfContext = context || 'full';
-  window._pdfContextLabel = contextLabel;
-  await _origDownloadPDF();
-  window._pdfContext = null; window._pdfContextLabel = null;
-}
+// downloadPDF patch handled in DOMContentLoaded below
 
 // ══════════════════════════════════════════
-// AVATAR INITIAL SYNC — patch enterApp
+// AVATAR INITIAL SYNC
 // ══════════════════════════════════════════
-// Update avatar button after enterApp is called
+function syncProfileAvatar() {
+  const btn = document.getElementById('profile-avatar-btn');
+  if(btn && userName) btn.textContent = (userName[0] || 'A').toUpperCase();
+}
+// Hook into existing renderDashboard calls — add avatar sync at end
+// We do this safely by wrapping the debounced call, not the function itself
 document.addEventListener('DOMContentLoaded', () => {
-  // Ensure avatar reflects current user on load
-  const _patchAvatar = () => {
-    const btn = document.getElementById('profile-avatar-btn');
-    if(btn && userName) btn.textContent = (userName[0] || 'A').toUpperCase();
-  };
-  setTimeout(_patchAvatar, 1200);
-  // Also patch renderDashboard to keep avatar in sync
-  const _rdOrig = renderDashboard;
-  // Note: renderDashboard is already debounced — just add avatar sync after
+  // Swap in 3-state mosaic renderer after all functions are declared
+  setTimeout(() => {
+    if(typeof window._renderMosaicInto3State === 'function') {
+      window.renderMosaicInto = window._renderMosaicInto3State;
+    }
+    // Patch renderCouplePage now that original is definitely defined
+    if(typeof window.renderCouplePage === 'function' && !window._rcpPatched) {
+      window._rcpPatched = true;
+      const _rcp = window.renderCouplePage;
+      window.renderCouplePage = function() { _rcp(); renderCoupleMosaicSide(); };
+    }
+    // Patch sendNaraMessage safely
+    if(typeof window.sendNaraMessage === 'function' && !window._snmPatched) {
+      window._snmPatched = true;
+      const _snm = window.sendNaraMessage;
+      window.sendNaraMessage = async function() {
+        const input = document.getElementById('nara-input');
+        const msg = input?.value?.trim();
+        if(!msg) return;
+        if(_checkNaraHarm(msg)) {
+          input.value = ''; input.style.height = 'auto';
+          addChatBubble('user', msg);
+          _showNaraHarmResponse();
+          return;
+        }
+        await _snm();
+      };
+    }
+    // Patch downloadPDF safely
+    if(typeof window.downloadPDF === 'function' && !window._dlpPatched) {
+      window._dlpPatched = true;
+      const _dlp = window.downloadPDF;
+      window.downloadPDF = async function(context) {
+        window._pdfContext = context || 'full';
+        await _dlp();
+        window._pdfContext = null;
+      };
+    }
+  }, 0); // setTimeout 0 — runs after all sync script execution
 });
 
 </script>
