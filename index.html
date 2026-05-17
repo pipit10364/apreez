@@ -1982,6 +1982,13 @@ async function onLoginSuccess(user, nameOverride=null) {
   localStorage.removeItem('apreez_v4');
   localStorage.removeItem('apreez_onboarding_seen');
 
+  // Clear Nara chat history — must reset per user, not per session
+  naraChatHistory = [];
+  naraAnswerSummary = '';
+  // Clear chat area UI if already rendered
+  const _naraChatArea = document.getElementById('nara-chat-area');
+  if(_naraChatArea) _naraChatArea.innerHTML = '';
+
   currentUser = user; isGuest = false;
   console.log('[Apreez] onLoginSuccess for:', user.email, '| id:', user.id.slice(0,8));
   // NOTE: intentionally NOT loading localStorage here for logged-in users.
@@ -2826,6 +2833,10 @@ async function initNaraScreen() {
   const completedThemes=getCompletedThemes(), totalThemes=TABS.filter(t=>!t.isProfil).length, filled=getFilledQ(), total=getTotalQ();
   const noteEl=document.getElementById('nara-threshold-note');
   naraAnswerSummary=buildAnswerSummary();
+
+  // Always clear chat area first — prevents stale messages from previous user bleeding in
+  const areaEarly = document.getElementById('nara-chat-area');
+  if(areaEarly) areaEarly.innerHTML = '';
 
   const pct = total>0 ? Math.round(filled/total*100) : 0;
   const progressBar = `<div class="nara-progress-wrap">
