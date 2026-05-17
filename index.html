@@ -2850,21 +2850,33 @@ async function initNaraScreen() {
   }
 
   if(filled===0) {
-    noteEl.innerHTML=`Belum ada jawaban yang bisa aku baca. Isi dulu beberapa pertanyaan, lalu kembali ke sini.${progressBar}`;
+    noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:var(--peach-dim);border:1px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
+      ⚠️ Belum ada jawaban yang bisa aku baca. Isi dulu beberapa pertanyaan di tab <strong>Perjalanan</strong> atau <strong>Tema</strong>, lalu kembali ke sini.
+    </div>${progressBar}`;
     document.getElementById('nara-input').disabled=true; document.getElementById('nara-send-btn').disabled=true;
   } else if(appMode==='couple') {
     if(partnerLoaded) {
-      noteEl.innerHTML=`Mode couple aktif — aku sudah bisa membaca jawaban kamu dan <strong>${partnerName}</strong>. Minta aku membandingkan topik tertentu, atau tanya apa saja.${progressBar}`;
+      noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:rgba(46,115,89,.08);border:1px solid rgba(46,115,89,.2);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
+        ✓ Mode couple aktif — aku sudah bisa membaca jawaban kamu dan <strong>${partnerName}</strong>. Minta aku membandingkan topik tertentu, atau tanya apa saja.
+      </div>${progressBar}`;
     } else {
-      noteEl.innerHTML=`Mode couple aktif, tapi jawaban pasanganmu belum tersedia. Mungkin mereka belum mengisi Apreez, atau kode belum terhubung. Untuk sekarang aku hanya bisa refleksi dari jawabanmu saja.${progressBar}`;
+      noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:var(--peach-dim);border:1px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
+        ⏳ Mode couple aktif, tapi jawaban pasanganmu belum tersedia. Mungkin mereka belum mengisi Apreez, atau kode belum terhubung. Untuk sekarang aku hanya bisa refleksi dari jawabanmu saja.
+      </div>${progressBar}`;
     }
     document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
   } else if(completedThemes<2) {
     const themesLeft = 2 - completedThemes;
-    noteEl.innerHTML=`Aku sudah bisa membaca apa yang kamu tulis — tapi refleksiku akan jauh lebih bermakna kalau kamu menyelesaikan <strong>minimal 2 tema penuh</strong>. Sekarang baru <strong>${completedThemes} dari ${totalThemes} tema</strong> yang tuntas. Selesaikan <strong>${themesLeft} tema lagi</strong>, lalu kita ngobrol lebih dalam. Kalau mau tanya dulu, boleh.${progressBar}`;
+    noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:var(--peach-dim);border:1px solid rgba(224,122,95,.25);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
+      <div style="font-weight:600;color:var(--pink);margin-bottom:4px;letter-spacing:.3px;">Selesaikan ${themesLeft} tema lagi untuk membuka refleksi penuh</div>
+      Refleksiku akan jauh lebih bermakna kalau kamu menyelesaikan minimal <strong>2 tema penuh</strong>. Sekarang baru <strong>${completedThemes} dari ${totalThemes} tema</strong> yang tuntas. Kamu tetap bisa tanya, tapi jawabanku masih terbatas.
+    </div>${progressBar}`;
     document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
   } else {
-    noteEl.innerHTML=`<strong>${completedThemes} dari ${totalThemes} tema</strong> sudah selesai — aku sudah bisa memberi refleksi yang bermakna. Tanya aku apa saja tentang perjalananmu.${progressBar}`;
+    noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:rgba(46,115,89,.08);border:1px solid rgba(46,115,89,.2);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
+      <div style="font-weight:600;color:var(--card);margin-bottom:4px;letter-spacing:.3px;">✓ ${completedThemes} dari ${totalThemes} tema selesai — Nara siap</div>
+      Aku sudah bisa memberi refleksi yang bermakna. Tanya aku apa saja tentang perjalananmu.
+    </div>${progressBar}`;
     document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
   }
   // Restore previous chat history from localStorage
