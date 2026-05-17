@@ -380,25 +380,50 @@ body {
 #s-nara { padding:0; flex-direction:column; height:100dvh; max-height:100dvh; min-height:unset; overflow:hidden; }
 #s-nara.active { display:flex; }
 .nara-header-sub { font-size:10px; color:var(--text3); letter-spacing:1px; margin-top:1px; }
-.nara-chat-area { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:12px; }
+.nara-chat-area { flex:1; overflow-y:auto; padding:20px 18px 12px; display:flex; flex-direction:column; gap:16px; }
 .nara-chat-area::-webkit-scrollbar { width:3px; }
 .nara-chat-area::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 .nara-intro-bubble { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px; padding:16px 18px; max-width:88%; align-self:flex-start; }
-.nara-intro-name { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:400; font-style:italic; color:var(--card); margin-bottom:6px; }
-.nara-intro-text { font-size:13px; color:var(--text2); line-height:1.75; font-weight:300; }
-.nara-threshold-note { font-size:11px; color:var(--text3); margin-top:10px; padding-top:10px; border-top:1px solid var(--border); line-height:1.6; }
-.nara-threshold-note strong { color:var(--card); font-weight:500; }
-.nara-progress-wrap { margin-top:8px; }
-.nara-progress-label { display:flex; justify-content:space-between; font-size:10px; color:var(--text3); margin-bottom:4px; letter-spacing:.3px; }
-.nara-progress-bar { height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
-.nara-progress-fill { height:100%; background:var(--card); border-radius:2px; transition:width .6s var(--ease-smooth); }
-.chat-bubble-wrap { display:flex; flex-direction:column; gap:2px; animation:fadeUp .3s var(--ease) both; }
+.chat-bubble-wrap { display:flex; flex-direction:column; gap:4px; animation:fadeUp .3s var(--ease) both; }
 .chat-bubble-wrap.user { align-items:flex-end; }
-.chat-bubble-wrap.nara { align-items:flex-start; }
-.chat-bubble { padding:12px 16px; border-radius:var(--radius-lg); font-size:13px; line-height:1.75; font-weight:300; max-width:88%; }
-.chat-bubble.user { background:var(--card); color:white; border-radius:var(--radius-lg) var(--radius-lg) 4px var(--radius-lg); }
-.chat-bubble.nara { background:var(--bg2); border:1px solid var(--border); color:var(--text); border-radius:var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px; }
-.chat-sender { font-size:10px; color:var(--text3); letter-spacing:.5px; margin-bottom:2px; padding:0 4px; }
+.chat-bubble-wrap.nara { align-items:flex-start; max-width:86%; }
+.chat-bubble { padding:14px 18px; border-radius:var(--radius-lg); font-size:13px; line-height:1.85; font-weight:300; max-width:88%; }
+.chat-bubble.user { background:var(--card); color:white; border-radius:var(--radius-lg) var(--radius-lg) 4px var(--radius-lg); font-size:13px; }
+.chat-bubble.nara {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  border-radius: 0;
+  padding: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: -.01em;
+  max-width: 100%;
+}
+.chat-sender {
+  font-size: 9px; color: var(--card); letter-spacing: 2.5px;
+  margin-bottom: 6px; padding: 0; text-transform: uppercase;
+  font-weight: 600; opacity: .7;
+}
+.nara-bubble-card {
+  background: rgba(255,255,255,.5);
+  border: 1px solid var(--border);
+  border-radius: 20px 20px 20px 4px;
+  padding: 18px 22px;
+  box-shadow: 0 8px 28px rgba(67,55,38,.07);
+  backdrop-filter: blur(12px);
+  width: 100%;
+}
+[data-theme="dark"] .nara-bubble-card {
+  background: rgba(37,45,37,.55);
+}
+.nara-disc {
+  font-size: 9px; color: var(--text3); margin-top: 10px;
+  line-height: 1.5; opacity: .6; font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+}
 .nara-typing { display:flex; gap:4px; align-items:center; padding:14px 18px; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px; align-self:flex-start; width:fit-content; }
 .nara-typing span { width:6px; height:6px; border-radius:50%; background:var(--text3); animation:typingDot 1.2s ease infinite; }
 .nara-typing span:nth-child(2) { animation-delay:.2s; }
@@ -827,7 +852,8 @@ body {
 .sub-header { box-shadow:0 10px 30px rgba(67,55,38,.04); }
 #s-nara { background:radial-gradient(circle at 50% 0, rgba(239,203,138,.18), transparent 42vw), var(--bg); }
 .nara-chat-area { max-width:760px; width:100%; margin:0 auto; padding-top:28px; }
-.nara-intro-bubble,.chat-bubble.nara,.nara-typing { background:rgba(255,255,255,.42); box-shadow:var(--soft-shadow-sm); border-color:var(--border); }
+.nara-intro-bubble,.nara-typing { background:rgba(255,255,255,.42); box-shadow:var(--soft-shadow-sm); border-color:var(--border); }
+.nara-bubble-card { background:rgba(255,255,255,.52); box-shadow:0 8px 32px rgba(67,55,38,.08); }
 .chat-bubble.user { background:linear-gradient(135deg,var(--card),var(--card-hover)); }
 .nara-suggestions { max-width:760px; width:100%; margin:0 auto; }
 #s-nara .nara-input-row { padding-bottom:calc(86px + var(--safe-bottom)); }
@@ -2271,37 +2297,12 @@ async function renderPartnerCard() {
     statusEl.textContent = `${pPct}% selesai`;
     statusEl.className = 'partner-card-status connected';
 
-    // Render mosaic pasangan
-    let mosaicHtml = '<div class="partner-mosaic-wrap">';
-    TABS.forEach(tab => {
-      mosaicHtml += '<div class="partner-mosaic-row">';
-      if(tab.isProfil) {
-        tab.fields.forEach((f,i) => {
-          const filled = !!pAnswers[`profil__field__${i}`]?.trim();
-          mosaicHtml += `<div class="partner-mosaic-block${filled?' filled':''}"></div>`;
-        });
-      } else {
-        tab.subtabs?.forEach((st,si) => st.questions.forEach((_,qi) => {
-          const key = `${tab.id}__${si}__${qi}`;
-          const filled = !!pAnswers[key]?.trim();
-          mosaicHtml += `<div class="partner-mosaic-block${filled?' filled':''}"></div>`;
-        }));
-      }
-      mosaicHtml += '</div>';
-    });
-    if(typeof WEDDING_TAB !== 'undefined') {
-      mosaicHtml += '<div class="partner-mosaic-row partner-wedding-row">';
-      WEDDING_TAB.subtabs.forEach((st, si) => {
-        st.questions.forEach((_, qi) => {
-          const filled = !!pAnswers[getWeddingQId(si, qi)]?.trim();
-          mosaicHtml += `<div class="partner-mosaic-block${filled?' filled':''}"></div>`;
-        });
-      });
-      mosaicHtml += '</div>';
-    }
-    mosaicHtml += '</div>';
-    mosaicHtml += `<div class="partner-card-meta">${pFilled} dari ${pTotal} pertanyaan dijawab · Diperbarui saat kamu buka Nara</div>`;
-    bodyEl.innerHTML = mosaicHtml;
+    // Cukup tampilkan ringkasan — mosaic sudah ada di side-by-side di atas
+    bodyEl.innerHTML = `<div class="partner-card-meta" style="font-size:12px;color:var(--text2);line-height:1.8;padding-top:4px;">
+      ${pFilled} dari ${pTotal} pertanyaan dijawab
+      <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--pink);margin:0 6px 1px;vertical-align:middle;"></span>
+      Mosaik perbandingan tersedia di atas
+    </div>`;
     renderCouplePage();
 
   } catch(e) {
@@ -2803,7 +2804,7 @@ ${isCouple ? `MODE COUPLE:
 Kamu punya akses ke jawaban dua orang sekaligus. Saat membandingkan: cari keselarasan yang bisa jadi kekuatan, dan titik perhatian yang perlu didiskusikan — bukan diputuskan siapa yang benar. Sampaikan perbedaan sebagai "bahan percakapan yang berharga", bukan red flag. Jangan memihak. Kalau user hanya tanya soal dirinya, fokus ke jawabannya saja.
 
 ` : ''}FORMAT:
-DILARANG menggunakan markdown: tidak ada **bold**, *italic*, # header, atau bullet -. Tulis dalam paragraf biasa. Selalu selesaikan kalimat dan paragraf sebelum berhenti. Jangan pernah memotong di tengah kalimat.
+DILARANG menggunakan markdown: tidak ada **bold**, *italic*, # header, atau bullet -. Tulis dalam paragraf biasa. WAJIB selalu selesaikan kalimat dan paragraf sebelum berhenti — jangan pernah memotong di tengah kalimat. Jika mendekati batas respons, wrap up dengan elegan dalam 1-2 kalimat penutup.
 
 DATA JAWABAN ${userName.toUpperCase()}:
 ${naraAnswerSummary}${isCouple ? `
@@ -2965,18 +2966,36 @@ function stripMarkdown(text) {
 }
 
 function addChatBubble(role,text) {
-  const area=document.getElementById('nara-chat-area'), wrap=document.createElement('div'); wrap.className=`chat-bubble-wrap ${role}`;
-  if(role==='nara') { const s=document.createElement('div'); s.className='chat-sender'; s.textContent='NARA'; wrap.appendChild(s); }
-  const bubble=document.createElement('div'); bubble.className=`chat-bubble ${role}`;
-  bubble.textContent = role==='nara' ? stripMarkdown(text) : text;
-  wrap.appendChild(bubble);
-  if(role==='nara') {
-    const disc=document.createElement('div');
-    disc.style.cssText='font-size:9px;color:var(--text3);margin-top:4px;margin-left:4px;line-height:1.5;opacity:.65;max-width:85%;';
-    disc.textContent='Nara adalah AI, bukan pengganti konselor profesional. Pertimbangkan berkonsultasi dengan psikolog atau konselor pernikahan untuk eksplorasi lebih dalam.';
-    wrap.appendChild(disc);
+  const area = document.getElementById('nara-chat-area');
+  const wrap = document.createElement('div');
+  wrap.className = `chat-bubble-wrap ${role}`;
+
+  if(role === 'nara') {
+    // Nara: editorial card with serif text
+    const card = document.createElement('div');
+    card.className = 'nara-bubble-card';
+
+    const sender = document.createElement('div');
+    sender.className = 'chat-sender';
+    sender.textContent = 'NARA';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble nara';
+    bubble.textContent = stripMarkdown(text);
+
+    card.appendChild(sender);
+    card.appendChild(bubble);
+    wrap.appendChild(card);
+  } else {
+    // User: compact pill bubble
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble user';
+    bubble.textContent = text;
+    wrap.appendChild(bubble);
   }
-  area.appendChild(wrap); area.scrollTop=area.scrollHeight;
+
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
 }
 function showTypingIndicator() {
   const area=document.getElementById('nara-chat-area'), t=document.createElement('div');
@@ -2989,7 +3008,7 @@ async function sendToNara(userMessage, showUserBubble=true) {
   naraChatHistory.push({role:'user',content:userMessage}); saveNaraHistory(); incrementNaraUsage(); showTypingIndicator();
   document.getElementById('nara-send-btn').disabled=true;
   try {
-    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:700})});
+    const res=await fetch('/api/nara',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:getNaraSystemPrompt(),messages:naraChatHistory,max_tokens:1000})});
     const data=await res.json();
     const reply=data.content?.[0]?.text||'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya.';
     removeTypingIndicator(); addChatBubble('nara', reply); naraChatHistory.push({role:'assistant',content:reply});
@@ -3643,11 +3662,23 @@ function _showNaraHarmResponse() {
   if(!area) return;
   const wrap = document.createElement('div');
   wrap.className = 'chat-bubble-wrap nara';
-  const s = document.createElement('div'); s.className = 'chat-sender'; s.textContent = 'NARA';
-  const bubble = document.createElement('div'); bubble.className = 'nara-harm-bubble';
-  bubble.innerHTML = `<strong>Aku dengar kamu.</strong>Yang kamu rasakan itu nyata, dan aku tidak mau meremehkannya. Tapi untuk yang satu ini, aku tidak bisa menemanimu sendirian — kamu butuh seseorang yang sungguh-sungguh terlatih untuk ini.<br><br>Tolong hubungi <strong>Into The Light Indonesia</strong> di <a href="tel:119" style="color:var(--card);">119 ext 8</a> atau chat ke <strong>www.intothelightid.org</strong>. Kamu tidak harus melalui ini sendiri.`;
-  wrap.appendChild(s); wrap.appendChild(bubble);
-  area.appendChild(wrap); area.scrollTop = area.scrollHeight;
+
+  const card = document.createElement('div');
+  card.className = 'nara-bubble-card';
+
+  const sender = document.createElement('div');
+  sender.className = 'chat-sender';
+  sender.textContent = 'NARA';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'nara-harm-bubble';
+  bubble.innerHTML = `<strong>Aku dengar kamu.</strong>Yang kamu rasakan itu nyata, dan aku tidak mau meremehkannya. Tapi untuk yang satu ini, aku tidak bisa menemanimu sendirian — kamu butuh seseorang yang sungguh-sungguh terlatih untuk ini.<br><br>Tolong hubungi <strong>Into The Light Indonesia</strong> di <a href="tel:119" style="color:var(--card);">119 ext 8</a> atau kunjungi <strong>intothelightid.org</strong>. Kamu tidak harus melalui ini sendiri.`;
+
+  card.appendChild(sender);
+  card.appendChild(bubble);
+  wrap.appendChild(card);
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
 }
 
 // sendNaraMessage harm-check patch handled in DOMContentLoaded below
