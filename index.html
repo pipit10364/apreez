@@ -288,7 +288,7 @@ body {
 .tab-card:hover::after { opacity:1; }
 .tab-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.15); }
 .tab-card.profil-card { grid-column:1/-1; background:var(--profil-card); min-height:52px; flex-direction:row; align-items:center; justify-content:space-between; padding:14px 18px; }
-.tab-card.profil-card .tab-name { color:var(--profil-text); font-size:14px; }
+.tab-card.profil-card .tab-name { color:var(--profil-text); }
 .tab-card.profil-card .tab-pct { color:var(--profil-text); opacity:.7; }
 .tab-name { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:white; line-height:1.3; }
 .tab-pct { font-size:10px; color:rgba(255,255,255,.7); margin-top:4px; }
@@ -2842,7 +2842,7 @@ async function initNaraScreen() {
 
   const pct = total>0 ? Math.round(filled/total*100) : 0;
   const progressBar = `<div class="nara-progress-wrap">
-    <div class="nara-progress-label"><span>Progres refleksimu</span><span>${filled} / ${total} pertanyaan</span></div>
+    <div class="nara-progress-label"><span>Progres refleksimu</span><span> ${filled} / ${total} pertanyaan</span></div>
     <div class="nara-progress-bar"><div class="nara-progress-fill" style="width:${pct}%"></div></div>
   </div>`;
 
@@ -2858,7 +2858,14 @@ async function initNaraScreen() {
     </div>${progressBar}`;
     document.getElementById('nara-input').disabled=true; document.getElementById('nara-send-btn').disabled=true;
   } else if(appMode==='couple') {
-    if(partnerLoaded) {
+    if(completedThemes < 2) {
+      const themesLeft = 2 - completedThemes;
+      noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:var(--peach-dim);border:1px solid rgba(224,122,95,.25);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
+        <div style="font-weight:600;color:var(--pink);margin-bottom:4px;letter-spacing:.3px;">Selesaikan ${themesLeft} tema lagi untuk membuka Nara</div>
+        Di mode couple, Nara butuh kamu menyelesaikan minimal <strong>2 tema penuh</strong> agar bisa memberi refleksi yang bermakna. Sekarang baru <strong>${completedThemes} dari ${totalThemes} tema</strong> tuntas.
+      </div>${progressBar}`;
+      document.getElementById('nara-input').disabled=true; document.getElementById('nara-send-btn').disabled=true;
+    } else if(partnerLoaded) {
       noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:rgba(46,115,89,.08);border:1px solid rgba(46,115,89,.2);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
         ✓ Mode couple aktif — aku sudah bisa membaca jawaban kamu dan <strong>${partnerName}</strong>. Minta aku membandingkan topik tertentu, atau tanya apa saja.
       </div>${progressBar}`;
@@ -2867,7 +2874,9 @@ async function initNaraScreen() {
         ⏳ Mode couple aktif, tapi jawaban pasanganmu belum tersedia. Mungkin mereka belum mengisi Apreez, atau kode belum terhubung. Untuk sekarang aku hanya bisa refleksi dari jawabanmu saja.
       </div>${progressBar}`;
     }
-    document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
+    if(completedThemes >= 2) {
+      document.getElementById('nara-input').disabled=false; document.getElementById('nara-send-btn').disabled=false;
+    }
   } else if(completedThemes<3) {
     const themesLeft = 3 - completedThemes;
     noteEl.innerHTML=`<div style="margin-top:4px;padding:12px 14px;background:var(--peach-dim);border:1px solid rgba(224,122,95,.25);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text2);line-height:1.7;">
@@ -3125,120 +3134,291 @@ async function submitFeedback() {
 }
 
 // ══ DOWNLOAD PDF ══
-async function downloadPDF() {
-  const btn = document.querySelector('.btn-pdf');
+async function downloadPDF(context) {
+  context = context || window._pdfContext || 'full';
+
+  // Find any PDF button to show loading state
+  const btn = document.querySelector('.page-pdf-btn, .btn-pdf');
   const origHTML = btn?.innerHTML;
-  if(btn) btn.innerHTML = '<span style="opacity:.6;font-size:11px;">Membuat PDF...</span>';
+  if(btn) btn.innerHTML = '<span style="opacity:.6;font-size:11px;">Membuat PDF…</span>';
 
   try {
     if(!window.jspdf) throw new Error('jsPDF not loaded');
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
 
-    const pageW=210, pageH=297, mL=20, mR=20, mT=24, mB=24;
+    const pageW=210, pageH=297, mL=22, mR=22, mT=28, mB=26;
     const cW = pageW - mL - mR;
     let y = mT;
 
-    const cGreen=[45,106,79], cPink=[233,172,187], cDark=[44,44,44];
-    const cMid=[107,92,76], cLight=[170,170,170], cBg=[245,245,238], cBorder=[200,232,200];
+    // ── COLOUR PALETTE ──
+    const cGreen=[45,106,79], cGreenPale=[200,225,210];
+    const cPink=[200,110,95], cPinkPale=[245,228,220];
+    const cDark=[38,35,30], cMid=[100,90,78], cLight=[175,168,158];
+    const cBg=[248,246,240], cBgDark=[238,234,224];
+    const cBorder=[210,228,210];
 
-    function newPageIfNeeded(need=10) {
-      if(y+need > pageH-mB) { doc.addPage(); y=mT; }
-    }
+    // ── HELPERS ──
+    function newPage() { doc.addPage(); y = mT; drawPageHeader(); }
+    function newPageIfNeeded(need=12) { if(y+need > pageH-mB) newPage(); }
 
-    function wrappedText(text, maxW, size) {
+    function wrap(text, maxW, size) {
       doc.setFontSize(size);
-      return doc.splitTextToSize(String(text||''), maxW);
+      return doc.splitTextToSize(String(text||'–'), maxW);
     }
 
-    // ── HEADER ──
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(26); doc.setTextColor(...cGreen);
-    doc.text('Apreez', mL, y); y+=8;
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(7); doc.setTextColor(...cPink);
-    doc.text(('PART OF INARTE · REFLEKSI PRA-NIKAH · '+userName).toUpperCase(), mL, y); y+=5;
-    doc.setFontSize(7); doc.setTextColor(...cLight);
-    doc.text(new Date().toLocaleDateString('id-ID',{year:'numeric',month:'long',day:'numeric'}), mL, y); y+=8;
-    doc.setDrawColor(...cBorder); doc.setLineWidth(0.3);
-    doc.line(mL, y, pageW-mR, y); y+=10;
-
-    // ── BUILD SECTIONS ──
-    function renderTab(name) {
-      newPageIfNeeded(18);
-      y+=2;
-      doc.setFont('helvetica','bold'); doc.setFontSize(15); doc.setTextColor(...cGreen);
-      doc.text(name, mL, y); y+=3;
+    function drawPageHeader() {
+      doc.setFont('helvetica','bold'); doc.setFontSize(7);
+      doc.setTextColor(...cGreen);
+      doc.text('APREEZ', mL, 14);
+      doc.setFont('helvetica','normal'); doc.setTextColor(...cLight);
+      doc.text('· PART OF INARTE', mL+13, 14);
       doc.setDrawColor(...cBorder); doc.setLineWidth(0.2);
-      doc.line(mL, y, pageW-mR, y); y+=8;
+      doc.line(mL, 17, pageW-mR, 17);
     }
-    function renderSubtab(name) {
-      newPageIfNeeded(10);
-      doc.setFont('helvetica','italic'); doc.setFontSize(9.5); doc.setTextColor(...cGreen);
-      doc.text(name, mL, y); y+=7;
+
+    // ── COVER PAGE ──
+    function drawCover() {
+      // Background accent block
+      doc.setFillColor(...cBg);
+      doc.rect(0, 0, pageW, pageH, 'F');
+      doc.setFillColor(...cGreenPale);
+      doc.rect(0, pageH*0.62, pageW, pageH*0.38, 'F');
+
+      // Logo area
+      doc.setFont('helvetica','bold'); doc.setFontSize(38);
+      doc.setTextColor(...cGreen);
+      doc.text('Apreez', mL, 62);
+
+      doc.setFont('helvetica','normal'); doc.setFontSize(8);
+      doc.setTextColor(...cPink);
+      doc.text('REFLEKSI PRA-NIKAH · PART OF INARTE', mL, 72);
+
+      // Divider
+      doc.setDrawColor(...cGreen); doc.setLineWidth(0.8);
+      doc.line(mL, 80, mL+40, 80);
+
+      // Name
+      doc.setFont('helvetica','bold'); doc.setFontSize(22);
+      doc.setTextColor(...cDark);
+      const displayName = userName || 'Refleksi';
+      doc.text(displayName, mL, 98);
+
+      // Bio if exists
+      const bio = answers['profil__bio'] || '';
+      if(bio.trim()) {
+        doc.setFont('helvetica','italic'); doc.setFontSize(10);
+        doc.setTextColor(...cMid);
+        const bioLines = wrap(bio, cW, 10);
+        doc.text(bioLines, mL, 108);
+        y = 108 + bioLines.length * 5.5 + 6;
+      } else {
+        y = 110;
+      }
+
+      // Context label
+      const contextLabels = { full:'Refleksi Lengkap', journey:'Perjalanan', themes:'Tema Refleksi', couple:'Refleksi Bersama' };
+      doc.setFont('helvetica','normal'); doc.setFontSize(9);
+      doc.setTextColor(...cLight);
+      doc.text((contextLabels[context]||'Refleksi').toUpperCase(), mL, y); y += 7;
+
+      // Stats row
+      const filled = getFilledQ(), total = getTotalQ();
+      const pct = total>0 ? Math.round(filled/total*100) : 0;
+      doc.setFont('helvetica','bold'); doc.setFontSize(13);
+      doc.setTextColor(...cGreen);
+      doc.text(`${filled}`, mL, y);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...cMid);
+      doc.text(` dari ${total} pertanyaan dijawab  ·  ${pct}%`, mL+8, y); y+=10;
+
+      // If couple, show partner name
+      if(context === 'couple' && partnerName) {
+        doc.setFont('helvetica','italic'); doc.setFontSize(9);
+        doc.setTextColor(...cPink);
+        doc.text(`Bersama ${partnerName}`, mL, y); y+=8;
+      }
+
+      // Date bottom
+      doc.setFont('helvetica','normal'); doc.setFontSize(8);
+      doc.setTextColor(...cLight);
+      doc.text(new Date().toLocaleDateString('id-ID',{year:'numeric',month:'long',day:'numeric'}), mL, pageH-30);
+
+      doc.addPage(); y = mT; drawPageHeader();
     }
+
+    // ── THEME DIVIDER PAGE ──
+    function drawThemeDivider(themeName, themeDesc, emoji) {
+      doc.addPage();
+      doc.setFillColor(...cBgDark);
+      doc.rect(0, 0, pageW, pageH, 'F');
+      doc.setFillColor(...cBg);
+      doc.rect(0, pageH*0.45, pageW, pageH*0.55, 'F');
+
+      // Emoji / icon area
+      doc.setFontSize(26);
+      doc.text(emoji || '✦', mL, pageH*0.35);
+
+      doc.setFont('helvetica','bold'); doc.setFontSize(22);
+      doc.setTextColor(...cGreen);
+      const nameLines = wrap(themeName, cW, 22);
+      doc.text(nameLines, mL, pageH*0.4);
+
+      if(themeDesc) {
+        doc.setFont('helvetica','normal'); doc.setFontSize(10);
+        doc.setTextColor(...cMid);
+        const descLines = wrap(themeDesc, cW, 10);
+        doc.text(descLines, mL, pageH*0.4 + nameLines.length*9 + 6);
+      }
+
+      y = mT; // next page content starts fresh
+    }
+
+    // ── QA BLOCK ──
     function renderQA(q, a) {
-      const qLines = wrappedText(q, cW, 8.5);
-      const aLines = a?.trim() ? wrappedText(a, cW-8, 9.5) : null;
-      const need = qLines.length*4 + (aLines ? aLines.length*5.5+10 : 7);
+      const qLines = wrap(q, cW, 8.5);
+      const aText = a?.trim() || '';
+      const aLines = aText ? wrap(aText, cW-8, 9.5) : null;
+      const need = qLines.length*4.5 + (aLines ? aLines.length*5.5+12 : 9);
       newPageIfNeeded(need);
+
       doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...cMid);
-      doc.text(qLines, mL, y); y += qLines.length*4+2;
+      doc.text(qLines, mL, y); y += qLines.length*4.5+2;
+
       if(aLines) {
-        const boxH = aLines.length*5.5+7;
-        doc.setFillColor(...cBg); doc.rect(mL+0.5, y, cW-0.5, boxH, 'F');
-        doc.setDrawColor(...cBorder); doc.setLineWidth(0.6);
-        doc.line(mL, y, mL, y+boxH);
+        const boxH = aLines.length*5.5+8;
+        doc.setFillColor(...cBg);
+        doc.roundedRect(mL, y, cW, boxH, 2, 2, 'F');
+        doc.setDrawColor(...cGreen); doc.setLineWidth(0.7);
+        doc.line(mL, y+2, mL, y+boxH-2);
         doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...cDark);
-        doc.text(aLines, mL+4, y+5); y+=boxH+5;
+        doc.text(aLines, mL+5, y+5.5); y += boxH+6;
       } else {
         doc.setFont('helvetica','italic'); doc.setFontSize(9); doc.setTextColor(...cLight);
-        doc.text('Belum diisi', mL+2, y); y+=7;
+        doc.text('—', mL+2, y); y += 8;
       }
     }
 
-    // Main tabs
-    TABS.forEach((tab,ti)=>{
-      renderTab(tab.name);
+    // ── COUPLE QA BLOCK (side by side) ──
+    function renderCoupleQA(q, myA, partnerA) {
+      const qLines = wrap(q, cW, 8.5);
+      const colW = (cW-6)/2;
+      const myLines = wrap(myA?.trim() || '—', colW-6, 9);
+      const ptLines = wrap(partnerA?.trim() || '—', colW-6, 9);
+      const rowH = Math.max(myLines.length, ptLines.length)*5.5+10;
+      const need = qLines.length*4.5+rowH+10;
+      newPageIfNeeded(need);
+
+      // Question
+      doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...cMid);
+      doc.text(qLines, mL, y); y += qLines.length*4.5+3;
+
+      // Side-by-side boxes
+      const leftX = mL, rightX = mL+colW+6;
+
+      // Left — me
+      doc.setFillColor(...cBg);
+      doc.roundedRect(leftX, y, colW, rowH, 2, 2, 'F');
+      doc.setDrawColor(...cGreen); doc.setLineWidth(0.7);
+      doc.line(leftX, y+2, leftX, y+rowH-2);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...cGreen);
+      doc.text((userName||'Kamu').toUpperCase(), leftX+5, y+4);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...cDark);
+      doc.text(myLines, leftX+5, y+9);
+
+      // Right — partner
+      doc.setFillColor(...cPinkPale);
+      doc.roundedRect(rightX, y, colW, rowH, 2, 2, 'F');
+      doc.setDrawColor(...cPink); doc.setLineWidth(0.7);
+      doc.line(rightX, y+2, rightX, y+rowH-2);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...cPink);
+      doc.text((partnerName||'Pasangan').toUpperCase(), rightX+5, y+4);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...cDark);
+      doc.text(ptLines, rightX+5, y+9);
+
+      y += rowH+7;
+    }
+
+    // ── SECTION HEADING (subtab) ──
+    function renderSubtab(name) {
+      newPageIfNeeded(12);
+      doc.setFont('helvetica','bold'); doc.setFontSize(10);
+      doc.setTextColor(...cGreen);
+      doc.text(name, mL, y); y+=3;
+      doc.setDrawColor(...cGreenPale); doc.setLineWidth(0.4);
+      doc.line(mL, y, mL+30, y); y+=8;
+    }
+
+    // ══════════════════════════════════════
+    // BUILD PDF
+    // ══════════════════════════════════════
+    drawCover();
+
+    const isCouple = context === 'couple' && appMode === 'couple';
+    const pA = partnerAnswers || {};
+
+    TABS.forEach((tab, ti) => {
+      // Filter by context
+      if(context === 'journey') return; // journey = all tabs (fall through)
+      if(context === 'themes' && tab.isProfil) return;
+      if(context === 'couple' && tab.isProfil) return;
+
+      const emoji = THEME_EMOJIS[tab.name] || '✦';
+      drawThemeDivider(tab.name, tab.desc || '', emoji);
+
+      doc.addPage(); y = mT; drawPageHeader();
+
       if(tab.isProfil) {
-        tab.fields.forEach((f,i)=>renderQA(f.label, answers[`profil__field__${i}`]));
+        tab.fields.forEach((f,i) => renderQA(f.label, answers[`profil__field__${i}`]));
       } else {
-        tab.subtabs?.forEach((st,si)=>{
+        tab.subtabs?.forEach((st, si) => {
           renderSubtab(st.name);
-          st.questions.forEach((q,qi)=>renderQA(q, answers[getQId(ti,si,qi)]));
+          st.questions.forEach((q, qi) => {
+            const myA = answers[getQId(ti, si, qi)];
+            if(isCouple) {
+              const ptA = pA[getQId(ti, si, qi)];
+              renderCoupleQA(q, myA, ptA);
+            } else {
+              renderQA(q, myA);
+            }
+          });
         });
       }
     });
 
     // Wedding tab
-    const hasWedding = WEDDING_TAB.subtabs.some((st,si)=>st.questions.some((_,qi)=>isWeddingAnswered(si,qi)));
-    if(hasWedding) {
-      renderTab(WEDDING_TAB.name);
-      WEDDING_TAB.subtabs.forEach((st,si)=>{
-        renderSubtab(st.name);
-        st.questions.forEach((q,qi)=>renderQA(q, answers[getWeddingQId(si,qi)]));
-      });
-    }
-
-    // Footer
-    const totalPages = doc.internal.getNumberOfPages();
-    for(let p=1;p<=totalPages;p++) {
-      doc.setPage(p);
-      doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(...cLight);
-      doc.text(`${p} / ${totalPages}`, pageW-mR, pageH-10, {align:'right'});
-      if(p===totalPages) {
-        doc.setDrawColor(...cBorder); doc.setLineWidth(0.2);
-        doc.line(mL, pageH-16, pageW-mR, pageH-16);
-        doc.text('APREEZ · PART OF INARTE', pageW/2, pageH-10, {align:'center'});
+    if(context !== 'themes' && context !== 'couple') {
+      const hasWedding = WEDDING_TAB.subtabs.some((st,si)=>st.questions.some((_,qi)=>isWeddingAnswered(si,qi)));
+      if(hasWedding) {
+        drawThemeDivider(WEDDING_TAB.name, '', '💍');
+        doc.addPage(); y = mT; drawPageHeader();
+        WEDDING_TAB.subtabs.forEach((st,si)=>{
+          renderSubtab(st.name);
+          st.questions.forEach((q,qi)=>renderQA(q, answers[getWeddingQId(si,qi)]));
+        });
       }
     }
 
-    doc.save(`Apreez_${(userName||'Refleksi').replace(/\s+/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    // ── FOOTER on every page ──
+    const totalPages = doc.internal.getNumberOfPages();
+    for(let p=1; p<=totalPages; p++) {
+      doc.setPage(p);
+      doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(...cLight);
+      doc.text(`${p} / ${totalPages}`, pageW-mR, pageH-10, {align:'right'});
+      doc.setDrawColor(...cBorder); doc.setLineWidth(0.15);
+      doc.line(mL, pageH-16, pageW-mR, pageH-16);
+      doc.text('APREEZ · PART OF INARTE', pageW/2, pageH-10, {align:'center'});
+    }
+
+    const contextSuffix = context !== 'full' ? `_${context}` : '';
+    doc.save(`Apreez_${(userName||'Refleksi').replace(/\s+/g,'_')}${contextSuffix}_${new Date().toISOString().split('T')[0]}.pdf`);
 
   } catch(err) {
     console.error('[Apreez] PDF error:', err);
     alert('Gagal membuat PDF. Pastikan koneksi internet aktif lalu coba lagi.');
   } finally {
+    if(btn && origHTML) btn.innerHTML = origHTML;
+  }
+}
     if(btn && origHTML) btn.innerHTML = origHTML;
   }
 }
