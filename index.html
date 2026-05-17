@@ -3247,30 +3247,32 @@ async function downloadPDF(context) {
     }
 
     // ── THEME DIVIDER PAGE ──
-    function drawThemeDivider(themeName, themeDesc, emoji) {
+    function drawThemeDivider(themeName, themeDesc) {
       doc.addPage();
+      // Background
       doc.setFillColor(...cBgDark);
       doc.rect(0, 0, pageW, pageH, 'F');
       doc.setFillColor(...cBg);
-      doc.rect(0, pageH*0.45, pageW, pageH*0.55, 'F');
+      doc.rect(0, pageH*0.52, pageW, pageH*0.48, 'F');
 
-      // Emoji / icon area
-      doc.setFontSize(26);
-      doc.text(emoji || '✦', mL, pageH*0.35);
+      // Green accent bar
+      doc.setFillColor(...cGreen);
+      doc.rect(mL, pageH*0.28, 6, 0.8, 'F');
 
-      doc.setFont('helvetica','bold'); doc.setFontSize(22);
+      // Theme name
+      doc.setFont('helvetica','bold'); doc.setFontSize(24);
       doc.setTextColor(...cGreen);
-      const nameLines = wrap(themeName, cW, 22);
-      doc.text(nameLines, mL, pageH*0.4);
+      const nameLines = wrap(themeName, cW, 24);
+      doc.text(nameLines, mL, pageH*0.32);
 
-      if(themeDesc) {
+      // Description
+      if(themeDesc && themeDesc.trim()) {
         doc.setFont('helvetica','normal'); doc.setFontSize(10);
         doc.setTextColor(...cMid);
         const descLines = wrap(themeDesc, cW, 10);
-        doc.text(descLines, mL, pageH*0.4 + nameLines.length*9 + 6);
+        doc.text(descLines, mL, pageH*0.32 + nameLines.length*10 + 6);
       }
-
-      y = mT; // next page content starts fresh
+      y = mT;
     }
 
     // ── QA BLOCK ──
@@ -3356,15 +3358,22 @@ async function downloadPDF(context) {
     const isCouple = context === 'couple' && appMode === 'couple';
     const pA = partnerAnswers || {};
 
+    // Safe ASCII symbol map — jsPDF helvetica can't render emoji
+    const THEME_SYMBOLS = {
+      'Profil':'[ ]','Hobi':'[ ]','Mimpi':'[ ]','Visi & Misi':'[ ]',
+      'Agama':'[ ]','Latar Belakang':'[ ]','Keuangan':'[ ]','Pengasuhan':'[ ]',
+      'Pendidikan Anak':'[ ]','Pembagian Tugas':'[ ]','Kesehatan':'[ ]',
+      'Trauma':'[ ]','Love Language':'[ ]','Konflik':'[ ]','Relasi Sosial':'[ ]',
+      'Ekspektasi':'[ ]','Respon':'[ ]','Rencana Pernikahan':'[ ]'
+    };
+
     TABS.forEach((tab, ti) => {
       // Filter by context
-      if(context === 'journey') return; // journey = all tabs (fall through)
       if(context === 'themes' && tab.isProfil) return;
       if(context === 'couple' && tab.isProfil) return;
+      // journey and full: include everything
 
-      const emoji = THEME_EMOJIS[tab.name] || '✦';
-      drawThemeDivider(tab.name, tab.desc || '', emoji);
-
+      drawThemeDivider(tab.name, tab.desc || '');
       doc.addPage(); y = mT; drawPageHeader();
 
       if(tab.isProfil) {
@@ -3389,7 +3398,7 @@ async function downloadPDF(context) {
     if(context !== 'themes' && context !== 'couple') {
       const hasWedding = WEDDING_TAB.subtabs.some((st,si)=>st.questions.some((_,qi)=>isWeddingAnswered(si,qi)));
       if(hasWedding) {
-        drawThemeDivider(WEDDING_TAB.name, '', '💍');
+        drawThemeDivider(WEDDING_TAB.name, '');
         doc.addPage(); y = mT; drawPageHeader();
         WEDDING_TAB.subtabs.forEach((st,si)=>{
           renderSubtab(st.name);
@@ -3546,46 +3555,18 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   function showAuthScreen() { hideSplash(); document.getElementById('auth-screen').style.display='flex'; }
 
-  // ── FAST PATH — Inarte pattern ──
-  // Returning user: if local cache exists AND Supabase session matches, go straight to app.
-  // We verify the session first to prevent data bleed between accounts.
+  // ── FAST PATH — returning user ──
+  // Only use cached data if Supabase has no conflicting active session.
+  // We do NOT call onLoginSuccess here to avoid overwriting data with wrong user.
   const cachedUserId = _getCachedUserId();
-  if(cachedUserId && SB) {
-    try {
-      const { data: { session } } = await SB.auth.getSession();
-      if(session?.user) {
-        if(session.user.id !== cachedUserId) {
-          // Different user logged in — clear stale cache and do full login
-          localStorage.removeItem(`apreez_v4_${cachedUserId}`);
-          localStorage.removeItem('apreez_v4');
-          await onLoginSuccess(session.user);
-          hideSplash();
-          return;
-        }
-        // Same user — safe to use fast path
-        loadLocalState(cachedUserId);
-        if(userName && userName !== 'Tamu') {
-          currentUser = session.user; // use real session object, not placeholder
-          hideSplash();
-          enterApp();
-          _backgroundSessionSync();
-          return;
-        }
-      } else {
-        // No active session — clear cache and show auth
-        localStorage.removeItem(`apreez_v4_${cachedUserId}`);
-        localStorage.removeItem('apreez_v4');
-      }
-    } catch(e) {
-      // Network error — fall back to cached data optimistically
-      loadLocalState(cachedUserId);
-      if(userName && userName !== 'Tamu') {
-        currentUser = { id: cachedUserId };
-        hideSplash();
-        enterApp();
-        if(SB) _backgroundSessionSync();
-        return;
-      }
+  if(cachedUserId) {
+    loadLocalState(cachedUserId);
+    if(userName && userName !== 'Tamu') {
+      currentUser = { id: cachedUserId };
+      hideSplash();
+      enterApp();
+      if(SB) _backgroundSessionSync();
+      return;
     }
   }
 
