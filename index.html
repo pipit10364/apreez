@@ -1985,9 +1985,8 @@ async function onLoginSuccess(user, nameOverride=null) {
   // Clear Nara chat history — must reset per user, not per session
   naraChatHistory = [];
   naraAnswerSummary = '';
-  // Clear chat area UI if already rendered
-  const _naraChatArea = document.getElementById('nara-chat-area');
-  if(_naraChatArea) _naraChatArea.innerHTML = '';
+  // Note: do NOT clear nara-chat-area DOM here — it contains static HTML including
+  // nara-threshold-note. initNaraScreen will rebuild chat history when user opens Nara.
 
   currentUser = user; isGuest = false;
   console.log('[Apreez] onLoginSuccess for:', user.email, '| id:', user.id.slice(0,8));
@@ -2834,7 +2833,11 @@ async function loadPartnerAnswers() {
 async function initNaraScreen() {
   const completedThemes=getCompletedThemes(), totalThemes=TABS.filter(t=>!t.isProfil).length, filled=getFilledQ(), total=getTotalQ();
   const noteEl=document.getElementById('nara-threshold-note');
-  if(!noteEl) return; // DOM not ready yet, skip
+  if(!noteEl) {
+    // DOM not ready yet — retry once after short delay
+    setTimeout(()=>initNaraScreen(), 120);
+    return;
+  }
   naraAnswerSummary=buildAnswerSummary();
 
   const pct = total>0 ? Math.round(filled/total*100) : 0;
@@ -2883,7 +2886,10 @@ async function initNaraScreen() {
   const area = document.getElementById('nara-chat-area');
   const hadHistory = loadNaraHistory();
   if(hadHistory && naraChatHistory.length > 0) {
-    if(area) area.innerHTML = '';
+    // Remove only previous chat bubbles, not the static intro card
+    if(area) {
+      Array.from(area.querySelectorAll('.chat-bubble-wrap')).forEach(el => el.remove());
+    }
     naraChatHistory.forEach(msg => {
       if(msg.role==='user') addChatBubble('user', msg.content);
       else if(msg.role==='assistant') addChatBubble('nara', msg.content);
