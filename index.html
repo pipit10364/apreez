@@ -896,6 +896,168 @@ body {
   .home-mosaic-card .mosaic-block { width:6px; height:6px; }
 }
 
+/* ══════════════════════════════════════════
+   PROFILE DRAWER
+══════════════════════════════════════════ */
+.profile-drawer-overlay {
+  position: fixed; inset: 0; z-index: 3000;
+  background: rgba(0,0,0,.35); backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s var(--ease-smooth);
+}
+.profile-drawer-overlay.open { opacity: 1; pointer-events: all; }
+.profile-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(340px, 92vw); background: var(--bg);
+  z-index: 3001; display: flex; flex-direction: column;
+  transform: translateX(110%); transition: transform .35s var(--ease);
+  box-shadow: -20px 0 60px rgba(0,0,0,.18);
+}
+.profile-drawer-overlay.open .profile-drawer { transform: translateX(0); }
+.profile-drawer-handle {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: var(--border); margin: 14px auto 0; flex-shrink: 0;
+}
+.profile-drawer-top {
+  padding: calc(20px + var(--safe-top)) 22px 20px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.profile-drawer-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 400; line-height: 1.1;
+  color: var(--text); margin-bottom: 4px;
+}
+.profile-drawer-name em { color: var(--card); font-style: italic; }
+.profile-drawer-email { font-size: 11px; color: var(--text3); letter-spacing: .3px; }
+.profile-drawer-mode-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--card); background: rgba(46,115,89,.1);
+  border: 1px solid rgba(46,115,89,.2);
+  border-radius: 999px; padding: 4px 10px; margin-top: 10px;
+}
+.profile-drawer-body {
+  flex: 1; overflow-y: auto; padding: 16px 22px 0;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.profile-drawer-section-label {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text3); margin-top: 8px; margin-bottom: 2px;
+}
+.profile-drawer-row { display: flex; flex-direction: column; gap: 5px; }
+.profile-drawer-field-label { font-size: 11px; font-weight: 500; color: var(--text2); }
+.profile-drawer-input {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 10px 13px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  color: var(--text); outline: none; transition: var(--transition); width: 100%;
+}
+.profile-drawer-input:focus { border-color: var(--card); background: var(--bg3); }
+.profile-drawer-input::placeholder { color: var(--text3); }
+.profile-drawer-textarea {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 10px 13px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  color: var(--text); outline: none; transition: var(--transition); width: 100%;
+  resize: none; min-height: 72px; line-height: 1.65;
+}
+.profile-drawer-textarea:focus { border-color: var(--card); background: var(--bg3); }
+.profile-drawer-textarea::placeholder { color: var(--text3); }
+.profile-drawer-footer {
+  padding: 16px 22px; padding-bottom: calc(16px + var(--safe-bottom));
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+}
+.profile-drawer-btn {
+  width: 100%; padding: 12px 16px; border-radius: var(--radius);
+  cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px;
+  font-weight: 500; letter-spacing: .5px; transition: var(--transition);
+  text-align: left; display: flex; align-items: center; gap: 10px;
+}
+.profile-drawer-btn.primary { background: var(--card); color: white; border: none; }
+.profile-drawer-btn.primary:hover { background: var(--card-hover); }
+.profile-drawer-btn.secondary { background: transparent; color: var(--text2); border: 1.5px solid var(--border); }
+.profile-drawer-btn.secondary:hover { border-color: var(--text2); color: var(--text); }
+.profile-drawer-btn.danger { background: transparent; color: var(--pink); border: 1.5px solid rgba(224,122,95,.25); }
+.profile-drawer-btn.danger:hover { background: var(--pink-dim); border-color: var(--pink); }
+.profile-drawer-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.profile-avatar-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--card), var(--card-hover));
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: white; font-family: 'Cormorant Garamond', serif; font-size: 16px;
+  transition: var(--transition); box-shadow: 0 4px 14px rgba(46,115,89,.25); flex-shrink: 0;
+}
+.profile-avatar-btn:hover { transform: scale(1.08); }
+
+/* ══════════════════════════════════════════
+   3-STATE MOSAIC  (kosong / dibuka / dijawab)
+══════════════════════════════════════════ */
+.mosaic-block.opened {
+  background: transparent !important;
+  box-shadow: inset 0 0 0 1.5px var(--mosaic-fill) !important;
+  opacity: .8;
+}
+.journey-mosaic-grid .mosaic-block.opened {
+  box-shadow: inset 0 0 0 2px var(--mosaic-fill) !important;
+}
+
+/* ══════════════════════════════════════════
+   COUPLE MOSAIC SIDE-BY-SIDE
+══════════════════════════════════════════ */
+.couple-mosaic-side {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px;
+}
+.couple-mosaic-side-card {
+  background: rgba(255,255,255,.34); border: 1px solid var(--border);
+  border-radius: 20px; padding: 14px 12px;
+}
+[data-theme="dark"] .couple-mosaic-side-card { background: rgba(37,45,37,.5); }
+.couple-mosaic-side-name {
+  font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 400;
+  color: var(--text); margin-bottom: 2px;
+}
+.couple-mosaic-side-pct { font-size: 10px; color: var(--text3); letter-spacing: .5px; margin-bottom: 10px; }
+.couple-mosaic-side-grid { display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
+.couple-mosaic-side-grid .mosaic-row { gap: 3px; }
+.couple-mosaic-side-grid .mosaic-block { width: 8px; height: 8px; border-radius: 3px; cursor: default; }
+.couple-mosaic-side-grid .mosaic-block:hover { transform: none; }
+.couple-mosaic-side-grid .mosaic-block.filled { background: var(--pink) !important; box-shadow: none !important; }
+
+/* ══════════════════════════════════════════
+   PAGE-LEVEL PDF BUTTON
+══════════════════════════════════════════ */
+.page-pdf-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border);
+  background: rgba(255,255,255,.34); color: var(--text2);
+  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
+  letter-spacing: .5px; cursor: pointer; transition: var(--transition); white-space: nowrap;
+}
+.page-pdf-btn:hover { border-color: var(--card); color: var(--card); }
+.page-pdf-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.page-hero-actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+
+/* ══════════════════════════════════════════
+   NARA DISCLAIMER + HARM
+══════════════════════════════════════════ */
+.nara-disclaimer-bar {
+  background: var(--peach-dim); border-top: 1px solid var(--border);
+  padding: 7px 20px; font-size: 10px; color: var(--text3);
+  line-height: 1.6; text-align: center; flex-shrink: 0;
+}
+.nara-disclaimer-bar strong { color: var(--text2); font-weight: 500; }
+.nara-harm-bubble {
+  background: var(--pink-dim); border: 1px solid rgba(224,122,95,.3);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px;
+  padding: 14px 18px; max-width: 88%; align-self: flex-start;
+  font-size: 13px; color: var(--text); line-height: 1.75; font-weight: 300;
+}
+.nara-harm-bubble strong {
+  display: block; font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 400; color: var(--pink); margin-bottom: 6px;
+}
+
 </style>
 </head>
 <body>
@@ -1055,7 +1217,7 @@ body {
       </div>
       <div class="home-actions">
         <button class="btn-sm ghost" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
-        <button class="btn-sm ghost" onclick="authLogout()" title="Keluar">⇥</button>
+        <button class="profile-avatar-btn" id="profile-avatar-btn" onclick="openProfileDrawer()" title="Profil">?</button>
       </div>
     </header>
 
@@ -1096,6 +1258,12 @@ body {
       <div class="page-kicker">Perjalanan Refleksimu</div>
       <h1>Mosaik yang tumbuh bersama jawabanmu</h1>
       <p>Ketuk titik mana pun untuk membuka pertanyaan. Mosaik ini adalah peta, navigasi, dan jejak perjalanan pra-nikahmu.</p>
+      <div class="page-hero-actions">
+        <button class="page-pdf-btn" onclick="downloadPDF('journey')">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+          Unduh PDF lengkap
+        </button>
+      </div>
     </header>
     <section class="journey-mosaic-card">
       <div class="journey-stat"><strong id="journey-filled">0</strong><span id="journey-total">/ 0 pertanyaan dijawab</span></div>
@@ -1112,6 +1280,12 @@ body {
       <div class="page-kicker">Tema refleksi</div>
       <h1>Pilih ruang yang ingin kamu masuki hari ini</h1>
       <p>Tema-tema ini tidak perlu dikejar sekaligus. Datangi pelan-pelan, sesuai kesiapan hatimu.</p>
+      <div class="page-hero-actions">
+        <button class="page-pdf-btn" onclick="downloadPDF('themes')">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+          Unduh PDF refleksi
+        </button>
+      </div>
     </header>
     <div class="tab-grid themes-grid" id="tab-grid"></div>
   </div>
@@ -1124,6 +1298,12 @@ body {
       <div class="page-kicker">Bersama pasangan</div>
       <h1>Melihat ritme kalian berdua dengan lembut</h1>
       <p>Sinkronisasi bukan untuk menilai siapa yang lebih cepat, tapi membantu kalian menemukan bahan percakapan yang lebih jujur.</p>
+      <div class="page-hero-actions" style="justify-content:center;">
+        <button class="page-pdf-btn" onclick="downloadPDF('couple')">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+          Unduh PDF couple
+        </button>
+      </div>
     </header>
     <section class="couple-status-card">
       <div class="couple-avatars">
@@ -1132,6 +1312,7 @@ body {
         <div class="couple-avatar"><strong id="couple-partner-initial">?</strong><span id="couple-partner-label">Pasangan</span></div>
       </div>
       <div class="couple-bars" id="couple-bars"></div>
+      <div class="couple-mosaic-side" id="couple-mosaic-side" style="display:none;"></div>
       <div class="couple-note">Apreez membaca pola jawaban dan ritme refleksi kalian; tidak perlu menebak gender untuk membuat perbandingan terasa personal.</div>
     </section>
     <div class="partner-card couple-partner-card" id="partner-card">
@@ -1208,6 +1389,7 @@ body {
   </div>
   <div id="nara-usage-info" style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;letter-spacing:.3px;"></div>
   <div class="nara-suggestions" id="nara-suggestions"></div>
+  <div class="nara-disclaimer-bar"><strong>Nara adalah AI</strong>, bukan konselor profesional. Untuk eksplorasi mendalam atau situasi sulit, pertimbangkan berkonsultasi dengan psikolog atau konselor pernikahan.</div>
   <div class="nara-input-row">
     <textarea class="nara-input" id="nara-input" placeholder="Tanya Nara sesuatu..." rows="1" onkeydown="handleNaraKey(event)" oninput="autoResizeNaraInput(this)"></textarea>
     <button class="nara-send-btn" id="nara-send-btn" onclick="sendNaraMessage()">
@@ -3261,6 +3443,327 @@ function _showReAuthPrompt() {
     // If cancelled — stay on app with local data (offline-like mode)
   });
 }
+
+// ══════════════════════════════════════════
+// PROFILE DRAWER
+// ══════════════════════════════════════════
+let _pdSaveTimer = null;
+function openProfileDrawer() {
+  const overlay = document.getElementById('profile-drawer-overlay');
+  if(!overlay) return;
+  // Populate fields
+  const nameInput = document.getElementById('pd-name-input');
+  const bioInput  = document.getElementById('pd-bio-input');
+  const pdName    = document.getElementById('pd-name');
+  const pdEmail   = document.getElementById('pd-email');
+  const pdPill    = document.getElementById('pd-mode-pill');
+  if(nameInput) nameInput.value = userName || '';
+  // Bio stored in answers as a special key
+  const bio = answers['profil__bio'] || '';
+  if(bioInput) { bioInput.value = bio; updateBioCount(bio.length); }
+  if(pdName) pdName.innerHTML = userName ? `Ap<em>reez</em> · ${userName.split(' ')[0]}` : 'Apreez';
+  if(pdEmail) pdEmail.textContent = currentUser?.email || (isGuest ? 'Mode tamu' : '');
+  if(pdPill) pdPill.textContent = appMode === 'couple' ? '♡ Couple' : 'Solo';
+  // Update avatar button initial
+  const avatarBtn = document.getElementById('profile-avatar-btn');
+  if(avatarBtn) avatarBtn.textContent = (userName?.[0] || 'A').toUpperCase();
+  overlay.classList.add('open');
+}
+function closeProfileDrawer() {
+  document.getElementById('profile-drawer-overlay')?.classList.remove('open');
+}
+function pdAutoSaveName(val) {
+  clearTimeout(_pdSaveTimer);
+  _pdSaveTimer = setTimeout(() => {
+    if(val.trim() && val.trim() !== userName) {
+      userName = val.trim();
+      saveState(); syncToSupabase(); renderDashboard();
+      const pdName = document.getElementById('pd-name');
+      if(pdName) pdName.innerHTML = `Ap<em>reez</em> · ${userName.split(' ')[0]}`;
+      const avatarBtn = document.getElementById('profile-avatar-btn');
+      if(avatarBtn) avatarBtn.textContent = (userName[0] || 'A').toUpperCase();
+    }
+  }, 800);
+}
+function pdAutoSaveBio(val) {
+  updateBioCount(val.length);
+  clearTimeout(_pdSaveTimer);
+  _pdSaveTimer = setTimeout(() => {
+    answers['profil__bio'] = val;
+    saveState(); syncToSupabase();
+  }, 800);
+}
+function updateBioCount(len) {
+  const el = document.getElementById('pd-bio-count');
+  if(el) el.textContent = `${len} / 160`;
+}
+
+// Update avatar initial whenever dashboard renders
+const _origRenderDashboard = renderDashboard;
+// Patch avatar update into enterApp
+const _origEnterApp = enterApp;
+function enterApp() {
+  _origEnterApp();
+  setTimeout(() => {
+    const avatarBtn = document.getElementById('profile-avatar-btn');
+    if(avatarBtn) avatarBtn.textContent = (userName?.[0] || 'A').toUpperCase();
+  }, 100);
+}
+
+// ══════════════════════════════════════════
+// 3-STATE MOSAIC — track opened questions
+// ══════════════════════════════════════════
+// We track which questions have been "opened" (viewed) in sessionStorage
+// so the state resets each session (feels natural, not persistent burden)
+function _getOpenedKey(ti, si, qi) { return `o_${ti}_${si}_${qi}`; }
+function _markOpened(ti, si, qi) {
+  try { sessionStorage.setItem(_getOpenedKey(ti,si,qi), '1'); } catch(e){}
+}
+function _isOpened(ti, si, qi) {
+  try { return !!sessionStorage.getItem(_getOpenedKey(ti,si,qi)); } catch(e){ return false; }
+}
+function _markWeddingOpened(si, qi) {
+  try { sessionStorage.setItem(`ow_${si}_${qi}`, '1'); } catch(e){}
+}
+function _isWeddingOpened(si, qi) {
+  try { return !!sessionStorage.getItem(`ow_${si}_${qi}`); } catch(e){ return false; }
+}
+
+// Patch openQuestion and openMosaicQuestion to mark as opened
+const _origOpenQuestion = openQuestion;
+function openQuestion(ti, si, qi) {
+  _markOpened(ti, si, qi);
+  _origOpenQuestion(ti, si, qi);
+}
+const _origOpenMosaicQuestion = openMosaicQuestion;
+function openMosaicQuestion(ti, si, qi) {
+  _markOpened(ti, si, qi);
+  _origOpenMosaicQuestion(ti, si, qi);
+}
+const _origOpenWeddingQuestion = openWeddingQuestion;
+function openWeddingQuestion(si, qi) {
+  _markWeddingOpened(si, qi);
+  _origOpenWeddingQuestion(si, qi);
+}
+
+// Patch renderMosaicInto to support 3-state
+const _origRenderMosaicInto = renderMosaicInto;
+function renderMosaicInto(grid, opts={}) {
+  if(!grid) return;
+  grid.innerHTML = '';
+  const groups = buildMosaicGroups();
+  groups.forEach((group, gi) => {
+    const row = document.createElement('div');
+    row.className = 'mosaic-row'; row.title = group.name;
+    group.questions.forEach(q => {
+      const block = document.createElement('div');
+      block.className = 'mosaic-block';
+      const filled = q.isWedding
+        ? isWeddingAnswered(q.subIdx, q.qIdx)
+        : (q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx, q.subIdx, q.qIdx));
+      const opened = q.isWedding
+        ? _isWeddingOpened(q.subIdx, q.qIdx)
+        : (!q.isField && _isOpened(q.tabIdx, q.subIdx, q.qIdx));
+      if(filled) block.classList.add('filled');
+      else if(opened) block.classList.add('opened');
+      block.title = group.name;
+      block.onclick = () => {
+        if(q.isWedding) {
+          openWeddingQuestion(q.subIdx, q.qIdx);
+          openedFromMosaic = true;
+          document.getElementById('modal-overlay')?.classList.add('mosaic-mode');
+        } else if(q.isField) {
+          openedFromMosaic = true;
+          openProfilFieldModal(q.fieldIdx);
+        } else {
+          openMosaicQuestion(q.tabIdx, q.subIdx, q.qIdx);
+        }
+      };
+      row.appendChild(block);
+    });
+    if(opts.preview && gi < 6) {
+      const maxQ = 27, dripNeeded = maxQ - group.questions.length;
+      for(let d = 0; d < Math.min(dripNeeded, 5); d++) {
+        const drip = document.createElement('div');
+        drip.className = 'mosaic-block';
+        drip.style.opacity = String(.3 - d * .06);
+        drip.style.pointerEvents = 'none';
+        row.appendChild(drip);
+      }
+    }
+    renderMosaicBadge(row, group);
+    grid.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════════════
+// COUPLE MOSAIC SIDE-BY-SIDE
+// ══════════════════════════════════════════
+function renderCoupleMosaicSide() {
+  const el = document.getElementById('couple-mosaic-side');
+  if(!el) return;
+  if(appMode !== 'couple' || !partnerAnswers) { el.style.display = 'none'; return; }
+  el.style.display = 'grid';
+  const myTotal = getTotalQ(), myFilled = getFilledQ();
+  const pFilled = Object.values(partnerAnswers).filter(v => v && v.trim()).length;
+  const myPct = myTotal > 0 ? Math.round(myFilled / myTotal * 100) : 0;
+  const pPct  = myTotal > 0 ? Math.round(pFilled  / myTotal * 100) : 0;
+  function buildMiniMosaic(targetAnswers, colorClass) {
+    let html = '<div class="couple-mosaic-side-grid">';
+    const groups = buildMosaicGroups();
+    groups.forEach(group => {
+      html += '<div class="mosaic-row">';
+      group.questions.forEach(q => {
+        const filled = q.isWedding
+          ? !!(targetAnswers[`wedding__${q.subIdx}__${q.qIdx}`]?.trim())
+          : (q.isField ? !!targetAnswers[`profil__field__${q.fieldIdx}`]?.trim() : !!targetAnswers[`${TABS[q.tabIdx]?.id}__${q.subIdx}__${q.qIdx}`]?.trim());
+        html += `<div class="mosaic-block${filled ? ' filled' : ''}"></div>`;
+      });
+      html += '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+  el.innerHTML = `
+    <div class="couple-mosaic-side-card">
+      <div class="couple-mosaic-side-name">${userName || 'Kamu'}</div>
+      <div class="couple-mosaic-side-pct">${myFilled} pertanyaan · ${myPct}%</div>
+      ${buildMiniMosaic(answers, 'you')}
+    </div>
+    <div class="couple-mosaic-side-card">
+      <div class="couple-mosaic-side-name">${partnerName || 'Pasangan'}</div>
+      <div class="couple-mosaic-side-pct">${pFilled} pertanyaan · ${pPct}%</div>
+      ${buildMiniMosaic(partnerAnswers, 'partner')}
+    </div>`;
+}
+
+// Patch renderCouplePage to also render side-by-side mosaic
+const _origRenderCouplePage = renderCouplePage;
+function renderCouplePage() {
+  _origRenderCouplePage();
+  renderCoupleMosaicSide();
+}
+
+// ══════════════════════════════════════════
+// NARA HARM DETECTION
+// ══════════════════════════════════════════
+const NARA_HARM_KEYWORDS = [
+  'bunuh diri','mau mati','ingin mati','ingin bunuh','menyakiti diri',
+  'nyakitin diri','potong nadi','lompat','gantung','overdosis','overdose',
+  'tidak mau hidup','ga mau hidup','gak mau hidup','sudah tidak sanggup',
+  'sudah tidak kuat','capek hidup','lelah hidup','menyesal lahir',
+  'tidak ingin ada','rasanya mau', 'harming myself','self harm','suicidal',
+  'want to die','end my life','kill myself'
+];
+function _checkNaraHarm(message) {
+  const lower = message.toLowerCase();
+  return NARA_HARM_KEYWORDS.some(k => lower.includes(k));
+}
+function _showNaraHarmResponse() {
+  const area = document.getElementById('nara-chat-area');
+  if(!area) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'chat-bubble-wrap nara';
+  const s = document.createElement('div'); s.className = 'chat-sender'; s.textContent = 'NARA';
+  const bubble = document.createElement('div'); bubble.className = 'nara-harm-bubble';
+  bubble.innerHTML = `<strong>Aku dengar kamu.</strong>Yang kamu rasakan itu nyata, dan aku tidak mau meremehkannya. Tapi untuk yang satu ini, aku tidak bisa menemanimu sendirian — kamu butuh seseorang yang sungguh-sungguh terlatih untuk ini.<br><br>Tolong hubungi <strong>Into The Light Indonesia</strong> di <a href="tel:119" style="color:var(--card);">119 ext 8</a> atau chat ke <strong>www.intothelightid.org</strong>. Kamu tidak harus melalui ini sendiri.`;
+  wrap.appendChild(s); wrap.appendChild(bubble);
+  area.appendChild(wrap); area.scrollTop = area.scrollHeight;
+}
+
+// Patch sendNaraMessage to include harm check
+const _origSendNaraMessage = sendNaraMessage;
+async function sendNaraMessage() {
+  const input = document.getElementById('nara-input');
+  const msg = input?.value?.trim();
+  if(!msg) return;
+  if(_checkNaraHarm(msg)) {
+    input.value = ''; input.style.height = 'auto';
+    addChatBubble('user', msg);
+    _showNaraHarmResponse();
+    return;
+  }
+  await _origSendNaraMessage();
+}
+
+// ══════════════════════════════════════════
+// PDF — CONTEXT-AWARE DOWNLOAD
+// ══════════════════════════════════════════
+// Override downloadPDF to accept context parameter
+const _origDownloadPDF = downloadPDF;
+async function downloadPDF(context) {
+  // 'full', 'journey', 'themes', 'couple', or undefined → all same full PDF for now
+  // In future can filter by context; for now all call the same generator
+  // but filename reflects context
+  const contextLabel = {
+    couple: 'Couple', journey: 'Perjalanan', themes: 'Tema'
+  }[context] || 'Refleksi';
+  // Call original but patch filename via a global flag
+  window._pdfContext = context || 'full';
+  window._pdfContextLabel = contextLabel;
+  await _origDownloadPDF();
+  window._pdfContext = null; window._pdfContextLabel = null;
+}
+
+// ══════════════════════════════════════════
+// AVATAR INITIAL SYNC — patch enterApp
+// ══════════════════════════════════════════
+// Update avatar button after enterApp is called
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure avatar reflects current user on load
+  const _patchAvatar = () => {
+    const btn = document.getElementById('profile-avatar-btn');
+    if(btn && userName) btn.textContent = (userName[0] || 'A').toUpperCase();
+  };
+  setTimeout(_patchAvatar, 1200);
+  // Also patch renderDashboard to keep avatar in sync
+  const _rdOrig = renderDashboard;
+  // Note: renderDashboard is already debounced — just add avatar sync after
+});
+
 </script>
+<!-- PROFILE DRAWER -->
+<div class="profile-drawer-overlay" id="profile-drawer-overlay" onclick="if(event.target===this)closeProfileDrawer()">
+  <div class="profile-drawer" id="profile-drawer">
+    <div class="profile-drawer-handle"></div>
+    <div class="profile-drawer-top">
+      <div class="profile-drawer-name" id="pd-name">Namamu</div>
+      <div class="profile-drawer-email" id="pd-email"></div>
+      <div class="profile-drawer-mode-pill" id="pd-mode-pill">Solo</div>
+    </div>
+    <div class="profile-drawer-body">
+      <div class="profile-drawer-section-label">Nama panggilan</div>
+      <div class="profile-drawer-row">
+        <input class="profile-drawer-input" id="pd-name-input" type="text" placeholder="Nama panggilanmu" maxlength="40" oninput="pdAutoSaveName(this.value)"/>
+      </div>
+      <div class="profile-drawer-section-label" style="margin-top:4px;">Bio singkat <span style="font-weight:300;text-transform:none;letter-spacing:0;font-size:10px;color:var(--text3);"> — muncul di profil pasangan</span></div>
+      <div class="profile-drawer-row">
+        <textarea class="profile-drawer-textarea" id="pd-bio-input" placeholder="Satu kalimat tentang siapa kamu..." maxlength="160" rows="3" oninput="pdAutoSaveBio(this.value)"></textarea>
+        <div style="font-size:10px;color:var(--text3);text-align:right;" id="pd-bio-count">0 / 160</div>
+      </div>
+      <div class="profile-drawer-section-label" style="margin-top:4px;">Mode</div>
+      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(showModeSettings,300);">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Ubah mode & kode couple
+      </button>
+      <div class="profile-drawer-section-label" style="margin-top:4px;">Lainnya</div>
+      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(openFeedback,300);">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Feedback untuk developer
+      </button>
+      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(()=>downloadPDF('full'),300);">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Unduh semua jawaban (PDF)
+      </button>
+    </div>
+    <div class="profile-drawer-footer">
+      <button class="profile-drawer-btn danger" onclick="closeProfileDrawer();setTimeout(authLogout,300);">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Keluar / ganti akun
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
