@@ -848,6 +848,14 @@ body {
 }
 .app-bottom-nav button.active { color:var(--card); background:rgba(46,115,89,.10); }
 .app-bottom-nav svg { width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.nav-profile-btn { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.nav-avatar {
+  width:22px; height:22px; border-radius:50%;
+  background:linear-gradient(135deg,var(--card),var(--card-hover));
+  color:white; font-family:'Cormorant Garamond',serif;
+  font-size:12px; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(46,115,89,.3);
+}
 .sub-header,.answer-header,.nara-input-row { background:var(--header-bg); backdrop-filter:blur(14px); border-color:var(--border); }
 .sub-header { box-shadow:0 10px 30px rgba(67,55,38,.04); }
 #s-nara { background:radial-gradient(circle at 50% 0, rgba(239,203,138,.18), transparent 42vw), var(--bg); }
@@ -1243,7 +1251,6 @@ body {
       </div>
       <div class="home-actions">
         <button class="btn-sm ghost" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
-        <button class="profile-avatar-btn" id="profile-avatar-btn" onclick="openProfileDrawer()" title="Profil">?</button>
       </div>
     </header>
 
@@ -2405,7 +2412,8 @@ function renderBottomNav(activeId='s-dashboard') {
     ['s-couple','Couple','<path d="M16 11a4 4 0 1 0-8 0c0 5 8 9 8 9s8-4 8-9a4 4 0 0 0-8 0" transform="scale(.8) translate(3 1)"/>'],
     ['s-nara','Nara','<path d="M12 3c2.8 3.2 4.2 6.1 4.2 8.7A4.2 4.2 0 0 1 12 16a4.2 4.2 0 0 1-4.2-4.3C7.8 9.1 9.2 6.2 12 3z"/><path d="M5 21c2-2 4.3-3 7-3s5 1 7 3"/>']
   ];
-  nav.innerHTML = items.map(([id,label,icon])=>`<button class="${activeId===id?'active':''}" onclick="${id==='s-nara'?'openNara()':`goTo('${id}')`}"><svg viewBox="0 0 24 24">${icon}</svg><span>${label}</span></button>`).join('');
+  nav.innerHTML = items.map(([id,label,icon])=>`<button class="${activeId===id?'active':''}" onclick="${id==='s-nara'?'openNara()':`goTo('${id}')`}"><svg viewBox="0 0 24 24">${icon}</svg><span>${label}</span></button>`).join('')
+    + `<button class="nav-profile-btn" onclick="openProfileDrawer()" title="Profil" id="nav-profile-btn"><div class="nav-avatar">${(userName?.[0]||'A').toUpperCase()}</div><span>Profil</span></button>`;
 }
 
 // ══ HELPERS ══
@@ -3922,8 +3930,12 @@ function _showNaraHarmResponse() {
 // AVATAR INITIAL SYNC
 // ══════════════════════════════════════════
 function syncProfileAvatar() {
-  const btn = document.getElementById('profile-avatar-btn');
-  if(btn && userName) btn.textContent = (userName[0] || 'A').toUpperCase();
+  // Update avatar initial in navbar
+  const navAvatar = document.querySelector('.nav-avatar');
+  if(navAvatar && userName) navAvatar.textContent = (userName[0] || 'A').toUpperCase();
+  // Also sync profile drawer if open
+  const pdName = document.getElementById('pd-name');
+  if(pdName && userName) pdName.innerHTML = `Ap<em>reez</em> · ${userName.split(' ')[0]}`;
 }
 // Hook into existing renderDashboard calls — add avatar sync at end
 // We do this safely by wrapping the debounced call, not the function itself
