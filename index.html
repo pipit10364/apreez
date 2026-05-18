@@ -703,7 +703,7 @@ body {
   gap:24px;
   margin-bottom:28px;
 }
-.home-hero { padding-top:var(--safe-top); }
+.home-hero { padding-top:var(--safe-top); padding-right:60px; }
 .home-actions { display:flex; gap:10px; }
 .btn-sm.ghost { background:rgba(255,255,255,.36); border-color:var(--border); box-shadow:var(--soft-shadow-sm); backdrop-filter:blur(12px); }
 .dash-datetime,.page-kicker,.home-card-kicker {
@@ -850,15 +850,15 @@ body {
 .app-bottom-nav svg { width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .profile-fab {
   position: fixed;
-  top: calc(14px + var(--safe-top));
-  right: 16px;
-  width: 36px; height: 36px;
+  top: calc(16px + var(--safe-top));
+  right: 18px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--card), var(--card-hover));
   color: white; border: none; cursor: pointer;
-  font-family: 'Cormorant Garamond', serif; font-size: 16px;
+  font-family: 'Cormorant Garamond', serif; font-size: 15px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px rgba(46,115,89,.28);
+  box-shadow: 0 3px 12px rgba(46,115,89,.25);
   z-index: 900;
   transition: var(--transition);
 }
@@ -1262,9 +1262,6 @@ body {
         <div class="dash-datetime" id="dash-datetime"></div>
         <div class="dash-greeting" id="dash-greeting"></div>
         <div class="dash-sub" id="dash-sub"></div>
-      </div>
-      <div class="home-actions">
-        <button class="btn-sm ghost" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
       </div>
     </header>
 
@@ -4041,6 +4038,10 @@ document.addEventListener('DOMContentLoaded', () => {
       <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(()=>downloadPDF('full'),300);">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Unduh semua jawaban (PDF)
+      </button>
+      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(forceSyncFromCloud,300);">
+        <svg viewBox="0 0 24 24"><polyline points="23,4 23,10 17,10"/><polyline points="1,20 1,14 7,14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Sinkron ulang dari cloud
       </button>
     </div>
     <div class="profile-drawer-footer">
