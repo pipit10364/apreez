@@ -848,7 +848,21 @@ body {
 }
 .app-bottom-nav button.active { color:var(--card); background:rgba(46,115,89,.10); }
 .app-bottom-nav svg { width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-.nav-profile-btn { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.profile-fab {
+  position: fixed;
+  top: calc(14px + var(--safe-top));
+  right: 16px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--card), var(--card-hover));
+  color: white; border: none; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(46,115,89,.28);
+  z-index: 900;
+  transition: var(--transition);
+}
+.profile-fab:hover { transform: scale(1.08); }
 .nav-avatar {
   width:22px; height:22px; border-radius:50%;
   background:linear-gradient(135deg,var(--card),var(--card-hover));
@@ -2412,8 +2426,19 @@ function renderBottomNav(activeId='s-dashboard') {
     ['s-couple','Couple','<path d="M16 11a4 4 0 1 0-8 0c0 5 8 9 8 9s8-4 8-9a4 4 0 0 0-8 0" transform="scale(.8) translate(3 1)"/>'],
     ['s-nara','Nara','<path d="M12 3c2.8 3.2 4.2 6.1 4.2 8.7A4.2 4.2 0 0 1 12 16a4.2 4.2 0 0 1-4.2-4.3C7.8 9.1 9.2 6.2 12 3z"/><path d="M5 21c2-2 4.3-3 7-3s5 1 7 3"/>']
   ];
-  nav.innerHTML = items.map(([id,label,icon])=>`<button class="${activeId===id?'active':''}" onclick="${id==='s-nara'?'openNara()':`goTo('${id}')`}"><svg viewBox="0 0 24 24">${icon}</svg><span>${label}</span></button>`).join('')
-    + `<button class="nav-profile-btn" onclick="openProfileDrawer()" title="Profil" id="nav-profile-btn"><div class="nav-avatar">${(userName?.[0]||'A').toUpperCase()}</div><span>Profil</span></button>`;
+  nav.innerHTML = items.map(([id,label,icon])=>`<button class="${activeId===id?'active':''}" onclick="${id==='s-nara'?'openNara()':`goTo('${id}')`}"><svg viewBox="0 0 24 24">${icon}</svg><span>${label}</span></button>`).join('');
+
+  // Floating avatar button — persists across all screens
+  let fab = document.getElementById('profile-fab');
+  if(!fab) {
+    fab = document.createElement('button');
+    fab.id = 'profile-fab';
+    fab.className = 'profile-fab';
+    fab.onclick = openProfileDrawer;
+    fab.title = 'Profil';
+    document.body.appendChild(fab);
+  }
+  fab.textContent = (userName?.[0] || 'A').toUpperCase();
 }
 
 // ══ HELPERS ══
@@ -3706,6 +3731,8 @@ function _showReAuthPrompt() {
 // ══════════════════════════════════════════
 let _pdSaveTimer = null;
 function openProfileDrawer() {
+  const fab = document.getElementById('profile-fab');
+  if(fab) fab.style.opacity = '0';
   const overlay = document.getElementById('profile-drawer-overlay');
   if(!overlay) return;
   // Populate fields
@@ -3728,6 +3755,8 @@ function openProfileDrawer() {
 }
 function closeProfileDrawer() {
   document.getElementById('profile-drawer-overlay')?.classList.remove('open');
+  const fab = document.getElementById('profile-fab');
+  if(fab) fab.style.opacity = '1';
 }
 function pdAutoSaveName(val) {
   clearTimeout(_pdSaveTimer);
@@ -3930,10 +3959,8 @@ function _showNaraHarmResponse() {
 // AVATAR INITIAL SYNC
 // ══════════════════════════════════════════
 function syncProfileAvatar() {
-  // Update avatar initial in navbar
-  const navAvatar = document.querySelector('.nav-avatar');
-  if(navAvatar && userName) navAvatar.textContent = (userName[0] || 'A').toUpperCase();
-  // Also sync profile drawer if open
+  const fab = document.getElementById('profile-fab');
+  if(fab && userName) fab.textContent = (userName[0] || 'A').toUpperCase();
   const pdName = document.getElementById('pd-name');
   if(pdName && userName) pdName.innerHTML = `Ap<em>reez</em> · ${userName.split(' ')[0]}`;
 }
