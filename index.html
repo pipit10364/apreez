@@ -274,14 +274,17 @@ body {
 .tab-card.alt1 { background:var(--pink); }
 .tab-card.alt2 { background:var(--peach); }
 .tab-card.alt2 .tab-name,.tab-card.alt2 .tab-pct { color:var(--text); }
-[data-theme="dark"] .tab-card { background:rgba(82,183,136,.1); border:1.5px solid #52B788; }
-[data-theme="dark"] .tab-card .tab-name,[data-theme="dark"] .tab-card .tab-pct,[data-theme="dark"] .tab-card .tab-icon { color:#52B788; }
-[data-theme="dark"] .tab-card.alt1 { background:rgba(224,122,95,.1); border-color:#E07A5F; }
-[data-theme="dark"] .tab-card.alt1 .tab-name,[data-theme="dark"] .tab-card.alt1 .tab-pct,[data-theme="dark"] .tab-card.alt1 .tab-icon { color:#E07A5F; }
-[data-theme="dark"] .tab-card.alt2 { background:rgba(242,204,143,.1); border-color:#F2CC8F; }
+[data-theme="dark"] .tab-card { background:rgba(82,183,136,.18); border:1.5px solid rgba(82,183,136,.5); }
+[data-theme="dark"] .tab-card .tab-name,[data-theme="dark"] .tab-card .tab-pct,[data-theme="dark"] .tab-card .tab-icon { color:#7DCFA8; }
+[data-theme="dark"] .tab-card.alt1 { background:rgba(224,122,95,.18); border-color:rgba(224,122,95,.5); }
+[data-theme="dark"] .tab-card.alt1 .tab-name,[data-theme="dark"] .tab-card.alt1 .tab-pct,[data-theme="dark"] .tab-card.alt1 .tab-icon { color:#F0A090; }
+[data-theme="dark"] .tab-card.alt2 { background:rgba(242,204,143,.18); border-color:rgba(242,204,143,.5); }
 [data-theme="dark"] .tab-card.alt2 .tab-name,[data-theme="dark"] .tab-card.alt2 .tab-pct,[data-theme="dark"] .tab-card.alt2 .tab-icon { color:#F2CC8F; }
-[data-theme="dark"] .tab-card.profil-card { background:rgba(242,204,143,.12); border-color:#F2CC8F; }
+[data-theme="dark"] .tab-card.profil-card { background:rgba(242,204,143,.15); border-color:rgba(242,204,143,.45); }
 [data-theme="dark"] .tab-card.profil-card .tab-name,[data-theme="dark"] .tab-card.profil-card .tab-pct { color:#F2CC8F; }
+[data-theme="dark"] .tab-card:hover { background:rgba(82,183,136,.28); }
+[data-theme="dark"] .tab-card.alt1:hover { background:rgba(224,122,95,.28); }
+[data-theme="dark"] .tab-card.alt2:hover { background:rgba(242,204,143,.28); }
 .tab-icon { width:22px; height:22px; margin-bottom:6px; flex-shrink:0; color:white; }
 .tab-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .tab-card::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,.1); opacity:0; transition:opacity .2s; }
@@ -1152,6 +1155,7 @@ body {
       <div class="home-actions">
         <button class="btn-sm ghost" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
         <button class="btn-sm ghost" id="theme-btn" onclick="toggleTheme()" title="Ganti tema">☀</button>
+        <button class="btn-sm ghost" onclick="openFeedback()" title="Feedback">✉</button>
         <button class="btn-sm ghost" onclick="authLogout()" title="Keluar">⇥</button>
       </div>
     </header>
