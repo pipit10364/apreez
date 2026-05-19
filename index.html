@@ -703,7 +703,7 @@ body {
   gap:24px;
   margin-bottom:28px;
 }
-.home-hero { padding-top:var(--safe-top); padding-right:60px; }
+.home-hero { padding-top:var(--safe-top); }
 .home-actions { display:flex; gap:10px; }
 .btn-sm.ghost { background:rgba(255,255,255,.36); border-color:var(--border); box-shadow:var(--soft-shadow-sm); backdrop-filter:blur(12px); }
 .dash-datetime,.page-kicker,.home-card-kicker {
@@ -848,28 +848,8 @@ body {
 }
 .app-bottom-nav button.active { color:var(--card); background:rgba(46,115,89,.10); }
 .app-bottom-nav svg { width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-.profile-fab {
-  position: fixed;
-  top: calc(16px + var(--safe-top));
-  right: 18px;
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--card), var(--card-hover));
-  color: white; border: none; cursor: pointer;
-  font-family: 'Cormorant Garamond', serif; font-size: 15px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 12px rgba(46,115,89,.25);
-  z-index: 900;
-  transition: var(--transition);
-}
-.profile-fab:hover { transform: scale(1.08); }
-.nav-avatar {
-  width:22px; height:22px; border-radius:50%;
-  background:linear-gradient(135deg,var(--card),var(--card-hover));
-  color:white; font-family:'Cormorant Garamond',serif;
-  font-size:12px; display:flex; align-items:center; justify-content:center;
-  box-shadow:0 2px 8px rgba(46,115,89,.3);
-}
+
+
 .sub-header,.answer-header,.nara-input-row { background:var(--header-bg); backdrop-filter:blur(14px); border-color:var(--border); }
 .sub-header { box-shadow:0 10px 30px rgba(67,55,38,.04); }
 #s-nara { background:radial-gradient(circle at 50% 0, rgba(239,203,138,.18), transparent 42vw), var(--bg); }
@@ -943,100 +923,6 @@ body {
   .journey-mosaic-grid .mosaic-block { width:9px; height:9px; }
   .home-mosaic-card .mosaic-block { width:6px; height:6px; }
 }
-
-/* ══════════════════════════════════════════
-   PROFILE DRAWER
-══════════════════════════════════════════ */
-.profile-drawer-overlay {
-  position: fixed; inset: 0; z-index: 3000;
-  background: rgba(0,0,0,.35); backdrop-filter: blur(6px);
-  opacity: 0; pointer-events: none;
-  transition: opacity .3s var(--ease-smooth);
-}
-.profile-drawer-overlay.open { opacity: 1; pointer-events: all; }
-.profile-drawer {
-  position: fixed; top: 0; right: 0; bottom: 0;
-  width: min(340px, 92vw); background: var(--bg);
-  z-index: 3001; display: flex; flex-direction: column;
-  transform: translateX(110%); transition: transform .35s var(--ease);
-  box-shadow: -20px 0 60px rgba(0,0,0,.18);
-}
-.profile-drawer-overlay.open .profile-drawer { transform: translateX(0); }
-.profile-drawer-handle {
-  width: 36px; height: 4px; border-radius: 2px;
-  background: var(--border); margin: 14px auto 0; flex-shrink: 0;
-}
-.profile-drawer-top {
-  padding: calc(20px + var(--safe-top)) 22px 20px;
-  border-bottom: 1px solid var(--border); flex-shrink: 0;
-}
-.profile-drawer-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 28px; font-weight: 400; line-height: 1.1;
-  color: var(--text); margin-bottom: 4px;
-}
-.profile-drawer-name em { color: var(--card); font-style: italic; }
-.profile-drawer-email { font-size: 11px; color: var(--text3); letter-spacing: .3px; }
-.profile-drawer-mode-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--card); background: rgba(46,115,89,.1);
-  border: 1px solid rgba(46,115,89,.2);
-  border-radius: 999px; padding: 4px 10px; margin-top: 10px;
-}
-.profile-drawer-body {
-  flex: 1; overflow-y: auto; padding: 16px 22px 0;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.profile-drawer-section-label {
-  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--text3); margin-top: 8px; margin-bottom: 2px;
-}
-.profile-drawer-row { display: flex; flex-direction: column; gap: 5px; }
-.profile-drawer-field-label { font-size: 11px; font-weight: 500; color: var(--text2); }
-.profile-drawer-input {
-  background: var(--bg2); border: 1.5px solid var(--border);
-  border-radius: var(--radius); padding: 10px 13px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px;
-  color: var(--text); outline: none; transition: var(--transition); width: 100%;
-}
-.profile-drawer-input:focus { border-color: var(--card); background: var(--bg3); }
-.profile-drawer-input::placeholder { color: var(--text3); }
-.profile-drawer-textarea {
-  background: var(--bg2); border: 1.5px solid var(--border);
-  border-radius: var(--radius); padding: 10px 13px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px;
-  color: var(--text); outline: none; transition: var(--transition); width: 100%;
-  resize: none; min-height: 72px; line-height: 1.65;
-}
-.profile-drawer-textarea:focus { border-color: var(--card); background: var(--bg3); }
-.profile-drawer-textarea::placeholder { color: var(--text3); }
-.profile-drawer-footer {
-  padding: 16px 22px; padding-bottom: calc(16px + var(--safe-bottom));
-  border-top: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
-}
-.profile-drawer-btn {
-  width: 100%; padding: 12px 16px; border-radius: var(--radius);
-  cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px;
-  font-weight: 500; letter-spacing: .5px; transition: var(--transition);
-  text-align: left; display: flex; align-items: center; gap: 10px;
-}
-.profile-drawer-btn.primary { background: var(--card); color: white; border: none; }
-.profile-drawer-btn.primary:hover { background: var(--card-hover); }
-.profile-drawer-btn.secondary { background: transparent; color: var(--text2); border: 1.5px solid var(--border); }
-.profile-drawer-btn.secondary:hover { border-color: var(--text2); color: var(--text); }
-.profile-drawer-btn.danger { background: transparent; color: var(--pink); border: 1.5px solid rgba(224,122,95,.25); }
-.profile-drawer-btn.danger:hover { background: var(--pink-dim); border-color: var(--pink); }
-.profile-drawer-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.profile-avatar-btn {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--card), var(--card-hover));
-  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  color: white; font-family: 'Cormorant Garamond', serif; font-size: 16px;
-  transition: var(--transition); box-shadow: 0 4px 14px rgba(46,115,89,.25); flex-shrink: 0;
-}
-.profile-avatar-btn:hover { transform: scale(1.08); }
 
 /* ══════════════════════════════════════════
    3-STATE MOSAIC  (kosong / dibuka / dijawab)
@@ -1262,6 +1148,11 @@ body {
         <div class="dash-datetime" id="dash-datetime"></div>
         <div class="dash-greeting" id="dash-greeting"></div>
         <div class="dash-sub" id="dash-sub"></div>
+      </div>
+      <div class="home-actions">
+        <button class="btn-sm ghost" onclick="forceSyncFromCloud()" title="Sinkron dari cloud">↻</button>
+        <button class="btn-sm ghost" id="theme-btn" onclick="toggleTheme()" title="Ganti tema">☀</button>
+        <button class="btn-sm ghost" onclick="authLogout()" title="Keluar">⇥</button>
       </div>
     </header>
 
@@ -2197,6 +2088,9 @@ function toggleTheme() {
   document.documentElement.setAttribute('data-theme', isDark?'dark':'light');
   document.getElementById('meta-theme-color').content = isDark?'#0D1B2A':'#2D6A4F';
   saveState(); updateThemeIcons();
+  // Sync profile drawer label
+  const label = document.getElementById('pd-theme-label');
+  if(label) label.textContent = isDark ? 'Ganti ke mode terang' : 'Ganti ke mode gelap';
 }
 function updateThemeIcons() {
   const icon = isDark?'☾':'☀';
@@ -2424,18 +2318,6 @@ function renderBottomNav(activeId='s-dashboard') {
     ['s-nara','Nara','<path d="M12 3c2.8 3.2 4.2 6.1 4.2 8.7A4.2 4.2 0 0 1 12 16a4.2 4.2 0 0 1-4.2-4.3C7.8 9.1 9.2 6.2 12 3z"/><path d="M5 21c2-2 4.3-3 7-3s5 1 7 3"/>']
   ];
   nav.innerHTML = items.map(([id,label,icon])=>`<button class="${activeId===id?'active':''}" onclick="${id==='s-nara'?'openNara()':`goTo('${id}')`}"><svg viewBox="0 0 24 24">${icon}</svg><span>${label}</span></button>`).join('');
-
-  // Floating avatar button — persists across all screens
-  let fab = document.getElementById('profile-fab');
-  if(!fab) {
-    fab = document.createElement('button');
-    fab.id = 'profile-fab';
-    fab.className = 'profile-fab';
-    fab.onclick = openProfileDrawer;
-    fab.title = 'Profil';
-    document.body.appendChild(fab);
-  }
-  fab.textContent = (userName?.[0] || 'A').toUpperCase();
 }
 
 // ══ HELPERS ══
@@ -3725,63 +3607,6 @@ function _showReAuthPrompt() {
 
 // ══════════════════════════════════════════
 // PROFILE DRAWER
-// ══════════════════════════════════════════
-let _pdSaveTimer = null;
-function openProfileDrawer() {
-  const fab = document.getElementById('profile-fab');
-  if(fab) fab.style.opacity = '0';
-  const overlay = document.getElementById('profile-drawer-overlay');
-  if(!overlay) return;
-  // Populate fields
-  const nameInput = document.getElementById('pd-name-input');
-  const bioInput  = document.getElementById('pd-bio-input');
-  const pdName    = document.getElementById('pd-name');
-  const pdEmail   = document.getElementById('pd-email');
-  const pdPill    = document.getElementById('pd-mode-pill');
-  if(nameInput) nameInput.value = userName || '';
-  // Bio stored in answers as a special key
-  const bio = answers['profil__bio'] || '';
-  if(bioInput) { bioInput.value = bio; updateBioCount(bio.length); }
-  if(pdName) pdName.innerHTML = userName ? `Ap<em>reez</em> · ${userName.split(' ')[0]}` : 'Apreez';
-  if(pdEmail) pdEmail.textContent = currentUser?.email || (isGuest ? 'Mode tamu' : '');
-  if(pdPill) pdPill.textContent = appMode === 'couple' ? '♡ Couple' : 'Solo';
-  // Update avatar button initial
-  const avatarBtn = document.getElementById('profile-avatar-btn');
-  if(avatarBtn) avatarBtn.textContent = (userName?.[0] || 'A').toUpperCase();
-  overlay.classList.add('open');
-}
-function closeProfileDrawer() {
-  document.getElementById('profile-drawer-overlay')?.classList.remove('open');
-  const fab = document.getElementById('profile-fab');
-  if(fab) fab.style.opacity = '1';
-}
-function pdAutoSaveName(val) {
-  clearTimeout(_pdSaveTimer);
-  _pdSaveTimer = setTimeout(() => {
-    if(val.trim() && val.trim() !== userName) {
-      userName = val.trim();
-      saveState(); syncToSupabase(); renderDashboard();
-      const pdName = document.getElementById('pd-name');
-      if(pdName) pdName.innerHTML = `Ap<em>reez</em> · ${userName.split(' ')[0]}`;
-      const avatarBtn = document.getElementById('profile-avatar-btn');
-      if(avatarBtn) avatarBtn.textContent = (userName[0] || 'A').toUpperCase();
-    }
-  }, 800);
-}
-function pdAutoSaveBio(val) {
-  updateBioCount(val.length);
-  clearTimeout(_pdSaveTimer);
-  _pdSaveTimer = setTimeout(() => {
-    answers['profil__bio'] = val;
-    saveState(); syncToSupabase();
-  }, 800);
-}
-function updateBioCount(len) {
-  const el = document.getElementById('pd-bio-count');
-  if(el) el.textContent = `${len} / 160`;
-}
-
-// Avatar initial sync — called after login/enterApp via existing hooks
 
 // ══════════════════════════════════════════
 // 3-STATE MOSAIC — track opened questions
@@ -3955,103 +3780,3 @@ function _showNaraHarmResponse() {
 // ══════════════════════════════════════════
 // AVATAR INITIAL SYNC
 // ══════════════════════════════════════════
-function syncProfileAvatar() {
-  const fab = document.getElementById('profile-fab');
-  if(fab && userName) fab.textContent = (userName[0] || 'A').toUpperCase();
-  const pdName = document.getElementById('pd-name');
-  if(pdName && userName) pdName.innerHTML = `Ap<em>reez</em> · ${userName.split(' ')[0]}`;
-}
-// Hook into existing renderDashboard calls — add avatar sync at end
-// We do this safely by wrapping the debounced call, not the function itself
-document.addEventListener('DOMContentLoaded', () => {
-  // Swap in 3-state mosaic renderer after all functions are declared
-  setTimeout(() => {
-    if(typeof window._renderMosaicInto3State === 'function') {
-      window.renderMosaicInto = window._renderMosaicInto3State;
-    }
-    // Patch renderCouplePage now that original is definitely defined
-    if(typeof window.renderCouplePage === 'function' && !window._rcpPatched) {
-      window._rcpPatched = true;
-      const _rcp = window.renderCouplePage;
-      window.renderCouplePage = function() { _rcp(); renderCoupleMosaicSide(); };
-    }
-    // Patch sendNaraMessage safely
-    if(typeof window.sendNaraMessage === 'function' && !window._snmPatched) {
-      window._snmPatched = true;
-      const _snm = window.sendNaraMessage;
-      window.sendNaraMessage = async function() {
-        const input = document.getElementById('nara-input');
-        const msg = input?.value?.trim();
-        if(!msg) return;
-        if(_checkNaraHarm(msg)) {
-          input.value = ''; input.style.height = 'auto';
-          addChatBubble('user', msg);
-          _showNaraHarmResponse();
-          return;
-        }
-        await _snm();
-      };
-    }
-    // Patch downloadPDF safely
-    if(typeof window.downloadPDF === 'function' && !window._dlpPatched) {
-      window._dlpPatched = true;
-      const _dlp = window.downloadPDF;
-      window.downloadPDF = async function(context) {
-        window._pdfContext = context || 'full';
-        await _dlp();
-        window._pdfContext = null;
-      };
-    }
-  }, 0); // setTimeout 0 — runs after all sync script execution
-});
-
-</script>
-<!-- PROFILE DRAWER -->
-<div class="profile-drawer-overlay" id="profile-drawer-overlay" onclick="if(event.target===this)closeProfileDrawer()">
-  <div class="profile-drawer" id="profile-drawer">
-    <div class="profile-drawer-handle"></div>
-    <div class="profile-drawer-top">
-      <div class="profile-drawer-name" id="pd-name">Namamu</div>
-      <div class="profile-drawer-email" id="pd-email"></div>
-      <div class="profile-drawer-mode-pill" id="pd-mode-pill">Solo</div>
-    </div>
-    <div class="profile-drawer-body">
-      <div class="profile-drawer-section-label">Nama panggilan</div>
-      <div class="profile-drawer-row">
-        <input class="profile-drawer-input" id="pd-name-input" type="text" placeholder="Nama panggilanmu" maxlength="40" oninput="pdAutoSaveName(this.value)"/>
-      </div>
-      <div class="profile-drawer-section-label" style="margin-top:4px;">Bio singkat <span style="font-weight:300;text-transform:none;letter-spacing:0;font-size:10px;color:var(--text3);"> — muncul di profil pasangan</span></div>
-      <div class="profile-drawer-row">
-        <textarea class="profile-drawer-textarea" id="pd-bio-input" placeholder="Satu kalimat tentang siapa kamu..." maxlength="160" rows="3" oninput="pdAutoSaveBio(this.value)"></textarea>
-        <div style="font-size:10px;color:var(--text3);text-align:right;" id="pd-bio-count">0 / 160</div>
-      </div>
-      <div class="profile-drawer-section-label" style="margin-top:4px;">Mode</div>
-      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(showModeSettings,300);">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Ubah mode & kode couple
-      </button>
-      <div class="profile-drawer-section-label" style="margin-top:4px;">Lainnya</div>
-      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(openFeedback,300);">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Feedback untuk developer
-      </button>
-      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(()=>downloadPDF('full'),300);">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        Unduh semua jawaban (PDF)
-      </button>
-      <button class="profile-drawer-btn secondary" onclick="closeProfileDrawer();setTimeout(forceSyncFromCloud,300);">
-        <svg viewBox="0 0 24 24"><polyline points="23,4 23,10 17,10"/><polyline points="1,20 1,14 7,14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        Sinkron ulang dari cloud
-      </button>
-    </div>
-    <div class="profile-drawer-footer">
-      <button class="profile-drawer-btn danger" onclick="closeProfileDrawer();setTimeout(authLogout,300);">
-        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Keluar / ganti akun
-      </button>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
