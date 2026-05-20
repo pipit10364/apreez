@@ -697,7 +697,6 @@ body {
     radial-gradient(circle at 88% 92%, rgba(46,115,89,.10), transparent 38vw),
     radial-gradient(circle at 88% 14%, rgba(46,115,89,.08), transparent 28vw),
     var(--bg);
-  background-attachment: fixed;
   letter-spacing:-.01em;
 }
 .screen.app-main-screen { padding-bottom:calc(88px + var(--safe-bottom)); }
@@ -742,7 +741,6 @@ body {
     radial-gradient(circle at 15% 10%, rgba(82,183,136,.08), transparent 40vw),
     radial-gradient(circle at 85% 90%, rgba(82,183,136,.06), transparent 38vw),
     var(--bg);
-  background-attachment: fixed;
 },[data-theme="dark"] .home-nara-card,[data-theme="dark"] .journey-mosaic-card,[data-theme="dark"] .couple-status-card,[data-theme="dark"] .couple-partner-card { background:linear-gradient(145deg, rgba(37,45,37,.82), rgba(32,39,31,.62)); }
 .home-progress-card { padding:24px; }
 .home-progress-line { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:12px 0 18px; }
@@ -816,6 +814,7 @@ body {
 .themes-grid .tab-name { display:block; color:var(--text); font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; }
 .themes-grid .tab-pct { color:var(--text3); font-size:12px; margin-left:auto; }
 .themes-grid .tab-card.profil-card { min-height:104px; }
+.themes-grid .tab-card.wedding-card { grid-column:1/-1; }
 .themes-grid .tab-card.wedding-card .tab-icon { color:var(--pink); }
 .couple-status-card { padding:22px; max-width:680px; margin:0 auto 18px; }
 .couple-avatars { display:flex; align-items:center; justify-content:center; gap:18px; color:var(--text2); margin-bottom:18px; }
