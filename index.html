@@ -274,17 +274,22 @@ body {
 .tab-card.alt1 { background:var(--pink); }
 .tab-card.alt2 { background:var(--peach); }
 .tab-card.alt2 .tab-name,.tab-card.alt2 .tab-pct { color:var(--text); }
-[data-theme="dark"] .tab-card { background:rgba(82,183,136,.18); border:1.5px solid rgba(82,183,136,.5); }
-[data-theme="dark"] .tab-card .tab-name,[data-theme="dark"] .tab-card .tab-pct,[data-theme="dark"] .tab-card .tab-icon { color:#7DCFA8; }
-[data-theme="dark"] .tab-card.alt1 { background:rgba(224,122,95,.18); border-color:rgba(224,122,95,.5); }
-[data-theme="dark"] .tab-card.alt1 .tab-name,[data-theme="dark"] .tab-card.alt1 .tab-pct,[data-theme="dark"] .tab-card.alt1 .tab-icon { color:#F0A090; }
-[data-theme="dark"] .tab-card.alt2 { background:rgba(242,204,143,.18); border-color:rgba(242,204,143,.5); }
-[data-theme="dark"] .tab-card.alt2 .tab-name,[data-theme="dark"] .tab-card.alt2 .tab-pct,[data-theme="dark"] .tab-card.alt2 .tab-icon { color:#F2CC8F; }
-[data-theme="dark"] .tab-card.profil-card { background:rgba(242,204,143,.15); border-color:rgba(242,204,143,.45); }
-[data-theme="dark"] .tab-card.profil-card .tab-name,[data-theme="dark"] .tab-card.profil-card .tab-pct { color:#F2CC8F; }
-[data-theme="dark"] .tab-card:hover { background:rgba(82,183,136,.28); }
-[data-theme="dark"] .tab-card.alt1:hover { background:rgba(224,122,95,.28); }
-[data-theme="dark"] .tab-card.alt2:hover { background:rgba(242,204,143,.28); }
+[data-theme="dark"] .tab-card { background:rgba(82,183,136,.18) !important; border:1.5px solid rgba(82,183,136,.45) !important; }
+[data-theme="dark"] .tab-card .tab-name { color:#E8F5EE !important; }
+[data-theme="dark"] .tab-card .tab-pct { color:rgba(232,245,238,.55) !important; }
+[data-theme="dark"] .tab-card .tab-icon { color:#7DCFA8 !important; }
+[data-theme="dark"] .tab-card.alt1 { background:rgba(224,122,95,.18) !important; border-color:rgba(224,122,95,.4) !important; }
+[data-theme="dark"] .tab-card.alt1 .tab-name { color:#F5E8E4 !important; }
+[data-theme="dark"] .tab-card.alt1 .tab-pct { color:rgba(245,232,228,.55) !important; }
+[data-theme="dark"] .tab-card.alt1 .tab-icon { color:#F0A090 !important; }
+[data-theme="dark"] .tab-card.alt2 { background:rgba(242,204,143,.18) !important; border-color:rgba(242,204,143,.4) !important; }
+[data-theme="dark"] .tab-card.alt2 .tab-name { color:#F5F0E4 !important; }
+[data-theme="dark"] .tab-card.alt2 .tab-pct { color:rgba(245,240,228,.55) !important; }
+[data-theme="dark"] .tab-card.alt2 .tab-icon { color:#F2CC8F !important; }
+[data-theme="dark"] .tab-card.profil-card { background:rgba(242,204,143,.15) !important; border-color:rgba(242,204,143,.4) !important; }
+[data-theme="dark"] .tab-card.profil-card .tab-name,
+[data-theme="dark"] .tab-card.profil-card .tab-pct { color:#F5F0E4 !important; }
+[data-theme="dark"] .tab-card:hover { filter: brightness(1.15); }
 .tab-icon { width:22px; height:22px; margin-bottom:6px; flex-shrink:0; color:white; }
 .tab-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .tab-card::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,.1); opacity:0; transition:opacity .2s; }
@@ -688,9 +693,11 @@ body {
 }
 body {
   background:
-    radial-gradient(circle at 12% 4%, rgba(239,203,138,.22), transparent 30vw),
-    radial-gradient(circle at 88% 14%, rgba(46,115,89,.10), transparent 28vw),
+    radial-gradient(circle at 12% 8%, rgba(239,203,138,.22), transparent 40vw),
+    radial-gradient(circle at 88% 92%, rgba(46,115,89,.10), transparent 38vw),
+    radial-gradient(circle at 88% 14%, rgba(46,115,89,.08), transparent 28vw),
     var(--bg);
+  background-attachment: fixed;
   letter-spacing:-.01em;
 }
 .screen.app-main-screen { padding-bottom:calc(88px + var(--safe-bottom)); }
@@ -730,7 +737,13 @@ body {
   box-shadow:var(--soft-shadow);
   backdrop-filter:blur(16px);
 }
-[data-theme="dark"] .home-progress-card,[data-theme="dark"] .home-nara-card,[data-theme="dark"] .journey-mosaic-card,[data-theme="dark"] .couple-status-card,[data-theme="dark"] .couple-partner-card { background:linear-gradient(145deg, rgba(37,45,37,.82), rgba(32,39,31,.62)); }
+[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(82,183,136,.08), transparent 40vw),
+    radial-gradient(circle at 85% 90%, rgba(82,183,136,.06), transparent 38vw),
+    var(--bg);
+  background-attachment: fixed;
+},[data-theme="dark"] .home-nara-card,[data-theme="dark"] .journey-mosaic-card,[data-theme="dark"] .couple-status-card,[data-theme="dark"] .couple-partner-card { background:linear-gradient(145deg, rgba(37,45,37,.82), rgba(32,39,31,.62)); }
 .home-progress-card { padding:24px; }
 .home-progress-line { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:12px 0 18px; }
 .mode-badge { background:rgba(255,255,255,.36); border-color:var(--border); padding:8px 12px; margin-top:0; }
@@ -2646,7 +2659,7 @@ function updateTabCard(ti) { const cards=document.querySelectorAll('#tab-grid .t
 let naraChatHistory=[], naraAnswerSummary='', naraIsTyping=false;
 
 // ══ NARA RATE LIMITING ══
-const NARA_DAILY_LIMIT = 30; // messages per day per user
+const NARA_DAILY_LIMIT = 15; // messages per day per user
 function getNaraUsageKey() {
   return currentUser?.id ? `apreez_nara_usage_${currentUser.id}` : 'apreez_nara_usage_guest';
 }
@@ -2825,6 +2838,13 @@ async function initNaraScreen() {
     // No history — maybe auto-reflect for new session
     if(naraChatHistory.length===0 && completedThemes>=3) setTimeout(()=>autoNaraReflection(), 400);
     renderNaraSuggestions(appMode==='couple' && partnerLoaded);
+  updateNaraUsageInfo();
+  // Disable input if daily limit reached
+  const limitStatus = checkNaraLimit();
+  if(!limitStatus.allowed) {
+    document.getElementById('nara-input').disabled = true;
+    document.getElementById('nara-send-btn').disabled = true;
+  }
   }
 }
 
@@ -3000,10 +3020,22 @@ async function sendNaraMessage() {
     return;
   }
   // Show remaining warning when close to limit
-  if(limitCheck.remaining <= 5 && limitCheck.remaining > 0) {
-    // Will show warning after this message
-  }
+  updateNaraUsageInfo();
   input.value=''; input.style.height='auto'; await sendToNara(msg,true);
+  updateNaraUsageInfo();
+}
+function updateNaraUsageInfo() {
+  const el = document.getElementById('nara-usage-info');
+  if(!el) return;
+  const { count, remaining } = checkNaraLimit();
+  if(count === 0) { el.textContent = ''; return; }
+  if(remaining <= 0) {
+    el.innerHTML = `<span style="color:var(--pink);">Batas harian tercapai · Kembali besok</span>`;
+  } else if(remaining <= 5) {
+    el.innerHTML = `<span style="color:var(--pink);">${remaining} pesan tersisa hari ini</span>`;
+  } else {
+    el.innerHTML = `<span style="color:var(--text3);">${remaining} dari ${NARA_DAILY_LIMIT} pesan tersisa</span>`;
+  }
 }
 function handleNaraKey(e) { if(e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendNaraMessage(); } }
 function autoResizeNaraInput(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
