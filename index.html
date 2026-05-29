@@ -2089,6 +2089,7 @@ function showModeSettings() {
   </div>`;
   document.getElementById('modal-sheet').innerHTML = html;
   document.getElementById('modal-overlay').classList.add('open');
+  document.body.classList.add('modal-open');
 }
 async function switchMode(mode) {
   appMode=mode; if(mode==='couple'&&!partnerCode) partnerCode=generateCode();
@@ -2530,6 +2531,7 @@ function openMosaicQuestion(ti, si, qi) {
   document.getElementById('modal-prev').disabled = true;
   document.getElementById('modal-next').disabled = true;
   document.getElementById('modal-overlay').classList.add('open', 'mosaic-mode');
+  document.body.classList.add('modal-open');
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 
@@ -2592,6 +2594,7 @@ function openProfilFieldModal(startFieldIdx) {
   let startIdx=0; modalQ.forEach((q,i)=>{ if(q.fieldIdx===startFieldIdx) startIdx=i; });
   currentQIdx=startIdx; renderProfilModal();
   document.getElementById('modal-overlay').classList.add('open');
+  document.body.classList.add('modal-open');
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderProfilModal() {
@@ -3503,6 +3506,7 @@ function openWeddingQuestion(si,qi) {
   if(!overlay){console.warn('[Apreez] modal-overlay missing');return;}
   renderWeddingModal();
   overlay.classList.add('open');
+  document.body.classList.add('modal-open');
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderWeddingModal() {
