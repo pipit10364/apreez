@@ -853,6 +853,8 @@ html::after {
 .couple-bar-track { height:8px; border-radius:999px; background:var(--mosaic-empty); overflow:hidden; }
 .couple-bar-fill { height:100%; border-radius:999px; background:var(--card); }
 .couple-partner-card { display:block; max-width:860px; margin:0 auto; padding:18px; }
+/* Hide navbar when modal is open so it doesn't block Save button */
+body.modal-open .app-bottom-nav { display: none; }
 .app-bottom-nav {
   position:fixed;
   left:50%;
@@ -2613,6 +2615,7 @@ function openModal(ti,si,qi) {
   let startIdx=0; modalQ.forEach((q,i)=>{ if(q.subIdx===si&&q.qIdx===qi) startIdx=i; });
   currentQIdx=startIdx; renderModal();
   document.getElementById('modal-overlay').classList.add('open');
+  document.body.classList.add('modal-open');
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderModal() {
@@ -2688,6 +2691,10 @@ function closeModal() {
     }
   }
   document.getElementById('modal-overlay').classList.remove('open','mosaic-mode');
+  document.body.classList.remove('modal-open');
+  // Reset sheet position in case keyboard was open
+  const sheet = document.getElementById('modal-sheet');
+  if(sheet) { sheet.style.marginBottom = ''; sheet.style.maxHeight = ''; }
   openedFromMosaic = false;
   renderMosaic(); renderJourneyMosaic(); renderTabGrid(); updateMosaicCounts(); renderHomeInsight(); renderJourneyMilestones(); renderCouplePage();
 }
@@ -3866,8 +3873,32 @@ function _showNaraHarmResponse() {
 // ══════════════════════════════════════════
 // downloadPDF patch handled in DOMContentLoaded below
 
-// ══════════════════════════════════════════
-// AVATAR INITIAL SYNC
+// ── KEYBOARD / VIEWPORT HANDLING ──
+// Push modal sheet above keyboard when it appears on mobile
+if(window.visualViewport) {
+  const _modalSheet = () => document.getElementById('modal-sheet');
+  const _onViewportResize = () => {
+    const sheet = _modalSheet();
+    if(!sheet) return;
+    const vv = window.visualViewport;
+    const keyboardHeight = window.innerHeight - vv.height - vv.offsetTop;
+    if(keyboardHeight > 100) {
+      // Keyboard visible — push sheet up
+      sheet.style.transform = 'translateY(0)';
+      sheet.style.marginBottom = keyboardHeight + 'px';
+      sheet.style.maxHeight = `calc(88vh - ${keyboardHeight}px)`;
+      // Scroll textarea into view
+      const ta = sheet.querySelector('textarea:focus');
+      if(ta) setTimeout(() => ta.scrollIntoView({ behavior:'smooth', block:'center' }), 100);
+    } else {
+      // Keyboard hidden — restore
+      sheet.style.marginBottom = '';
+      sheet.style.maxHeight = '';
+    }
+  };
+  window.visualViewport.addEventListener('resize', _onViewportResize);
+  window.visualViewport.addEventListener('scroll', _onViewportResize);
+}
 // ══════════════════════════════════════════
 
 </script>
