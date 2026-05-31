@@ -499,6 +499,27 @@ body {
 
 /* ── MODE SETTINGS ── */
 .modal-settings-body { flex:1; padding:20px 24px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; }
+.ms-greeting { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.ms-greeting-name { font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--text); }
+.ms-greeting-name em { color:var(--card); font-style:italic; }
+.ms-greeting-edit { background:none; border:none; cursor:pointer; padding:2px 6px; color:var(--text3); font-size:14px; line-height:1; border-radius:4px; transition:color .2s; }
+.ms-greeting-edit:hover { color:var(--card); }
+.ms-sub { font-size:12px; color:var(--text3); margin-bottom:4px; }
+.ms-section-label { font-size:11px; font-weight:500; color:var(--text2); letter-spacing:.3px; margin-bottom:8px; }
+.ms-mode-row { display:flex; gap:8px; margin-bottom:4px; }
+.ms-mode-btn { flex:1; padding:10px; border-radius:var(--radius); border:1.5px solid var(--border); background:var(--bg2); color:var(--text2); font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:var(--transition); }
+.ms-mode-btn.active { border-color:var(--card); background:var(--bg3); color:var(--card); }
+.ms-code-box { background:var(--bg2); border:1.5px solid var(--border); border-radius:var(--radius); padding:14px; text-align:center; }
+.ms-code-display { font-family:'Cormorant Garamond',serif; font-size:28px; letter-spacing:6px; color:var(--card); }
+.ms-code-hint { font-size:10px; color:var(--text3); margin-top:4px; }
+.ms-code-copy { margin-top:8px; padding:6px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); background:transparent; font-size:11px; color:var(--text3); cursor:pointer; font-family:'DM Sans',sans-serif; transition:var(--transition); }
+.ms-code-regen { width:100%; padding:8px; background:transparent; color:var(--text3); border:1px dashed var(--border); border-radius:var(--radius-sm); font-family:'DM Sans',sans-serif; font-size:11px; cursor:pointer; letter-spacing:.3px; transition:var(--transition); }
+.ms-partner-row { display:flex; gap:8px; }
+.ms-partner-input { flex:1; padding:10px 12px; border:1.5px solid var(--border); border-radius:var(--radius); background:var(--bg2); color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; outline:none; text-transform:uppercase; letter-spacing:2px; transition:var(--transition); }
+.ms-partner-input:focus { border-color:var(--card); }
+.ms-partner-link { padding:10px 14px; border-radius:var(--radius); border:none; background:var(--card); color:white; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer; transition:var(--transition); }
+.ms-logout { width:100%; padding:11px; background:transparent; color:var(--pink); border:1.5px solid var(--pink-dim); border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; margin-top:8px; transition:var(--transition); }
+.ms-login { width:100%; padding:11px; background:var(--card); color:white; border:none; border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; transition:var(--transition); }
 
 /* ── COUPLE PARTNER CARD ── */
 .partner-card {
@@ -814,7 +835,7 @@ html::after {
 .journey-stat { text-align:center; margin-bottom:22px; }
 .journey-stat strong { font-family:'Cormorant Garamond',serif; font-size:48px; color:var(--card); font-weight:500; }
 .journey-stat span { color:var(--text3); margin-left:6px; }
-.journey-mosaic-grid { display:flex; flex-direction:column; gap:7px; align-items:center; overflow:auto; padding:8px 0; }
+.journey-mosaic-grid { display:flex; flex-direction:column; gap:7px; align-items:center; overflow:auto; padding:8px 0; min-height:120px; will-change:contents; }
 .journey-mosaic-grid .mosaic-row { justify-content:center; gap:7px; }
 .journey-mosaic-grid .mosaic-block { width:14px; height:14px; }
 .journey-milestones { max-width:860px; margin:18px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
@@ -1082,6 +1103,7 @@ body.modal-open .app-bottom-nav { display: none; }
   <div class="confirm-box">
     <div class="confirm-title" id="confirm-title">Keluar dari akun?</div>
     <div class="confirm-body" id="confirm-body"></div>
+    <input class="auth-input" id="confirm-input" type="text" style="display:none;width:100%;margin-bottom:16px;" onkeydown="if(event.key==='Enter')confirmOk()"/>
     <div class="confirm-actions">
       <button class="confirm-cancel" onclick="closeConfirm()">Batal</button>
       <button class="confirm-ok" id="confirm-ok-btn" onclick="confirmOk()">Ya, keluar</button>
@@ -1642,8 +1664,13 @@ async function forceSyncFromCloud() {
 }
 
 // Auto-sync when user returns to app (tab focus / mobile foreground)
+// Debounced to 60s minimum interval — prevents spam on rapid tab switching
+let _lastVisibilitySync = 0;
 document.addEventListener('visibilitychange', async () => {
   if(!document.hidden && currentUser && !isGuest) {
+    const now = Date.now();
+    if(now - _lastVisibilitySync < 60000) return; // at most once per 60s
+    _lastVisibilitySync = now;
     await loadFromSupabase();
     renderDashboard();
   }
@@ -1680,11 +1707,12 @@ function checkShowOnboarding() {
 }
 
 // ══ EDIT NAME ══
-function editName() {
-  const newName=prompt('Ubah namamu:',userName||'');
-  if(newName!==null&&newName.trim()&&newName.trim()!==userName){
-    userName=newName.trim(); saveLocalState(); syncToSupabase(); renderDashboard();
-    closeModal(); setTimeout(()=>showModeSettings(),250);
+async function editName() {
+  const newName = await showConfirmWithInput('Ubah nama panggilanmu', 'Nama yang mau disapa Nara', userName || '', 'Simpan');
+  if(newName && typeof newName === 'string' && newName.trim() && newName.trim() !== userName) {
+    userName = newName.trim();
+    saveLocalState(); syncToSupabase(); renderDashboard();
+    closeModal(); setTimeout(() => showModeSettings(), 250);
   }
 }
 
@@ -1726,16 +1754,36 @@ function showConfirm(title, body, okLabel='Ya') {
     document.getElementById('confirm-title').textContent = title;
     document.getElementById('confirm-body').textContent = body;
     document.getElementById('confirm-ok-btn').textContent = okLabel;
+    const inp = document.getElementById('confirm-input');
+    inp.style.display = 'none'; inp.value = '';
     document.getElementById('confirm-overlay').classList.add('open');
+  });
+}
+function showConfirmWithInput(title, placeholder, defaultValue='', okLabel='Simpan') {
+  return new Promise(resolve => {
+    _confirmResolve = resolve;
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-body').textContent = '';
+    document.getElementById('confirm-ok-btn').textContent = okLabel;
+    const inp = document.getElementById('confirm-input');
+    inp.placeholder = placeholder;
+    inp.value = defaultValue;
+    inp.style.display = 'block';
+    document.getElementById('confirm-overlay').classList.add('open');
+    setTimeout(() => inp.focus(), 100);
   });
 }
 function closeConfirm() {
   document.getElementById('confirm-overlay').classList.remove('open');
+  document.getElementById('confirm-input').style.display = 'none';
   if(_confirmResolve) { _confirmResolve(false); _confirmResolve = null; }
 }
 function confirmOk() {
   document.getElementById('confirm-overlay').classList.remove('open');
-  if(_confirmResolve) { _confirmResolve(true); _confirmResolve = null; }
+  const inp = document.getElementById('confirm-input');
+  const inputValue = inp.style.display !== 'none' ? inp.value : null;
+  inp.style.display = 'none';
+  if(_confirmResolve) { _confirmResolve(inputValue !== null ? inputValue : true); _confirmResolve = null; }
 }
 
 // ══ PARTNER AUTO-REFRESH ══
@@ -1794,21 +1842,23 @@ window.addEventListener('online', updateOnlineStatus);
 
 // ══ BEFOREUNLOAD — flush pending sync immediately if tab is closing ══
 window.addEventListener('beforeunload', () => {
-  if(saveTimer && currentUser && !isGuest) {
+  // Always save locally — this is synchronous and reliable
+  saveLocalState();
+
+  // If there's a pending cloud sync, try to fire it via sendBeacon
+  // sendBeacon is the only reliable way to send data on tab close
+  if(saveTimer && currentUser && !isGuest && SB && navigator.sendBeacon) {
     clearTimeout(saveTimer);
-    // Use sendBeacon for reliable fire-and-forget on tab close
-    if(navigator.sendBeacon && SB) {
-      const payload = JSON.stringify({
-        user_id: currentUser.id, user_name: userName,
-        answers, app_mode: appMode, partner_code: partnerCode,
-        linked_partner_code: linkedPartnerCode,
-        updated_at: new Date().toISOString()
-      });
-      // Fallback: at minimum save to localStorage synchronously
-      saveLocalState();
-    } else {
-      saveLocalState();
-    }
+    const payload = JSON.stringify({
+      user_id: currentUser.id, user_name: userName,
+      answers, app_mode: appMode, partner_code: partnerCode,
+      linked_partner_code: linkedPartnerCode,
+      updated_at: new Date().toISOString()
+    });
+    // Supabase REST upsert via sendBeacon
+    const url = `${SUPA_URL}/rest/v1/apreez_sessions`;
+    const blob = new Blob([payload], { type: 'application/json' });
+    try { navigator.sendBeacon(url, blob); } catch(e) { /* silent — localStorage already saved */ }
   }
 });
 window.addEventListener('offline', updateOnlineStatus);
@@ -2059,33 +2109,40 @@ function updateModeBadge() {
   label.textContent = appMode==='couple' ? (linkedPartnerCode?`Couple · ${linkedPartnerCode}`:'Couple · menunggu pasangan') : 'Solo';
 }
 function showModeSettings() {
-  const isCouple = appMode==='couple';
-  let html = `<div class="modal-handle"></div>
-  <div class="modal-header"><div class="modal-tab-label">Pengaturan Mode</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+  const isCouple = appMode === 'couple';
+  const html = `<div class="modal-handle"></div>
+  <div class="modal-header">
+    <div class="modal-tab-label">Pengaturan Mode</div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
   <div class="modal-settings-body">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);">Halo, <em style="color:var(--card);">${userName}</em></div><button onclick="editName()" title="Edit nama" style="background:none;border:none;cursor:pointer;padding:2px 6px;color:var(--text3);font-size:14px;line-height:1;border-radius:4px;">✎</button></div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:16px;">${isGuest?'Mode tamu · data hanya tersimpan di perangkat ini':currentUser?.email||''}</div>
-    ${!isGuest?`
-    <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">MODE REFLEKSI</div>
-    <div style="display:flex;gap:8px;margin-bottom:16px;">
-      <button onclick="switchMode('solo')" style="flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid ${appMode==='solo'?'var(--card)':'var(--border)'};background:${appMode==='solo'?'var(--bg3)':'var(--bg2)'};color:${appMode==='solo'?'var(--card)':'var(--text2)'};font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Sendiri</button>
-      <button onclick="switchMode('couple')" style="flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid ${appMode==='couple'?'var(--card)':'var(--border)'};background:${appMode==='couple'?'var(--bg3)':'var(--bg2)'};color:${appMode==='couple'?'var(--card)':'var(--text2)'};font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Bersama Pasangan</button>
+    <div class="ms-greeting">
+      <div class="ms-greeting-name">Halo, <em>${userName}</em></div>
+      <button class="ms-greeting-edit" onclick="editName()" title="Edit nama">✎</button>
     </div>
-    ${isCouple?`
-    <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE KAMU</div>
-    <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:6px;text-align:center;">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:6px;color:var(--card);">${partnerCode}</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px;">Bagikan ke pasanganmu</div>
-      <button onclick="navigator.clipboard.writeText('${partnerCode}').then(()=>this.textContent='Tersalin ✓')" style="margin-top:8px;padding:6px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;font-size:11px;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;">Salin kode</button>
-    </div>
-    <button onclick="regenPartnerCode()" style="width:100%;padding:8px;background:transparent;color:var(--text3);border:1px dashed var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;margin-bottom:12px;letter-spacing:.3px;">↺ Ganti kode · putus akses pasangan lama</button>
-    <div style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.3px;margin-bottom:8px;">KODE PASANGAN</div>
-    <div style="display:flex;gap:8px;margin-bottom:12px;">
-      <input id="settings-partner-input" type="text" maxlength="8" placeholder="Masukkan kode pasangan (8 huruf)" value="${linkedPartnerCode||''}" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;text-transform:uppercase;letter-spacing:2px;"/>
-      <button onclick="linkPartner()" style="padding:10px 14px;border-radius:var(--radius);border:none;background:var(--card);color:white;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Link</button>
-    </div>`:''}
-    <button onclick="authLogout()" style="width:100%;padding:11px;background:transparent;color:var(--pink);border:1.5px solid var(--pink-dim);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;">Keluar dari akun</button>
-    `:`<button onclick="closeModal();document.getElementById('auth-screen').style.display='flex';" style="width:100%;padding:11px;background:var(--card);color:white;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Buat akun / Masuk</button>`}
+    <div class="ms-sub">${isGuest ? 'Mode tamu · data hanya tersimpan di perangkat ini' : currentUser?.email || ''}</div>
+    ${!isGuest ? `
+      <div class="ms-section-label">MODE REFLEKSI</div>
+      <div class="ms-mode-row">
+        <button class="ms-mode-btn${appMode === 'solo' ? ' active' : ''}" onclick="switchMode('solo')">Sendiri</button>
+        <button class="ms-mode-btn${appMode === 'couple' ? ' active' : ''}" onclick="switchMode('couple')">Bersama Pasangan</button>
+      </div>
+      ${isCouple ? `
+        <div class="ms-section-label">KODE KAMU</div>
+        <div class="ms-code-box">
+          <div class="ms-code-display">${partnerCode}</div>
+          <div class="ms-code-hint">Bagikan ke pasanganmu</div>
+          <button class="ms-code-copy" onclick="navigator.clipboard.writeText('${partnerCode}').then(()=>this.textContent='Tersalin ✓')">Salin kode</button>
+        </div>
+        <button class="ms-code-regen" onclick="regenPartnerCode()">↺ Ganti kode · putus akses pasangan lama</button>
+        <div class="ms-section-label">KODE PASANGAN</div>
+        <div class="ms-partner-row">
+          <input id="settings-partner-input" class="ms-partner-input" type="text" maxlength="8"
+            placeholder="8 huruf kode pasangan" value="${linkedPartnerCode || ''}"/>
+          <button class="ms-partner-link" onclick="linkPartner()">Link</button>
+        </div>` : ''}
+      <button class="ms-logout" onclick="authLogout()">Keluar dari akun</button>
+    ` : `<button class="ms-login" onclick="closeModal();document.getElementById('auth-screen').style.display='flex';">Buat akun / Masuk</button>`}
   </div>`;
   document.getElementById('modal-sheet').innerHTML = html;
   document.getElementById('modal-overlay').classList.add('open');
@@ -2434,37 +2491,92 @@ function buildMosaicGroups() {
 }
 function renderMosaicInto(grid, {preview=false}={}) {
   if(!grid) return;
-  grid.innerHTML='';
-  const groups=buildMosaicGroups();
-  groups.forEach((group,gi)=>{
-    const row=document.createElement('div'); row.className='mosaic-row'; row.title=group.name;
-    group.questions.forEach(q=>{
-      const block=document.createElement('div'); block.className='mosaic-block';
-      const filled = q.isWedding ? isWeddingAnswered(q.subIdx,q.qIdx) : (q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx,q.subIdx,q.qIdx));
+  const groups = buildMosaicGroups();
+
+  // ── Helper: compute block state for a question ──
+  function getBlockState(q) {
+    const filled = q.isWedding
+      ? isWeddingAnswered(q.subIdx, q.qIdx)
+      : (q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx, q.subIdx, q.qIdx));
+    const opened = !filled && !q.isField && (
+      q.isWedding ? _isWeddingOpened(q.subIdx, q.qIdx) : _isOpened(q.tabIdx, q.subIdx, q.qIdx)
+    );
+    return { filled, opened };
+  }
+
+  // ── Helper: build onclick for a block ──
+  function makeOnclick(q) {
+    return () => {
+      if(q.isWedding) {
+        _markWeddingOpened(q.subIdx, q.qIdx);
+        openWeddingQuestion(q.subIdx, q.qIdx);
+        openedFromMosaic = true;
+        document.getElementById('modal-overlay')?.classList.add('mosaic-mode');
+      } else if(q.isField) {
+        openedFromMosaic = true;
+        openProfilFieldModal(q.fieldIdx);
+      } else {
+        _markOpened(q.tabIdx, q.subIdx, q.qIdx);
+        openMosaicQuestion(q.tabIdx, q.subIdx, q.qIdx);
+      }
+    };
+  }
+
+  // ── Smart update: if structure matches, only toggle classes (no DOM rebuild) ──
+  const existingRows = grid.querySelectorAll('.mosaic-row');
+  const structureMatches = existingRows.length === groups.length &&
+    groups.every((group, gi) => {
+      const blocks = existingRows[gi]?.querySelectorAll('.mosaic-block:not([style*="opacity"])');
+      return blocks && blocks.length === group.questions.length;
+    });
+
+  if(structureMatches) {
+    groups.forEach((group, gi) => {
+      const row = existingRows[gi];
+      const blocks = row.querySelectorAll('.mosaic-block:not([style*="opacity"])');
+      group.questions.forEach((q, bi) => {
+        const block = blocks[bi];
+        if(!block) return;
+        const { filled, opened } = getBlockState(q);
+        block.classList.toggle('filled', filled);
+        block.classList.toggle('opened', !filled && opened);
+      });
+      // Update completion badge
+      const existingBadge = row.querySelector('.mosaic-badge');
+      const shouldHaveBadge = group.filled >= group.total && group.total > 0;
+      if(shouldHaveBadge && !existingBadge) renderMosaicBadge(row, group);
+      if(!shouldHaveBadge && existingBadge) existingBadge.remove();
+    });
+    return;
+  }
+
+  // ── Full build (first render or structure changed) ──
+  grid.innerHTML = '';
+  groups.forEach((group, gi) => {
+    const row = document.createElement('div');
+    row.className = 'mosaic-row'; row.title = group.name;
+    group.questions.forEach(q => {
+      const block = document.createElement('div');
+      block.className = 'mosaic-block';
+      const { filled, opened } = getBlockState(q);
       if(filled) block.classList.add('filled');
-      block.title=group.name;
-      block.onclick=()=>{
-        if(q.isWedding) {
-          openWeddingQuestion(q.subIdx,q.qIdx);
-          openedFromMosaic = true;
-          document.getElementById('modal-overlay')?.classList.add('mosaic-mode');
-        } else if(q.isField) {
-          openedFromMosaic = true;
-          openProfilFieldModal(q.fieldIdx);
-        } else {
-          openMosaicQuestion(q.tabIdx, q.subIdx, q.qIdx);
-        }
-      };
+      else if(opened) block.classList.add('opened');
+      block.title = group.name;
+      block.onclick = makeOnclick(q);
       row.appendChild(block);
     });
-    if(preview && gi<6) {
-      const maxQ=27, dripNeeded=maxQ-group.questions.length;
-      for(let d=0;d<Math.min(dripNeeded,5);d++) {
-        const drip=document.createElement('div'); drip.className='mosaic-block';
-        drip.style.opacity=String(.3-d*.06); drip.style.pointerEvents='none'; row.appendChild(drip);
+    if(preview && gi < 6) {
+      const maxQ = 27, dripNeeded = maxQ - group.questions.length;
+      for(let d = 0; d < Math.min(dripNeeded, 5); d++) {
+        const drip = document.createElement('div');
+        drip.className = 'mosaic-block';
+        drip.style.opacity = String(.3 - d * .06);
+        drip.style.pointerEvents = 'none';
+        row.appendChild(drip);
       }
     }
-    renderMosaicBadge(row,group); grid.appendChild(row);
+    renderMosaicBadge(row, group);
+    grid.appendChild(row);
   });
 }
 function renderMosaic() {
@@ -2478,7 +2590,14 @@ function renderMosaicBadge(row,groupOrTi) {
   }
 }
 
-// ══ TAB GRID ══
+// ══ SAFE RENDER WRAPPER ══
+// Wraps any render call so a crash in one function doesn't cascade to the rest.
+// Usage: instead of renderFoo() directly, call safeRender(renderFoo)
+// All render calls from closeModal, updateMosaicBlock, etc. use this automatically.
+function safeRender(fn, label) {
+  try { fn(); }
+  catch(e) { console.warn(`[Apreez] render error in ${label || fn.name}:`, e.message); }
+}
 function renderTabGrid() {
   const grid=document.getElementById('tab-grid'); if(!grid) return; grid.innerHTML='';
   const colors=['','alt1','alt2'];
@@ -2701,7 +2820,19 @@ function closeModal() {
   const sheet = document.getElementById('modal-sheet');
   if(sheet) { sheet.style.marginBottom = ''; sheet.style.maxHeight = ''; }
   openedFromMosaic = false;
-  renderMosaic(); renderJourneyMosaic(); renderTabGrid(); updateMosaicCounts(); renderHomeInsight(); renderJourneyMilestones(); renderCouplePage();
+  // Only re-render what is currently visible to avoid layout shifts
+  const activeScreen = document.querySelector('.screen.active')?.id;
+  safeRender(renderMosaic, 'renderMosaic');
+  if(activeScreen === 's-journey') {
+    safeRender(renderJourneyMosaic, 'renderJourneyMosaic');
+    safeRender(renderJourneyMilestones, 'renderJourneyMilestones');
+  } else {
+    safeRender(renderJourneyMosaic, 'renderJourneyMosaic');
+  }
+  safeRender(renderTabGrid, 'renderTabGrid');
+  safeRender(updateMosaicCounts, 'updateMosaicCounts');
+  safeRender(renderHomeInsight, 'renderHomeInsight');
+  safeRender(renderCouplePage, 'renderCouplePage');
 }
 function handleModalOverlayClick(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
 function animateMosaicBlock(ti,si,qi,filled) {
@@ -2716,8 +2847,17 @@ function animateMosaicBlock(ti,si,qi,filled) {
 function openQuestion(ti,si,qi) { openModal(ti,si,qi); }
 
 // ══ LIVE UPDATES ══
-function updateMosaicBlock() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderMosaic(); renderJourneyMosaic(); renderHomeInsight(); renderJourneyMilestones(); renderCouplePage(); }
-function updateMosaicCounts() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); renderHomeInsight(); }
+function updateMosaicBlock() {
+  const fc=document.getElementById('mosaic-count');
+  if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`;
+  updateEmpathyPhrase();
+  safeRender(renderMosaic, 'renderMosaic');
+  safeRender(renderJourneyMosaic, 'renderJourneyMosaic');
+  safeRender(renderHomeInsight, 'renderHomeInsight');
+  safeRender(renderJourneyMilestones, 'renderJourneyMilestones');
+  safeRender(renderCouplePage, 'renderCouplePage');
+}
+function updateMosaicCounts() { const fc=document.getElementById('mosaic-count'); if(fc) fc.innerHTML=`${getFilledQ()} <span>/ ${getTotalQ()} pertanyaan</span>`; updateEmpathyPhrase(); safeRender(renderHomeInsight, 'renderHomeInsight'); }
 function updateTabCard(ti) { const cards=document.querySelectorAll('#tab-grid .tab-card'); if(cards[ti]) { const pct=getTabTotal(ti)>0?Math.round(getTabFilled(ti)/getTabTotal(ti)*100):0; const pe=cards[ti].querySelector('.tab-pct'); if(pe) pe.textContent=pct+'%'; } }
 
 // ══ KATA NARA ══
@@ -2768,10 +2908,37 @@ function loadNaraHistory() {
 let partnerAnswers=null, partnerName='';
 function getCompletedThemes() { let c=0; TABS.forEach((tab,ti)=>{ if(tab.isProfil) return; if(getTabFilled(ti)>=getTabTotal(ti)&&getTabTotal(ti)>0) c++; }); return c; }
 function buildAnswerSummary(targetAnswers=answers, targetName=userName) {
-  let s=`Nama: ${targetName}\nMode: ${appMode==='couple'?'Couple':'Solo'}\n\n`;
-  TABS.forEach((tab,ti)=>{ if(tab.isProfil) return; let has=false, t=`=== ${tab.name.toUpperCase()} ===\n`;
-    tab.subtabs?.forEach((st,si)=>st.questions.forEach((q,qi)=>{ const v=targetAnswers[getQId(ti,si,qi)]; if(v?.trim()) { has=true; t+=`[${st.name}]\nQ: ${q}\nA: ${v}\n\n`; } }));
-    if(has) s+=t; }); return s;
+  // Collect all answered Q&A pairs
+  const pairs = [];
+  TABS.forEach((tab,ti)=>{
+    if(tab.isProfil) return;
+    tab.subtabs?.forEach((st,si)=>st.questions.forEach((q,qi)=>{
+      const v = targetAnswers[getQId(ti,si,qi)];
+      if(v?.trim()) pairs.push({ tab: tab.name, subtab: st.name, q, a: v.trim() });
+    }));
+  });
+
+  // Cap at ~6000 chars to keep system prompt manageable regardless of how many answers exist.
+  // Always include Profil fields first, then most recent answers via slice from end.
+  const CHAR_LIMIT = 6000;
+  let s = `Nama: ${targetName}\nMode: ${appMode==='couple'?'Couple':'Solo'}\n\n`;
+  let charCount = s.length;
+  let lastTab = '';
+
+  // Take from the end (most recently answered themes tend to be more relevant)
+  const capped = pairs.length > 60 ? pairs.slice(-60) : pairs;
+
+  for(const p of capped) {
+    const entry = (p.tab !== lastTab ? `=== ${p.tab.toUpperCase()} ===\n` : '') +
+      `[${p.subtab}]\nQ: ${p.q}\nA: ${p.a}\n\n`;
+    if(charCount + entry.length > CHAR_LIMIT) {
+      s += `\n[${pairs.length - capped.length} jawaban sebelumnya tidak ditampilkan untuk efisiensi]\n`;
+      break;
+    }
+    if(p.tab !== lastTab) lastTab = p.tab;
+    s += entry; charCount += entry.length;
+  }
+  return s;
 }
 function getNaraSystemPrompt() {
   const isCouple = appMode==='couple' && partnerAnswers;
@@ -3727,68 +3894,7 @@ function _isWeddingOpened(si, qi) {
   try { return !!sessionStorage.getItem(`ow_${si}_${qi}`); } catch(e){ return false; }
 }
 
-// ══════════════════════════════════════════
-// 3-STATE MOSAIC — render override (replaces original renderMosaicInto)
-// ══════════════════════════════════════════
-// We redefine renderMosaicInto here — this declaration comes AFTER the original
-// in the script, so it wins at runtime (function declarations hoist, but this
-// is a function expression assigned below, so order matters — we use a flag instead)
-window._renderMosaicInto3State = function(grid, opts={}) {
-  if(!grid) return;
-  grid.innerHTML = '';
-  const groups = buildMosaicGroups();
-  groups.forEach((group, gi) => {
-    const row = document.createElement('div');
-    row.className = 'mosaic-row'; row.title = group.name;
-    group.questions.forEach(q => {
-      const block = document.createElement('div');
-      block.className = 'mosaic-block';
-      const filled = q.isWedding
-        ? isWeddingAnswered(q.subIdx, q.qIdx)
-        : (q.isField ? !!answers[`profil__field__${q.fieldIdx}`]?.trim() : isAnswered(q.tabIdx, q.subIdx, q.qIdx));
-      const opened = q.isWedding
-        ? _isWeddingOpened(q.subIdx, q.qIdx)
-        : (!q.isField && _isOpened(q.tabIdx, q.subIdx, q.qIdx));
-      if(filled) block.classList.add('filled');
-      else if(opened) block.classList.add('opened');
-      block.title = group.name;
-      block.onclick = () => {
-        if(q.isWedding) {
-          _markWeddingOpened(q.subIdx, q.qIdx);
-          openWeddingQuestion(q.subIdx, q.qIdx);
-          openedFromMosaic = true;
-          document.getElementById('modal-overlay')?.classList.add('mosaic-mode');
-        } else if(q.isField) {
-          openedFromMosaic = true;
-          openProfilFieldModal(q.fieldIdx);
-        } else {
-          _markOpened(q.tabIdx, q.subIdx, q.qIdx);
-          openMosaicQuestion(q.tabIdx, q.subIdx, q.qIdx);
-        }
-      };
-      row.appendChild(block);
-    });
-    if(opts.preview && gi < 6) {
-      const maxQ = 27, dripNeeded = maxQ - group.questions.length;
-      for(let d = 0; d < Math.min(dripNeeded, 5); d++) {
-        const drip = document.createElement('div');
-        drip.className = 'mosaic-block';
-        drip.style.opacity = String(.3 - d * .06);
-        drip.style.pointerEvents = 'none';
-        row.appendChild(drip);
-      }
-    }
-    renderMosaicBadge(row, group);
-    grid.appendChild(row);
-  });
-};
-// Swap in the 3-state version after DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  // Override renderMosaicInto globally after all functions are defined
-  if(typeof renderMosaicInto === 'function') {
-    window.renderMosaicInto = window._renderMosaicInto3State;
-  }
-});
+// (3-state mosaic logic merged into renderMosaicInto above)
 
 // ══════════════════════════════════════════
 // COUPLE MOSAIC SIDE-BY-SIDE
