@@ -1500,7 +1500,7 @@ const TABS = [
 //   UPDATE: auth.uid() = user_id
 // Tanpa RLS, anon key di bawah bisa dipakai siapapun untuk baca/tulis semua data.
 const SUPA_URL = 'https://fanbsvlzhuhsngsvwfkn.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbmJzdmx6aHVoc25nc3Z3ZmtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDg0NjQsImV4cCI6MjA5MTYyNDQ2NH0.6RRz3y56PtFZLpn3LSwBL986NIc1MmlxjuG44JHryb4';
+const SUPA_KEY = 'sb_publishable_ZTShyxSG9gmE64Cnbt9Hjw_hM0jG75i';
 let SB = null;
 let currentUser = null;
 let _serverLoadComplete = false; // only true after loadFromSupabase succeeds for this session
@@ -1573,6 +1573,17 @@ function setSyncDot(state) {
   dot.className = 'sync-dot' + (state ? ' ' + state : '');
 }
 
+// Strip empty entries and trim whitespace before sending to Supabase.
+// Prevents the answers object from bloating with leftover empty keys over time.
+function cleanAnswersForSync(raw) {
+  const cleaned = {};
+  for(const [k, v] of Object.entries(raw)) {
+    if(typeof v === 'string') { const t = v.trim(); if(t) cleaned[k] = t; }
+    else if(v != null) cleaned[k] = v;
+  }
+  return cleaned;
+}
+
 async function syncToSupabase() {
   if(!SB || !currentUser) return;
   // Guard: don't sync if we haven't loaded from server yet this session
@@ -1583,7 +1594,7 @@ async function syncToSupabase() {
   }
   const payload = {
     user_id: currentUser.id, user_name: userName,
-    answers: {...answers}, app_mode: appMode,
+    answers: cleanAnswersForSync(answers), app_mode: appMode,
     partner_code: partnerCode, linked_partner_code: linkedPartnerCode,
     updated_at: new Date().toISOString()
   };
