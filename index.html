@@ -801,8 +801,11 @@ html::after {
   height:10px;
   border-radius:999px;
   border:0;
+  background:var(--mosaic-empty);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
 }
+.journey-mosaic-grid .mosaic-block:not(.filled):not(.opened) { background:var(--mosaic-empty) !important; }
+.journey-mosaic-grid .mosaic-block.filled { background:var(--mosaic-fill) !important; }
 .mosaic-block.filled,.journey-mosaic-grid .mosaic-block.filled,.home-mosaic-card .mosaic-block.filled { background:var(--mosaic-fill) !important; opacity:1 !important; box-shadow:0 0 0 2px rgba(46,115,89,.10), 0 6px 14px rgba(46,115,89,.16); }
 .mosaic-badge { border-radius:999px; background:var(--peach); }
 .home-cta {
