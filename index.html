@@ -614,7 +614,7 @@ body {
 .feedback-submit:disabled { opacity:.5; cursor:not-allowed; }
 
 /* ── ANIMATIONS ── */
-@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp { from { opacity:0; } to { opacity:1; } }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
 @keyframes typingDot { 0%,60%,100% { transform:translateY(0); opacity:.4; } 30% { transform:translateY(-4px); opacity:1; } }
 @keyframes blockFill { 0% { transform:scale(1); } 40% { transform:scale(1.6); } 70% { transform:scale(.9); } 100% { transform:scale(1); } }
@@ -2171,13 +2171,15 @@ function getEmpathyPhrase(filled, total) {
 
 // ══ NAVIGATION ══
 function goTo(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0); updateThemeIcons();
-  if(id==='s-wedding') renderWedding();
+  // Pre-render content BEFORE showing screen to prevent layout shift/shake
   if(id==='s-journey') renderJourneyPage();
   if(id==='s-themes') renderTabGrid();
   if(id==='s-couple') { renderCouplePage(); renderPartnerCard(); }
+  if(id==='s-wedding') renderWedding();
+
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0); updateThemeIcons();
   renderBottomNav(id);
 }
 
