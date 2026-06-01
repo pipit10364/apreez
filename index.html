@@ -3884,6 +3884,8 @@ function _showNaraHarmResponse() {
 if(window.visualViewport) {
   const _modalSheet = () => document.getElementById('modal-sheet');
   const _onViewportResize = () => {
+    const overlay = document.getElementById('modal-overlay');
+    if(!overlay || !overlay.classList.contains('open')) return;
     const sheet = _modalSheet();
     if(!sheet) return;
     const vv = window.visualViewport;
