@@ -2090,7 +2090,6 @@ function showModeSettings() {
   document.getElementById('modal-sheet').innerHTML = html;
   document.getElementById('modal-overlay').classList.add('open');
   document.body.classList.add('modal-open');
-  if(window._vpModalOpened) window._vpModalOpened();
 }
 async function switchMode(mode) {
   appMode=mode; if(mode==='couple'&&!partnerCode) partnerCode=generateCode();
@@ -2535,7 +2534,6 @@ function openMosaicQuestion(ti, si, qi) {
   document.getElementById('modal-next').disabled = true;
   document.getElementById('modal-overlay').classList.add('open', 'mosaic-mode');
   document.body.classList.add('modal-open');
-  if(window._vpModalOpened) window._vpModalOpened();
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 
@@ -2599,7 +2597,6 @@ function openProfilFieldModal(startFieldIdx) {
   currentQIdx=startIdx; renderProfilModal();
   document.getElementById('modal-overlay').classList.add('open');
   document.body.classList.add('modal-open');
-  if(window._vpModalOpened) window._vpModalOpened();
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderProfilModal() {
@@ -2624,7 +2621,6 @@ function openModal(ti,si,qi) {
   currentQIdx=startIdx; renderModal();
   document.getElementById('modal-overlay').classList.add('open');
   document.body.classList.add('modal-open');
-  if(window._vpModalOpened) window._vpModalOpened();
   setTimeout(()=>document.getElementById('modal-ta')?.focus(), 350);
 }
 function renderModal() {
@@ -2699,7 +2695,6 @@ function closeModal() {
       saveState();
     }
   }
-  if(window._vpModalClosed) window._vpModalClosed();
   document.getElementById('modal-overlay').classList.remove('open','mosaic-mode');
   document.body.classList.remove('modal-open');
   // Reset sheet position in case keyboard was open
@@ -3885,45 +3880,12 @@ function _showNaraHarmResponse() {
 // downloadPDF patch handled in DOMContentLoaded below
 
 // ── KEYBOARD / VIEWPORT HANDLING ──
-// Push modal sheet above keyboard when it appears on mobile
-if(window.visualViewport) {
-  let _vpActive = false; // only true after modal animation settles
-  let _vpTimer = null;
-
-  window._vpModalOpened = function() {
-    clearTimeout(_vpTimer);
-    // Wait for sheet slide-up animation (350ms) before activating listener
-    _vpTimer = setTimeout(() => { _vpActive = true; }, 380);
-  };
-  window._vpModalClosed = function() {
-    clearTimeout(_vpTimer);
-    _vpActive = false;
-    const sheet = document.getElementById('modal-sheet');
-    if(sheet) { sheet.style.marginBottom = ''; sheet.style.maxHeight = ''; }
-  };
-
-  const _onViewportResize = () => {
-    if(!_vpActive) return;
-    const sheet = document.getElementById('modal-sheet');
-    if(!sheet) return;
-    const vv = window.visualViewport;
-    const keyboardHeight = window.innerHeight - vv.height - vv.offsetTop;
-    if(keyboardHeight > 100) {
-      // Keyboard visible — push sheet up
-      sheet.style.marginBottom = keyboardHeight + 'px';
-      sheet.style.maxHeight = `calc(88vh - ${keyboardHeight}px)`;
-      // Scroll textarea into view
-      const ta = sheet.querySelector('textarea:focus');
-      if(ta) setTimeout(() => ta.scrollIntoView({ behavior:'smooth', block:'center' }), 100);
-    } else {
-      // Keyboard hidden — restore
-      sheet.style.marginBottom = '';
-      sheet.style.maxHeight = '';
-    }
-  };
-  window.visualViewport.addEventListener('resize', _onViewportResize);
-  window.visualViewport.addEventListener('scroll', _onViewportResize);
-}
+// Scroll textarea into view when focused on mobile (no visualViewport listener)
+document.addEventListener('focusin', (e) => {
+  if(e.target.tagName === 'TEXTAREA') {
+    setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+  }
+});
 // ══════════════════════════════════════════
 
 </script>
